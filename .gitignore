@@ -1,2 +1,6 @@
 # exclude LibreOffice temp files
 .~lock.*
+#exclude vim temporary files
+*~
+*.swp
+*.swo
