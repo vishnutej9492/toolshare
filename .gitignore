@@ -1,4 +1,4 @@
-# exclude LibreOffice temp files
+# exclude LibreOffice temp files.
 .~lock.*
 #exclude vim temporary files
 *~
