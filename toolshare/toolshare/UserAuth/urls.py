@@ -1,7 +1,9 @@
 from django.conf.urls import patterns,url,include 
-
+from django.views.generic import TemplateView
 from UserAuth import views
 
 urlpatterns = patterns('' ,
-         url(r'^$', views.login, name='login')
+        (r'^$',TemplateView.as_view(template_name="UserAuth/__base.html"))
+         #url(r'^$', views.login,name='login'),
+         
          )
