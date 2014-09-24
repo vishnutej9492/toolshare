@@ -12,5 +12,5 @@ def index(request):
     #return HttpResponse("That's it")
 
 class LoginView(TemplateView):
-    template_name = 'UserAuth/_base.html'
+    template_name = 'UserAuth/signin.html'
 
