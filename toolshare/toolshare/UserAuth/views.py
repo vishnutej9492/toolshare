@@ -8,17 +8,16 @@ from django.views.generic.edit import FormView
 class LoginView(FormView):
     form_class = LoginForm
     template_name = 'UserAuth/signin.html'
-
-#When page loads for the first time
+ #When page loads
     def get(self, request, *args, **kwargs):
-        print("Get Called")
+        #return HttpResponse ("Get Called")
         form = self.form_class(initial=self.initial)
         return render(request, self.template_name, {'form': form})
    
 #When a post is called after the user submits the page.
     def post(self, request,*args, **kwargs):
             print ("Post called")
-            context = RequestContext(request)
+            #context = RequestContext(request)
             username = request.POST['username']
             password = request.POST['password']
             if Tooler:

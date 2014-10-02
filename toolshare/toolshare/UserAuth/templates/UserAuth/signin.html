@@ -1,53 +1,6 @@
 <form action="/login/" method="post">
     {% csrf_token %}
-        {{ form }}
+        {{ form.as_p }}
             <input type="submit" value="Login" />
 </form>
-<!--<div class="sigin" style="position:relative;">-->
-<!--<form action="/login">-->
-        <!--<h2>Please sign in</h2>-->
-        <!--<br/>-->
-        <!--<div>-->
-            <!--Username/email:-->
-            <!--<input type="text"/>-->
-        <!--</div>-->
-        <!--<br>-->
-        <!--<div>    -->
-            <!--Password:-->
-            <!--<input type="password"/>-->
-        <!--</div>-->
-        <!--<div>-->
-            <!--<input type="submit" value="Login"/>-->
-        <!--</div>-->
-        <!--<br>-->
-        <!--<div>-->
-            <!--<a href="#">Sign Up Now!</a>-->
-        <!--</div>-->
-<!--</form>-->
-<!--</div>-->
-<!--<html>-->
-    <!--<head>-->
-            <!--<title>Login</title>-->
-                <!--<script type="text/javascript">-->
-   
-    <!--function register() {-->
-                <!--window.location.href = 'register'-->
-                        <!--}-->
-                <!--</script>-->
-    <!--</head>-->
-    <!--<body>-->
-            <!--<h1>Login</h1>-->
-                <!--{% for item in error %}-->
-                        <!--<p style="color:red;">{{item}}</p>-->
-                            <!--{% endfor %}-->
-                                        
-                                <!--<form action="" method="post">-->
-                                            <!--<table>-->
-                                                            <!--{{ form.as_table }}-->
-                                                                    <!--</table>-->
-                                                                            
-                                                                            <!--<input type="submit" value="Login">-->
-                                                                                    <!--<input type="button" value="Register" onclick="register()">-->
-                                                                                        <!--</form>-->
-    <!--</body>-->
-<!--</html>-->
+

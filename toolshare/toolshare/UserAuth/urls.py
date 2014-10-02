@@ -1,7 +1,6 @@
-from django.conf.urls import patterns,url,include 
-from django.views.generic import TemplateView
+from django.conf.urls import patterns,url
 from UserAuth import views
 
 urlpatterns = patterns('' ,
-        (r'^$',TemplateView.as_view(template_name="UserAuth/signin.html")),
+        url(r'^$', views.LoginView.as_view(), name='login')
         )
