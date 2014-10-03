@@ -1,6 +1,9 @@
 <form action="/login/" method="post">
     {% csrf_token %}
-        {{ form.as_p }}
+        {{ form }}
             <input type="submit" value="Login" />
+	    <div>
+		<a>Register Now!</a>
+	    </div>
 </form>
 
