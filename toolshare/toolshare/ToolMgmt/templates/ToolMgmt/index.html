@@ -1,0 +1,23 @@
+<h1>Tool listing</h1>
+{% if all_tools|length > 0 %}
+  <table>
+    <thead>
+      <tr>
+        <td>ID</td>
+        <td>Name</td>
+        <td>Description</td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tool in all_tools %}
+      <tr>
+        <td>{{ tool.id }}</td>
+        <td>{{ tool.name }}</td>
+        <td>{{ tool.description }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <span>No tool.</span>
+{% endif %}
