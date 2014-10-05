@@ -1,0 +1,8 @@
+<form action="/Register/">
+    <table>
+    {% csrf_token %}
+    {{ form.as_table }}
+    </table>
+<input type="submit" value="Register" />
+
+</form>
