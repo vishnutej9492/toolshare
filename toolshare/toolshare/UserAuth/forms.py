@@ -11,5 +11,9 @@ class LoginForm(forms.Form):
 class RegisterForm(ModelForm):
     class Meta:
         model = Tooler
-       # fields = '__all__'
-        exclude = ['password','user','user_permissions','is_staff','is_active','is_superuser','last_login','date_joined','groups'] 
+        exclude = ['password','user','user_permissions','is_staff','is_active','is_superuser','last_login','date_joined','groups','zipcode']
+    zipcode = USZipCodeField(max_length=5)
+    password = forms.CharField(widget=forms.PasswordInput,label='Password',max_length=16)
+    confirm_password = forms.CharField(widget=forms.PasswordInput,label='Confirm Password',max_length=16)
+ 
+
