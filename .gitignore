@@ -68,3 +68,5 @@ docs/_build/
 *.swp
 *.swo
 
+#exclude Mac folder information files
+*.DS_Store

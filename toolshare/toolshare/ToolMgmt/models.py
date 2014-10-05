@@ -4,6 +4,9 @@ class ToolCategory(models.Model):
     name = models.CharField(verbose_name="Name", max_length=100)
     description = models.CharField(verbose_name="Description", max_length=200)
 
+    def __str__(self):
+        return self.name
+
 class ToolStatus(models.Model):
     name = models.CharField(verbose_name="Name", max_length=50)
     description = models.CharField(verbose_name="Description", max_length=200)
