@@ -7,6 +7,8 @@ def index(request):
     return render(request, 'ToolMgmt/index.html', {'all_tools': all_tools})
 
 def detail(request,tool_id):
-    tool = Tool.objects.get(pk=tool_id)
-
-    return render(request,'ToolMgmt/detail.html',{'tool':tool})
+	if request.method == 'GET':
+		tool = Tool.objects.get(pk=tool_id)
+		return render(request,'ToolMgmt/detail.html',{'tool':tool})
+	else:
+		return HttpResponse("Post called")
