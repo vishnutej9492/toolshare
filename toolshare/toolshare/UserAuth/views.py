@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.views import generic
 from UserAuth.forms import LoginForm,RegisterForm
 from django.views.generic.edit import FormView
+from UserAuth.models import UserProfile
 
 # Create your views here.
 class LoginView(FormView):
@@ -16,15 +17,14 @@ class LoginView(FormView):
    
 #When a post is called after the user submits the page.
     def post(self, request,*args, **kwargs):
-            print ("Post called")
+            current_UP = UserProfile()
+            current_UP = current_UP.Authenticate_UP(request)
             #context = RequestContext(request)
-            username = request.POST['username']
-            password = request.POST['password']
-            if Tooler:
-                if Tooler.is_active:
+            if current_UP:
+                if current_UP.is_active:
                     return HttpResponse("Logged in Successfully")
                 else:
-                    return HttpResponse("Your account is disabled")
+                    return HttpResponse("Your account is disabled/does not exist")
             else:
                 return HttpResponse("Invalid login details supplied.")
 
@@ -37,6 +37,10 @@ class RegisterView(FormView):
         form = self.form_class(initial=self.initial)
         return render(request, self.template_name, {'form':form})
     #When page posts
-    def post(self, request, *args, **kwargs):
-        return HttpResponse("Post Called")
-
+    def post(self, request, *args, **kwargs): 
+        form = self.form_class(initial=self.initial)
+        form.CreateUserProfile(request)
+        #Get all the information from Form
+        #Set all the values from RegisterForm to the Tooler Model
+        #Save the Tooler Model
+        return HttpResponse("User Created successfully!")
