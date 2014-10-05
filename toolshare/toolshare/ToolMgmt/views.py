@@ -7,4 +7,6 @@ def index(request):
     return render(request, 'ToolMgmt/index.html', {'all_tools': all_tools})
 
 def detail(request,tool_id):
-     return HttpResponse("You are looking at tool %s." % tool_id)
+    tool = Tool.objects.get(pk=tool_id)
+
+    return render(request,'ToolMgmt/detail.html',{'tool':tool})
