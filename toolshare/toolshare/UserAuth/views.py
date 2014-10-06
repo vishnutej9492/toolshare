@@ -1,46 +1,82 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views import generic
-from UserAuth.forms import LoginForm,RegisterForm
+from UserAuth.forms import UserForm, UserProfileForm, UserEdit1Form
 from django.views.generic.edit import FormView
 from UserAuth.models import UserProfile
+from django.template import RequestContext
+from django.shortcuts import render_to_response
+from django.contrib.auth import authenticate, login
 
-# Create your views here.
-class LoginView(FormView):
-    form_class = LoginForm
-    template_name = 'UserAuth/signin.html'
- #When page loads
-    def get(self, request, *args, **kwargs):
-        #return HttpResponse ("Get Called")
-        form = self.form_class(initial=self.initial)
-        return render(request, self.template_name, {'form': form})
-   
-#When a post is called after the user submits the page.
-    def post(self, request,*args, **kwargs):
-            current_UP = UserProfile()
-            current_UP = current_UP.Authenticate_UP(request)
-            #context = RequestContext(request)
-            if current_UP:
-                if current_UP.is_active:
-                    return HttpResponse("Logged in Successfully")
-                else:
-                    return HttpResponse("Your account is disabled/does not exist")
+def register(request):
+    context = RequestContext(request)
+    registered=False
+    if request.method == 'POST':
+        user_form= UserForm(data=request.POST)
+        profile_form= UserProfileForm(data=request.POST)
+        if user_form.is_valid() and profile_form.is_valid():
+            user=user_form.save()
+            user.set_password(user.password)
+            user.save()
+            profile=profile_form.save(commit=False)
+            profile.user=user
+            profile.save()
+            registered=True
+ #       else:
+ #           print user_form.erorrs,profile_form.errors
+    else:
+        user_form= UserForm()
+        profile_form= UserProfileForm()
+
+    return render_to_response(
+        'UserAuth/register.html',
+        {'user_form': user_form, 'profile_form':profile_form, 'registered':registered},
+        context)
+
+def user_login(request):
+    context = RequestContext(request)
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        info= {username : password}
+        request.session['info']= info
+        user = authenticate(username=username, password=password)
+        if user:
+            if user.is_active:
+                login(request,user)
+                return HttpResponse("Successful")
+                return render(request, 'UserAuth/login.html')
             else:
-                return HttpResponse("Invalid login details supplied.")
+                return HttpResponse("Not Successful")
+        else:
+            return HttpResponse("Invalid login")
+    else:
+        return render_to_response('UserAuth/login.html',{},context)
 
-class RegisterView(FormView):
-    form_class = RegisterForm
-    template_name = 'UserAuth/Register.html'
+def user_edit1(request):
+    context = RequestContext(request)
+    edited1=False
+    info = request.session.get('info',None)
+    user=authenticate(info.username,info.password)
+    if user:
+        if request.method == 'POST':
+            edit1_form= UserEdit1Form(data=request.POST)
+            profile_form= UserProfileForm(data=request.POST)
+            if edit1_form.is_valid() and profile_form.is_valid():
+                user=edit1_form.save()
+                user.set_password(user.password)
+                user.save()
+                profile=profile_form.save(commit=False)
+                profile.user=user
+                profile.save()
+                edited1=True
+        else:
+            edit1_form= UserEdit1Form()
+            profile_form= UserProfileForm()
 
-    #When page loads
-    def get(self, request, *args, **kwargs):
-        form = self.form_class(initial=self.initial)
-        return render(request, self.template_name, {'form':form})
-    #When page posts
-    def post(self, request, *args, **kwargs): 
-        form = self.form_class(initial=self.initial)
-        form.CreateUserProfile(request)
-        #Get all the information from Form
-        #Set all the values from RegisterForm to the Tooler Model
-        #Save the Tooler Model
-        return HttpResponse("User Created successfully!")
+    return render_to_response(
+        'UserAuth/edit1.html',
+        {'edit1_form':edit1_form,'profile_form':profile_form,'edited1':edited1},
+        context)
+    return render(request,'UserAuth/edit1.html',{'info':info})
+            
