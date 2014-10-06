@@ -9,7 +9,6 @@ def index(request):
     all_tools = Tool.objects.all()
     return render(request, 'ToolMgmt/index.html', {'all_tools': all_tools})
 
-
 class RegisterTool(FormView):
     form_class = ToolForm
     template_name = 'ToolMgmt/register.html'
@@ -30,11 +29,9 @@ def detail(request, tool_id):
         return render(request, 'ToolMgmt/detail.html', {'tool': tool})
     else:
         tool = Tool.objects.get(pk=tool_id)
-        if tool.active == True:
+        if tool.active:
             tool.active = False
         else:
             tool.active = True
         tool.save()
         return HttpResponse('Status Changed')
-
-
