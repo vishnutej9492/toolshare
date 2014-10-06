@@ -12,3 +12,10 @@ def detail(request,tool_id):
 		return render(request,'ToolMgmt/detail.html',{'tool':tool})
 	else:
 		return HttpResponse("Post called")
+
+#def trigger():
+	#if (Tool.active == True):
+	#	Tool.active = False
+	#elif (Tool.active == False):
+	#	Tool.active = True
+

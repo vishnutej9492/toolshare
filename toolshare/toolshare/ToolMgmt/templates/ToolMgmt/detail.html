@@ -1,6 +1,6 @@
 
 <h1>Tool Detail</h1>
-<form action="/toolmgmt/1/" method="post">
+<form action="{% url 'toolmgmt:detail' tool.id %}" method="post">
   <table>
     {% csrf_token %}
     <thead>
@@ -30,4 +30,4 @@
     </tr>
     </thead>
   </table>
-<button type="submit">priyank</button>
+<button type="submit">Submit</button>
