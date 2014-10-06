@@ -20,6 +20,7 @@ class RegisterTool(FormView):
         form = self.form_class(initial=self.initial)
         form.register(request)
         return HttpResponse('Tool created')
+        
 def detail(request,tool_id):
 	if request.method == 'GET':
 		tool = Tool.objects.get(pk=tool_id)
