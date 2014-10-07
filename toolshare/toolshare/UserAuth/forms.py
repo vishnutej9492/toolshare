@@ -18,8 +18,10 @@ class UserProfileForm(forms.ModelForm):
         fields= ('add_line1','add_line2','zipcode')
 
 class UserEdit1Form(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(),label='Password',max_length=16)
-
     class Meta:
         model = User
         fields= ('email','password','first_name','last_name')
+    
+    password = forms.CharField(widget=forms.PasswordInput(),label='Password',max_length=16,required=False)
+
+    

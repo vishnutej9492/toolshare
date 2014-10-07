@@ -1,5 +1,3 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
 from django.views import generic
 from UserAuth.forms import UserForm, UserProfileForm, UserEdit1Form
 from django.views.generic.edit import FormView
@@ -8,7 +6,8 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-
+import pdb
+from django.http import HttpResponseRedirect,HttpResponse
 @login_required(login_url='/login/login')
 def index(request):
     context = RequestContext(request)
@@ -22,7 +21,8 @@ def register(request):
         profile_form= UserProfileForm(data=request.POST)
         if user_form.is_valid() and profile_form.is_valid():
             user=user_form.save()
-            user.set_password(user.password)
+            if user.password:
+                user.set_password(user.password)
             user.save()
             profile=profile_form.save(commit=False)
             profile.user=user
@@ -68,11 +68,19 @@ def user_logout(request):
 def user_edit1(request):
     context = RequestContext(request)
     edited1=False
+    user1 = request.user
     user1=authenticate()
+    #instill the instance in the form
+    edit1_form= UserEdit1Form(instance=request.user)
+    current_profile = UserProfile.objects.get(user = request.user)
+    profile_form= UserProfileForm(instance = current_profile)
+
     if request.method == 'POST':
-        edit1_form= UserEdit1Form(data=request.POST)
+        edit1_form= UserEdit1Form(data=request.POST,instance = request.user)
         profile_form= UserProfileForm(data=request.POST)
+        #pdb.set_trace()
         if edit1_form.is_valid() and profile_form.is_valid():
+            #pdb.set_trace()
             user=edit1_form.save()
             user.set_password(user.password)
             user.save()
@@ -80,12 +88,13 @@ def user_edit1(request):
             profile.user=user
             profile.save()
             edited1=True
+            return HttpResponseRedirect('/login/index')
         else:
-            edit1_form= UserEdit1Form()
-            profile_form= UserProfileForm()
+            print (edit1_form.errors, profile_form.errors)
+    else:
         return render_to_response(
             'UserAuth/edit1.html',
             {'edit1_form':edit1_form,'profile_form':profile_form,'edited1':edited1},
             context)
-    return render(request,'UserAuth/edit1.html')
+        return render(request,'UserAuth/edit1.html')
             

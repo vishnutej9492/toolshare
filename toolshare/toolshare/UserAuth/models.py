@@ -15,3 +15,12 @@ class UserProfile(models.Model):
 
     def __unicode__(self):
         return self.user.username
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            try:
+                p = UserProfile.objects.get(user=self.user)
+                self.pk = p.pk
+            except UserProfile.DoesNotExist:
+                pass
+        super(UserProfile, self).save(*args, **kwargs)
