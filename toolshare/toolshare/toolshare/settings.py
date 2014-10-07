@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'UserAuth',
     'localflavor',
+    'ToolMgmt',
 )
 
 MIDDLEWARE_CLASSES = (

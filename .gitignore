@@ -1,5 +1,7 @@
 # ignore resulting database
 *.sqlite3
+#ignore IDE file
+*.idea
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

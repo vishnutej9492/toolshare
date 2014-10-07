@@ -11,4 +11,5 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/', include('UserAuth.urls',namespace="UserAuth")),
     url(r'^$', include('UserAuth.urls',namespace="UserAuth")),
+    url(r'^toolmgmt/', include('ToolMgmt.urls', namespace="toolmgmt")),
 )
