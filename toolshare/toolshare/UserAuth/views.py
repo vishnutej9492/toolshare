@@ -6,7 +6,13 @@ from django.views.generic.edit import FormView
 from UserAuth.models import UserProfile
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+
+@login_required(login_url='/login/login')
+def index(request):
+    context = RequestContext(request)
+    return render_to_response('UserAuth/index.html', context)
 
 def register(request):
     context = RequestContext(request)
@@ -38,14 +44,14 @@ def user_login(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-        info= {username : password}
-        request.session['info']= info
+        request.session['username']= username
+        request.session['password']= password
         user = authenticate(username=username, password=password)
         if user:
             if user.is_active:
                 login(request,user)
-                return HttpResponse("Successful")
-                return render(request, 'UserAuth/login.html')
+                return HttpResponseRedirect('/login/index/')
+                #return render(request, 'UserAuth/edit1.html')
             else:
                 return HttpResponse("Not Successful")
         else:
@@ -53,30 +59,33 @@ def user_login(request):
     else:
         return render_to_response('UserAuth/login.html',{},context)
 
+@login_required(login_url='/login/login')
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect('/login/index/')
+
+@login_required(login_url='/login/login')
 def user_edit1(request):
     context = RequestContext(request)
     edited1=False
-    info = request.session.get('info',None)
-    user=authenticate(info.username,info.password)
-    if user:
-        if request.method == 'POST':
-            edit1_form= UserEdit1Form(data=request.POST)
-            profile_form= UserProfileForm(data=request.POST)
-            if edit1_form.is_valid() and profile_form.is_valid():
-                user=edit1_form.save()
-                user.set_password(user.password)
-                user.save()
-                profile=profile_form.save(commit=False)
-                profile.user=user
-                profile.save()
-                edited1=True
+    user1=authenticate()
+    if request.method == 'POST':
+        edit1_form= UserEdit1Form(data=request.POST)
+        profile_form= UserProfileForm(data=request.POST)
+        if edit1_form.is_valid() and profile_form.is_valid():
+            user=edit1_form.save()
+            user.set_password(user.password)
+            user.save()
+            profile=profile_form.save(commit=False)
+            profile.user=user
+            profile.save()
+            edited1=True
         else:
             edit1_form= UserEdit1Form()
             profile_form= UserProfileForm()
-
-    return render_to_response(
-        'UserAuth/edit1.html',
-        {'edit1_form':edit1_form,'profile_form':profile_form,'edited1':edited1},
-        context)
-    return render(request,'UserAuth/edit1.html',{'info':info})
+        return render_to_response(
+            'UserAuth/edit1.html',
+            {'edit1_form':edit1_form,'profile_form':profile_form,'edited1':edited1},
+            context)
+    return render(request,'UserAuth/edit1.html')
             
