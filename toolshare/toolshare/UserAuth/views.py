@@ -50,7 +50,7 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request,user)
-                return HttpResponseRedirect('/login/index/')
+                return HttpResponseRedirect('/home/')
                 #return render(request, 'UserAuth/edit1.html')
             else:
                 return HttpResponse("Not Successful")
@@ -62,7 +62,7 @@ def user_login(request):
 @login_required(login_url='/login/login')
 def user_logout(request):
     logout(request)
-    return HttpResponseRedirect('/login/index/')
+    return HttpResponseRedirect('/home')
 
 @login_required(login_url='/login/login')
 def user_edit1(request):
@@ -88,7 +88,7 @@ def user_edit1(request):
             profile.user=user
             profile.save()
             edited1=True
-            return HttpResponseRedirect('/login/index')
+            return HttpResponseRedirect('/home')
         else:
             print (edit1_form.errors, profile_form.errors)
     else:
