@@ -55,7 +55,7 @@ def user_login(request):
             else:
                 return HttpResponse("Not Successful")
         else:
-            return HttpResponse("Invalid login")
+            return HttpResponseRedirect('/home/')
     else:
         return render_to_response('UserAuth/login.html',{},context)
 
