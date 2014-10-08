@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from ToolMgmt.models import Tool
 from ToolMgmt.forms import ToolForm
@@ -34,4 +34,4 @@ def detail(request, tool_id):
         else:
             tool.active = True
         tool.save()
-        return HttpResponse('Status Changed')
+        return HttpResponseRedirect('/toolmgmt/' + tool_id)
