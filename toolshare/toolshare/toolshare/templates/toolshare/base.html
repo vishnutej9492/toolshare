@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>
+      {% block title_html %}{% endblock %}
+    </title>
+  </head>
+  <body>
+    <header>
+      <a href="/home">home</a> |
+      <a href="/about">about</a> |
+      {% if user.is_authenticated %}
+        <a href="/toolmgmt">Tool listing</a> |
+        <a href="/login/edit1/">Edit profile</a> |
+        {{ user.username }}(<a href="/login/logout/">Logout</a>)
+      {% else %}
+        <a href="/login/login/">Login</a>
+      {% endif %}
+    </header>
+    <h1>
+      ToolShare webapp {% block h1 %}{% endblock %}
+    </h1>
+    <article>
+      {% block article_content %}{% endblock %}
+    </article>
+    <footer>
+      <div class="footer">SWEN 610 - RIT, Rochester, NY - 2014</div>
+    </footer>
+  </body>
+</html>
