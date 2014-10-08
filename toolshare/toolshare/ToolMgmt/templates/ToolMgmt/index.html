@@ -7,6 +7,7 @@
         <td>Name</td>
         <td>Description</td>
         <td>Status</td>
+        <td>Owner</td>
       </tr>
     </thead>
     <tbody>
@@ -16,6 +17,7 @@
         <td>{{ tool.name }}</td>
         <td>{{ tool.description }}</td>
         <td>{{ tool.status }}</td>
+        <td>{{ user.username }}</td>
       </tr>
     {% endfor %}
     </tbody>
