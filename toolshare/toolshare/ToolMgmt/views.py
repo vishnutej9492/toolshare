@@ -20,7 +20,7 @@ class RegisterTool(FormView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(initial=self.initial)
         form.register(request)
-        return HttpResponse('Tool created')
+        return HttpResponseRedirect('/toolmgmt')
 
 
 def detail(request, tool_id):
