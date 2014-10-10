@@ -15,13 +15,16 @@ class UserForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields= ('add_line1','add_line2','zipcode')
+        fields= ('add_line1','add_line2','zipcode','reminder_preferences','pickup_loc')
 
 class UserEdit1Form(forms.ModelForm):
     class Meta:
         model = User
         fields= ('email','password','first_name','last_name')
-    
-    password = forms.CharField(widget=forms.PasswordInput(),label='Password',max_length=16,required=False)
+        
+    password = forms.CharField(widget=forms.PasswordInput(render_value = True),label='Password',max_length=16,required=False)
 
-    
+class UserPreferences(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('reminder_preferences','pickup_loc')

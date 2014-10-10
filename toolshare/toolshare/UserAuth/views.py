@@ -8,10 +8,21 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import pdb
 from django.http import HttpResponseRedirect,HttpResponse
+from django.contrib.auth.forms import PasswordChangeForm
+from django import forms
+from django.core import validators
+
 @login_required(login_url='/login/login')
 def index(request):
     context = RequestContext(request)
     return render_to_response('UserAuth/index.html', context)
+
+@login_required(login_url='/login/login')
+def user_preferences(request):
+    context = RequestContext(request)
+    form = UserPreferences()
+    return HttpResponse("Test")
+    #return render_to_response('UserAuth/preferences',{'form':form,context},context)
 
 def register(request):
     context = RequestContext(request)
@@ -69,7 +80,6 @@ def user_edit1(request):
     context = RequestContext(request)
     edited1=False
     user1 = request.user
-    user1=authenticate()
     #instill the instance in the form
     edit1_form= UserEdit1Form(instance=request.user)
     current_profile = UserProfile.objects.get(user = request.user)
@@ -78,10 +88,9 @@ def user_edit1(request):
     if request.method == 'POST':
         edit1_form= UserEdit1Form(data=request.POST,instance = request.user)
         profile_form= UserProfileForm(data=request.POST)
-        #pdb.set_trace()
         if edit1_form.is_valid() and profile_form.is_valid():
-            #pdb.set_trace()
             user=edit1_form.save()
+            #if user.password is not None and len(user.password) > 0:
             user.set_password(user.password)
             user.save()
             profile=profile_form.save(commit=False)
@@ -97,4 +106,23 @@ def user_edit1(request):
             {'edit1_form':edit1_form,'profile_form':profile_form,'edited1':edited1},
             context)
         return render(request,'UserAuth/edit1.html')
-            
+
+@login_required(login_url='/login/')
+def changepassword(request):
+    changepasswordform = PasswordChangeForm(request.user,data = request.POST) 
+    context = RequestContext(request)
+    if request.method == 'POST':
+        #pdb.set_trace()
+        if changepasswordform.is_valid():
+            #changepasswordform.clean()
+            changepasswordform.save()
+            #user.save()
+            return HttpResponse("Your password has been changed")
+        else:
+            #return HttpResponse(changepasswordform.errors)
+            raise ValidationError(changepasswordform.errors)
+    else:
+        return render_to_response(
+                'UserAuth/changepassword.html',
+                {'changepasswordform':changepasswordform},
+                context)
