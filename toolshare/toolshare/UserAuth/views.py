@@ -13,7 +13,6 @@ from django import forms
 from django.core import validators
 from django.contrib import messages
 
-
 @login_required(login_url='/login/login')
 def index(request):
     context = RequestContext(request)
@@ -24,7 +23,6 @@ def user_preferences(request):
     context = RequestContext(request)
     form = UserPreferences()
     return HttpResponse("Test")
-    #return render_to_response('UserAuth/preferences',{'form':form,context},context)
 
 def register(request):
     context = RequestContext(request)
@@ -64,6 +62,7 @@ def user_login(request):
             if user.is_active:
                 login(request,user)
                 messages.add_message(request, messages.SUCCESS, 'Successfully logged in')
+                return HttpResponseRedirect('/home/')
             else:
                 messages.add_message(request, messages.ERROR, 'User is not active')
         else:
@@ -93,6 +92,7 @@ def user_edit1(request):
         profile_form= UserProfileForm(data=request.POST)
         if edit1_form.is_valid() and profile_form.is_valid():
             user=edit1_form.save()
+            #if user.password is not None and len(user.password) > 0:
             user.set_password(user.password)
             user.save()
             profile=profile_form.save(commit=False)
