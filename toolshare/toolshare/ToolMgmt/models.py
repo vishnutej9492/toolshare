@@ -1,4 +1,5 @@
 from django.db import models
+from UserAuth.models import UserProfile
 
 class ToolCategory(models.Model):
     name = models.CharField(verbose_name="Name", max_length=100)
@@ -20,6 +21,7 @@ class Tool(models.Model):
     active = models.BooleanField(default=True)
     category = models.ForeignKey(ToolCategory)
     status = models.ForeignKey(ToolStatus)
+    owner = models.ForeignKey(UserProfile, null=True)
 
     def __str__(self):
         return self.name

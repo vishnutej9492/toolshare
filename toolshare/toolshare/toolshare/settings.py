@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'UserAuth',
     'localflavor',
     'ToolMgmt',
+    'south',
 )
 
 MIDDLEWARE_CLASSES = (

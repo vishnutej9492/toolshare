@@ -15,6 +15,7 @@
           <td>Name</td>
           <td>Description</td>
           <td>Status</td>
+          <td>Owner</td>
           <td></td>
         </tr>
       </thead>
@@ -25,6 +26,7 @@
           <td>{{ tool.name }}</td>
           <td>{{ tool.description }}</td>
           <td>{{ tool.status }}</td>
+          <td>{{ tool.owner }}</td>
           <td><a href="/toolmgmt/{{tool.id}}">show</a></td>
         </tr>
       {% endfor %}
