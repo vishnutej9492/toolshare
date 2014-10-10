@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title_html %}
+  Register
+{% endblock %}
+{% block h1 %}
+  {{ bloc.super }}
+{% endblock %}
+{% block article_content %}
+    <h1>Register</h1>
+
+    {% if registered %}
+    <strong> thank you for registering!</strong>
+    {% else %}
+    <strong>register here!</strong><br />
+
+    <form id="user_form" method="post" action="/login/register/" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        {{ profile_form.as_p }}
+        <input type="submit" name="submit" value="Register" />
+    </form>
+    {% endif %}
+{% endblock %}

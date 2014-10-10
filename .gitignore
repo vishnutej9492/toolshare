@@ -1,5 +1,7 @@
 # ignore resulting database
 *.sqlite3
+#ignore IDE file
+*.idea
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -66,3 +68,5 @@ docs/_build/
 *.swp
 *.swo
 
+#exlude Mac proprietory extension files for Folders
+*.DS_Store
