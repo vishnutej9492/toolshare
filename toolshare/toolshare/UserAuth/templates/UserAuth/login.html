@@ -1,20 +1,19 @@
-<!DOCTYPE html>
-<html>
-    <head>
-    </head>
-
-    <body>
-        <h1>Login</h1>
-
-        <form id="login_form" method="post" action="/login/login/">
-            {% csrf_token %}
-            Username: <input type="text" name="username" value="" size="50" />
-            <br />
-            Password: <input type="password" name="password" value="" size="50" />
-            <br />
-
-            <input type="submit" value="submit" />
-        </form>
-
-    </body>
-</html>
+{% extends "base.html" %}
+{% block title_html %}
+  Login
+{% endblock %}
+{% block h1 %}
+  {{ bloc.super }}
+{% endblock %}
+{% block article_content %}
+    <h1>Login</h1>
+    <form id="login_form" method="post" action="/login/login/">
+        {% csrf_token %}
+        Username: <input type="text" name="username" value="" size="50" /> <br />
+        Password: <input type="password" name="password" value="" size="50" /> <br />
+        <input type="submit" value="submit" />
+        <br/>
+        <br/>
+        <a href="{%url 'UserAuth:register'%}">Register! </a>
+    </form>
+{% endblock %}

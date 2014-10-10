@@ -8,10 +8,23 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import pdb
 from django.http import HttpResponseRedirect,HttpResponse
+from django.contrib.auth.forms import PasswordChangeForm
+from django import forms
+from django.core import validators
+from django.contrib import messages
+
+
 @login_required(login_url='/login/login')
 def index(request):
     context = RequestContext(request)
     return render_to_response('UserAuth/index.html', context)
+
+@login_required(login_url='/login/login')
+def user_preferences(request):
+    context = RequestContext(request)
+    form = UserPreferences()
+    return HttpResponse("Test")
+    #return render_to_response('UserAuth/preferences',{'form':form,context},context)
 
 def register(request):
     context = RequestContext(request)
@@ -27,9 +40,9 @@ def register(request):
             profile=profile_form.save(commit=False)
             profile.user=user
             profile.save()
+            messages.add_message(request, messages.SUCCESS, 'Successfully registered.')
             registered=True
- #       else:
- #           print user_form.erorrs,profile_form.errors
+            return HttpResponseRedirect('/home')
     else:
         user_form= UserForm()
         profile_form= UserProfileForm()
@@ -50,26 +63,26 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request,user)
-                return HttpResponseRedirect('/login/index/')
-                #return render(request, 'UserAuth/edit1.html')
+                messages.add_message(request, messages.SUCCESS, 'Successfully logged in')
             else:
-                return HttpResponse("Not Successful")
+                messages.add_message(request, messages.ERROR, 'User is not active')
         else:
-            return HttpResponse("Invalid login")
+            messages.add_message(request, messages.WARNING, 'Wrong username or password')
+        return HttpResponseRedirect('/home')
     else:
         return render_to_response('UserAuth/login.html',{},context)
 
 @login_required(login_url='/login/login')
 def user_logout(request):
     logout(request)
-    return HttpResponseRedirect('/login/index/')
+    messages.add_message(request, messages.SUCCESS, 'Successfully logged out')
+    return HttpResponseRedirect('/home')
 
 @login_required(login_url='/login/login')
 def user_edit1(request):
     context = RequestContext(request)
     edited1=False
     user1 = request.user
-    user1=authenticate()
     #instill the instance in the form
     edit1_form= UserEdit1Form(instance=request.user)
     current_profile = UserProfile.objects.get(user = request.user)
@@ -78,9 +91,7 @@ def user_edit1(request):
     if request.method == 'POST':
         edit1_form= UserEdit1Form(data=request.POST,instance = request.user)
         profile_form= UserProfileForm(data=request.POST)
-        #pdb.set_trace()
         if edit1_form.is_valid() and profile_form.is_valid():
-            #pdb.set_trace()
             user=edit1_form.save()
             user.set_password(user.password)
             user.save()
@@ -88,13 +99,32 @@ def user_edit1(request):
             profile.user=user
             profile.save()
             edited1=True
-            return HttpResponseRedirect('/login/index')
+            messages.add_message(request, messages.SUCCESS, 'Successfully updated.')
+            return HttpResponseRedirect('/home')
         else:
-            print (edit1_form.errors, profile_form.errors)
+            messages.add_message(request, messages.ERROR, profile_form.errors)
+            return HttpResponseRedirect('/login/edit1')
     else:
         return render_to_response(
             'UserAuth/edit1.html',
             {'edit1_form':edit1_form,'profile_form':profile_form,'edited1':edited1},
             context)
         return render(request,'UserAuth/edit1.html')
-            
+
+@login_required(login_url='/login/')
+def changepassword(request):
+    changepasswordform = PasswordChangeForm(request.user,data = request.POST) 
+    context = RequestContext(request)
+    if request.method == 'POST':
+        if changepasswordform.is_valid():
+            changepasswordform.save()
+            messages.add_message(request, messages.SUCCESS, 'Your password has been changed')
+            return HttpResponseRedirect('/home')
+        else:
+            messages.add_message(request, messages.ERROR, changepasswordform.errors)
+            return HttpResponseRedirect('/login/change_password')
+    else:
+        return render_to_response(
+                'UserAuth/changepassword.html',
+                {'changepasswordform':changepasswordform},
+                context)
