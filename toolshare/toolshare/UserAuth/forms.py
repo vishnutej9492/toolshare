@@ -20,10 +20,8 @@ class UserProfileForm(forms.ModelForm):
 class UserEdit1Form(forms.ModelForm):
     class Meta:
         model = User
-        fields= ('email','password','first_name','last_name')
+        fields= ('email', 'first_name','last_name')
         
-    password = forms.CharField(widget=forms.PasswordInput(render_value = True),label='Password',max_length=16,required=False)
-
 class UserPreferences(forms.ModelForm):
     class Meta:
         model = UserProfile

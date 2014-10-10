@@ -93,7 +93,6 @@ def user_edit1(request):
         profile_form= UserProfileForm(data=request.POST)
         if edit1_form.is_valid() and profile_form.is_valid():
             user=edit1_form.save()
-            #if user.password is not None and len(user.password) > 0:
             user.set_password(user.password)
             user.save()
             profile=profile_form.save(commit=False)
@@ -103,8 +102,8 @@ def user_edit1(request):
             messages.add_message(request, messages.SUCCESS, 'Successfully updated.')
             return HttpResponseRedirect('/home')
         else:
-            messages.add_message(request, messages.ERROR, 'Cannot edit.')
-            print (edit1_form.errors, profile_form.errors)
+            messages.add_message(request, messages.ERROR, profile_form.errors)
+            return HttpResponseRedirect('/login/edit1')
     else:
         return render_to_response(
             'UserAuth/edit1.html',
@@ -117,15 +116,13 @@ def changepassword(request):
     changepasswordform = PasswordChangeForm(request.user,data = request.POST) 
     context = RequestContext(request)
     if request.method == 'POST':
-        #pdb.set_trace()
         if changepasswordform.is_valid():
-            #changepasswordform.clean()
             changepasswordform.save()
-            #user.save()
-            return HttpResponse("Your password has been changed")
+            messages.add_message(request, messages.SUCCESS, 'Your password has been changed')
+            return HttpResponseRedirect('/home')
         else:
-            #return HttpResponse(changepasswordform.errors)
-            raise ValidationError(changepasswordform.errors)
+            messages.add_message(request, messages.ERROR, changepasswordform.errors)
+            return HttpResponseRedirect('/login/change_password')
     else:
         return render_to_response(
                 'UserAuth/changepassword.html',
