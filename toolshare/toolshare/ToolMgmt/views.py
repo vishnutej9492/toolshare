@@ -3,11 +3,16 @@ from django.shortcuts import render
 from ToolMgmt.models import Tool
 from ToolMgmt.forms import ToolForm
 from django.views.generic.edit import FormView
-
+from UserAuth.models import UserProfile
 
 def index(request):
     all_tools = Tool.objects.all()
     return render(request, 'ToolMgmt/index.html', {'all_tools': all_tools})
+
+def mytools(request):
+    currentprofile = UserProfile.objects.get( user = request.user)
+    my_tools = Tool.objects.filter( owner = currentprofile)
+    return render(request, 'ToolMgmt/mytools.html', {'my_tools': my_tools})
 
 class RegisterTool(FormView):
     form_class = ToolForm
