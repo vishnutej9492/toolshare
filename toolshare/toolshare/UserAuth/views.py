@@ -8,6 +8,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import pdb
 from django.http import HttpResponseRedirect,HttpResponse
+from django.contrib import messages
+
 @login_required(login_url='/login/login')
 def index(request):
     context = RequestContext(request)
@@ -27,9 +29,9 @@ def register(request):
             profile=profile_form.save(commit=False)
             profile.user=user
             profile.save()
+            messages.add_message(request, messages.SUCCESS, 'Successfully registered.')
             registered=True
- #       else:
- #           print user_form.erorrs,profile_form.errors
+            return HttpResponseRedirect('/home')
     else:
         user_form= UserForm()
         profile_form= UserProfileForm()
@@ -50,18 +52,19 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request,user)
-                return HttpResponseRedirect('/home/')
-                #return render(request, 'UserAuth/edit1.html')
+                messages.add_message(request, messages.SUCCESS, 'Successfully logged in')
             else:
-                return HttpResponse("Not Successful")
+                messages.add_message(request, messages.ERROR, 'User is not active')
         else:
-            return HttpResponseRedirect('/home/')
+            messages.add_message(request, messages.WARNING, 'Wrong username or password')
+        return HttpResponseRedirect('/home')
     else:
         return render_to_response('UserAuth/login.html',{},context)
 
 @login_required(login_url='/login/login')
 def user_logout(request):
     logout(request)
+    messages.add_message(request, messages.SUCCESS, 'Successfully logged out')
     return HttpResponseRedirect('/home')
 
 @login_required(login_url='/login/login')
@@ -78,9 +81,7 @@ def user_edit1(request):
     if request.method == 'POST':
         edit1_form= UserEdit1Form(data=request.POST,instance = request.user)
         profile_form= UserProfileForm(data=request.POST)
-        #pdb.set_trace()
         if edit1_form.is_valid() and profile_form.is_valid():
-            #pdb.set_trace()
             user=edit1_form.save()
             user.set_password(user.password)
             user.save()
@@ -88,8 +89,10 @@ def user_edit1(request):
             profile.user=user
             profile.save()
             edited1=True
+            messages.add_message(request, messages.SUCCESS, 'Successfully updated.')
             return HttpResponseRedirect('/home')
         else:
+            messages.add_message(request, messages.ERROR, 'Cannot edit.')
             print (edit1_form.errors, profile_form.errors)
     else:
         return render_to_response(
