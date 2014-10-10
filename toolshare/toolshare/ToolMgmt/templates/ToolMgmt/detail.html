@@ -1,33 +1,43 @@
- 
-<h1>Tool Detail</h1>
-<form action="{% url 'toolmgmt:detail' tool.id %}" method="post">
-  <table>
-    {% csrf_token %}
-    <thead>
-      <tr>
-        <td>ID:</td>
-        <td>{{ tool.id}}</td>
-      </tr>
-    <tr>
-        <td>Name:</td>
-        <td>{{ tool.name }}</td>
-    </tr>
-    <tr>
-        <td>Description:</td>
-        <td>{{ tool.description }}</td>
-    </tr>
-    <tr>
-        <td>Active:</td>
-        <td>{{ tool.active }}</td>
-    </tr>
-    <tr>
-        <td>Category:</td>
-        <td>{{ tool.category }}</td>
-    </tr>
-    <tr>
-        <td>Status:</td>
-        <td>{{ tool.status }}</td>
-    </tr>
-    </thead>
-  </table>
-<button type="submit">Submit</button>
+{% extends "base.html" %}
+{% block title_html %}
+  Tool detail
+{% endblock %}
+{% block h1 %}
+  {{ bloc.super }}
+{% endblock %}
+{% block article_content %} 
+    <h1>Tool Detail</h1>
+    <form action="{% url 'toolmgmt:detail' tool.id %}" method="post">
+      <table>
+        {% csrf_token %}
+        <thead>
+          <tr>
+            <td>ID:</td>
+            <td>{{ tool.id}}</td>
+          </tr>
+        <tr>
+            <td>Name:</td>
+            <td>{{ tool.name }}</td>
+        </tr>
+        <tr>
+            <td>Description:</td>
+            <td>{{ tool.description }}</td>
+        </tr>
+        <tr>
+            <td>Active:</td>
+            <td>{{ tool.active }}</td>
+        </tr>
+        <tr>
+            <td>Category:</td>
+            <td>{{ tool.category }}</td>
+        </tr>
+        <tr>
+            <td>Status:</td>
+            <td>{{ tool.status }}</td>
+        </tr>
+        </thead>
+      </table>
+    <button type="submit">Activate/Deactivate</button>
+    <br>
+    <a href="/toolmgmt">Back</a> | <a href="#">Edit tool</a>
+{% endblock %}

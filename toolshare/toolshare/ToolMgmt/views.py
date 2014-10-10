@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from ToolMgmt.models import Tool
 from ToolMgmt.forms import ToolForm
@@ -20,7 +20,7 @@ class RegisterTool(FormView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(initial=self.initial)
         form.register(request)
-        return HttpResponse('Tool created')
+        return HttpResponseRedirect('/toolmgmt')
 
 
 def detail(request, tool_id):
@@ -34,4 +34,4 @@ def detail(request, tool_id):
         else:
             tool.active = True
         tool.save()
-        return HttpResponse('Status Changed')
+        return HttpResponseRedirect('/toolmgmt/' + tool_id)
