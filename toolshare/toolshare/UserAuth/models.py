@@ -30,6 +30,9 @@ class UserProfile(models.Model):
     def __unicode__(self):
         return self.user.username
 
+    def __str__(self):
+        return self.user.username
+
     def save(self, *args, **kwargs):
         if not self.pk:
             try:
