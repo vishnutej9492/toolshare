@@ -4,6 +4,7 @@ from ToolMgmt.models import Tool
 from ToolMgmt.forms import ToolForm
 from django.views.generic.edit import FormView
 from UserAuth.models import UserProfile
+from django.contrib import messages
 
 def index(request):
     all_tools = Tool.objects.all()
@@ -25,6 +26,7 @@ class RegisterTool(FormView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(initial=self.initial)
         form.register(request)
+        messages.add_message(request, messages.SUCCESS, 'Tool successfully created')
         return HttpResponseRedirect('/toolmgmt')
 
 
