@@ -8,7 +8,6 @@ class ToolForm(ModelForm):
         fields = ['name', 'description', 'category', 'status']
 
     def register(self, request):
-        print("hola")
         newTool  = Tool(name = request.POST['name'], 
                         description = request.POST['description'],
                         active = True,
