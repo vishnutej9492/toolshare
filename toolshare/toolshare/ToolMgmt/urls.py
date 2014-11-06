@@ -5,7 +5,7 @@ from django.views.generic import RedirectView
 urlpatterns = patterns('',
     url(r'^$', RedirectView.as_view(url='tools/', permanent=False), name='tools'),
     url(r'^tools/$', views.index, name='tools'),
-    url(r'^mytools/', views.mytools, name='mytools'),
+    url(r'^tools/mytools/', views.mytools, name='mytools'),
     url(r'^register/$', views.register, name="register"),
     url(r'^(?P<tool_id>\d+)/$', views.detail, name='detail'),
 )

@@ -10,8 +10,7 @@ def index(request):
     return render(request, 'ToolMgmt/index.html', {'all_tools': all_tools})
 
 def mytools(request):
-    currentprofile = UserProfile.objects.get( user = request.user)
-    my_tools = Tool.objects.filter( owner = currentprofile)
+    my_tools = Tool.objects.filter( owner = request.user.profile)
     return render(request, 'ToolMgmt/mytools.html', {'my_tools': my_tools})
 
 def register(request):
