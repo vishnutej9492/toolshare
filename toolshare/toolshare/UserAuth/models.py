@@ -19,7 +19,7 @@ class UserProfile(models.Model):
         (WEEKLY, 'In a Week'),
         (SOMETIMES, 'Sometimes'), # extensible.
     ) 
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, related_name='profile')
     add_line1 = models.CharField(verbose_name="Address Line 1",max_length = 100)
     add_line2 = models.CharField(verbose_name="Address Line 2",max_length = 100)
     zipcode = models.IntegerField(verbose_name ="Zipcode")
