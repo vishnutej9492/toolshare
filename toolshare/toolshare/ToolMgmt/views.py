@@ -27,7 +27,7 @@ def register(request):
                             category=category, status=status, owner = user_profile)
             new_tool.save()
             messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully created' % new_tool)
-            return HttpResponseRedirect('/toolmgmt/' + new_tool.id.__str__())
+            return HttpResponseRedirect('/toolmgmt/tools/' + new_tool.id.__str__())
         else:
             return render(request, 'ToolMgmt/register.html',{'form' : form})
     else:
@@ -55,4 +55,4 @@ def detail(request, tool_id):
         else:
             tool.active = True
         tool.save()
-        return HttpResponseRedirect('/toolmgmt/' + tool_id)
+        return HttpResponseRedirect('/toolmgmt/tools/' + tool_id)

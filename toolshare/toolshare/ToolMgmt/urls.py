@@ -7,5 +7,5 @@ urlpatterns = patterns('',
     url(r'^tools/$', views.index, name='tools'),
     url(r'^tools/mytools/', views.mytools, name='mytools'),
     url(r'^tools/register/$', views.register, name="register"),
-    url(r'^(?P<tool_id>\d+)/$', views.detail, name='detail'),
+    url(r'^tools/(?P<tool_id>\d+)/$', views.detail, name='detail'),
 )
