@@ -6,7 +6,7 @@
   {{ bloc.super }}
 {% endblock %}
 {% block article_content %}
-<form action="{%url 'UserAuth:preferences'%}" method="post">
+<form action={% url 'users:preferences' %} method="post">
     {{ form }} 
 </form>
 {% endblock %}

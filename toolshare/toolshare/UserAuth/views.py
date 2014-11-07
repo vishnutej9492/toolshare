@@ -13,12 +13,12 @@ from django import forms
 from django.core import validators
 from django.contrib import messages
 
-@login_required(login_url='/users/login')
+@login_required(login_url='users:login')
 def index(request):
     context = RequestContext(request)
     return render_to_response('UserAuth/index.html', context)
 
-@login_required(login_url='/users/login')
+@login_required(login_url='users:login')
 def user_preferences(request):
     context = RequestContext(request)
     form = UserPreferences()
@@ -70,13 +70,13 @@ def user_login(request):
     else:
         return render_to_response('UserAuth/login.html',{},context)
 
-@login_required(login_url='/users/login')
+@login_required(login_url='users:login')
 def user_logout(request):
     logout(request)
     messages.add_message(request, messages.SUCCESS, 'Successfully logged out')
     return HttpResponseRedirect('/home')
 
-@login_required(login_url='/users/login')
+@login_required(login_url='users:login')
 def user_edit(request):
     context = RequestContext(request)
     edited1=False
@@ -110,7 +110,7 @@ def user_edit(request):
             context)
         return render(request,'UserAuth/edit.html')
 
-@login_required(login_url='/users/')
+@login_required(login_url='users:login')
 def changepassword(request):
     changepasswordform = PasswordChangeForm(request.user,data = request.POST) 
     context = RequestContext(request)
