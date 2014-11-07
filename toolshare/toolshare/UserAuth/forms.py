@@ -24,7 +24,7 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         fields= ('add_line1','add_line2','zipcode','reminder_preferences','pickup_loc')
 
-class UserEdit1Form(forms.ModelForm):
+class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
         fields= ('email', 'first_name','last_name')

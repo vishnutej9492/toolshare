@@ -1,5 +1,5 @@
 from django.views import generic
-from UserAuth.forms import UserForm, UserProfileForm, UserEdit1Form
+from UserAuth.forms import UserForm, UserProfileForm, UserEditForm
 from django.views.generic.edit import FormView
 from UserAuth.models import UserProfile
 from django.template import RequestContext
@@ -77,20 +77,20 @@ def user_logout(request):
     return HttpResponseRedirect('/home')
 
 @login_required(login_url='/users/login')
-def user_edit1(request):
+def user_edit(request):
     context = RequestContext(request)
     edited1=False
     user1 = request.user
     #instill the instance in the form
-    edit1_form= UserEdit1Form(instance=request.user)
+    edit_form= UserEditForm(instance=request.user)
     current_profile = UserProfile.objects.get(user = request.user)
     profile_form= UserProfileForm(instance = current_profile)
 
     if request.method == 'POST':
-        edit1_form= UserEdit1Form(data=request.POST,instance = request.user)
+        edit_form= UserEditForm(data=request.POST,instance = request.user)
         profile_form= UserProfileForm(data=request.POST)
-        if edit1_form.is_valid() and profile_form.is_valid():
-            user=edit1_form.save()
+        if edit_form.is_valid() and profile_form.is_valid():
+            user=edit_form.save()
             #if user.password is not None and len(user.password) > 0:
             user.set_password(user.password)
             user.save()
@@ -105,10 +105,10 @@ def user_edit1(request):
             return HttpResponseRedirect('/users/edit')
     else:
         return render_to_response(
-            'UserAuth/edit1.html',
-            {'edit1_form':edit1_form,'profile_form':profile_form,'edited1':edited1},
+            'UserAuth/edit.html',
+            {'edit_form':edit_form,'profile_form':profile_form,'edited1':edited1},
             context)
-        return render(request,'UserAuth/edit1.html')
+        return render(request,'UserAuth/edit.html')
 
 @login_required(login_url='/users/')
 def changepassword(request):
