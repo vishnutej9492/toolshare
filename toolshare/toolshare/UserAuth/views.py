@@ -12,6 +12,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django import forms
 from django.core import validators
 from django.contrib import messages
+from django.core.urlresolvers import reverse
 
 @login_required(login_url='users:login')
 def index(request):
@@ -39,7 +40,7 @@ def register(request):
             profile.save()
             messages.add_message(request, messages.SUCCESS, 'Successfully registered.')
             registered=True
-            return HttpResponseRedirect('/home')
+            return HttpResponseRedirect(reverse('home'))
     else:
         user_form= UserForm()
         profile_form= UserProfileForm()
@@ -61,12 +62,12 @@ def user_login(request):
             if user.is_active:
                 login(request,user)
                 messages.add_message(request, messages.SUCCESS, 'Successfully logged in')
-                return HttpResponseRedirect('/home/')
+                return HttpResponseRedirect(reverse('home'))
             else:
                 messages.add_message(request, messages.ERROR, 'User is not active')
         else:
             messages.add_message(request, messages.WARNING, 'Wrong username or password')
-        return HttpResponseRedirect('/home')
+        return HttpResponseRedirect(reverse('home'))
     else:
         return render_to_response('UserAuth/login.html',{},context)
 
@@ -74,7 +75,7 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     messages.add_message(request, messages.SUCCESS, 'Successfully logged out')
-    return HttpResponseRedirect('/home')
+    return HttpResponseRedirect(reverse('home'))
 
 @login_required(login_url='users:login')
 def user_edit(request):
@@ -99,10 +100,10 @@ def user_edit(request):
             profile.save()
             edited1=True
             messages.add_message(request, messages.SUCCESS, 'Successfully updated.')
-            return HttpResponseRedirect('/home')
+            return HttpResponseRedirect(reverse('home'))
         else:
             messages.add_message(request, messages.ERROR, profile_form.errors)
-            return HttpResponseRedirect('/users/edit')
+            return HttpResponseRedirect(reverse('users:edit'))
     else:
         return render_to_response(
             'UserAuth/edit.html',
@@ -118,10 +119,10 @@ def changepassword(request):
         if changepasswordform.is_valid():
             changepasswordform.save()
             messages.add_message(request, messages.SUCCESS, 'Your password has been changed')
-            return HttpResponseRedirect('/home')
+            return HttpResponseRedirect(reverse('home'))
         else:
             messages.add_message(request, messages.ERROR, changepasswordform.errors)
-            return HttpResponseRedirect('/users/change_password')
+            return HttpResponseRedirect(reverse('users:change_password'))
     else:
         return render_to_response(
                 'UserAuth/changepassword.html',
