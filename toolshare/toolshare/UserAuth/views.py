@@ -102,7 +102,7 @@ def user_edit1(request):
             return HttpResponseRedirect('/home')
         else:
             messages.add_message(request, messages.ERROR, profile_form.errors)
-            return HttpResponseRedirect('/users/edit1')
+            return HttpResponseRedirect('/users/edit')
     else:
         return render_to_response(
             'UserAuth/edit1.html',

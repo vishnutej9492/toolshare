@@ -11,7 +11,7 @@
       {% if user.is_authenticated %}
         <a href="/toolmgmt/tools">Tool listing</a> |
         <a href="/toolmgmt/tools/mytools">My tools</a> |
-        <a href="/users/edit1/">Edit profile</a> |
+        <a href="/users/edit/">Edit profile</a> |
         {{ user.username }}(<a href="/users/logout/">Logout</a>)
       {% else %}
         <a href="/users/login/">Login</a>
