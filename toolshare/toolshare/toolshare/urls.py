@@ -13,6 +13,6 @@ urlpatterns = patterns('',
     url(r'^home/', TemplateView.as_view(template_name='home.html')),
     url(r'^about/', TemplateView.as_view(template_name='about.html')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^login/', include('UserAuth.urls',namespace="UserAuth")),
+    url(r'^users/', include('UserAuth.urls',namespace="UserAuth")),
     url(r'^toolmgmt/', include('ToolMgmt.urls', namespace="toolmgmt")),
 )

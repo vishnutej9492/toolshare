@@ -13,12 +13,12 @@ from django import forms
 from django.core import validators
 from django.contrib import messages
 
-@login_required(login_url='/login/login')
+@login_required(login_url='/users/login')
 def index(request):
     context = RequestContext(request)
     return render_to_response('UserAuth/index.html', context)
 
-@login_required(login_url='/login/login')
+@login_required(login_url='/users/login')
 def user_preferences(request):
     context = RequestContext(request)
     form = UserPreferences()
@@ -70,13 +70,13 @@ def user_login(request):
     else:
         return render_to_response('UserAuth/login.html',{},context)
 
-@login_required(login_url='/login/login')
+@login_required(login_url='/users/login')
 def user_logout(request):
     logout(request)
     messages.add_message(request, messages.SUCCESS, 'Successfully logged out')
     return HttpResponseRedirect('/home')
 
-@login_required(login_url='/login/login')
+@login_required(login_url='/users/login')
 def user_edit1(request):
     context = RequestContext(request)
     edited1=False
@@ -102,7 +102,7 @@ def user_edit1(request):
             return HttpResponseRedirect('/home')
         else:
             messages.add_message(request, messages.ERROR, profile_form.errors)
-            return HttpResponseRedirect('/login/edit1')
+            return HttpResponseRedirect('/users/edit1')
     else:
         return render_to_response(
             'UserAuth/edit1.html',
@@ -110,7 +110,7 @@ def user_edit1(request):
             context)
         return render(request,'UserAuth/edit1.html')
 
-@login_required(login_url='/login/')
+@login_required(login_url='/users/')
 def changepassword(request):
     changepasswordform = PasswordChangeForm(request.user,data = request.POST) 
     context = RequestContext(request)
@@ -121,7 +121,7 @@ def changepassword(request):
             return HttpResponseRedirect('/home')
         else:
             messages.add_message(request, messages.ERROR, changepasswordform.errors)
-            return HttpResponseRedirect('/login/change_password')
+            return HttpResponseRedirect('/users/change_password')
     else:
         return render_to_response(
                 'UserAuth/changepassword.html',

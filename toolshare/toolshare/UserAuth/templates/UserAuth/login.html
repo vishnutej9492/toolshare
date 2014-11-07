@@ -7,7 +7,7 @@
 {% endblock %}
 {% block article_content %}
     <h1>Login</h1>
-    <form id="login_form" method="post" action="/login/login/">
+    <form id="login_form" method="post" action="/users/login/">
         {% csrf_token %}
         Username: <input type="text" name="username" value="" size="50" /> <br />
         Password: <input type="password" name="password" value="" size="50" /> <br />
