@@ -67,7 +67,7 @@ def user_login(request):
                 messages.add_message(request, messages.ERROR, 'User is not active')
         else:
             messages.add_message(request, messages.WARNING, 'Wrong username or password')
-        return HttpResponseRedirect(reverse('home'))
+        return HttpResponseRedirect(reverse('users:login'))
     else:
         return render_to_response('UserAuth/login.html',{},context)
 
