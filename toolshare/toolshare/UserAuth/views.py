@@ -25,9 +25,9 @@ def user_preferences(request):
     form = UserPreferences()
     return HttpResponse("Test")
 
-def register(request):
+def sign_up(request):
     context = RequestContext(request)
-    registered=False
+    signed_up=False
     if request.method == 'POST':
         user_form= UserForm(data=request.POST)
         profile_form= UserProfileForm(data=request.POST)
@@ -38,17 +38,15 @@ def register(request):
             profile=profile_form.save(commit=False)
             profile.user=user
             profile.save()
-            messages.add_message(request, messages.SUCCESS, 'Successfully registered.')
-            registered=True
+            messages.add_message(request, messages.SUCCESS, 'Successfully signed up.')
+            signed_up=True
             return HttpResponseRedirect(reverse('home'))
     else:
         user_form= UserForm()
         profile_form= UserProfileForm()
 
     return render_to_response(
-        'UserAuth/register.html',
-        {'user_form': user_form, 'profile_form':profile_form, 'registered':registered},
-        context)
+        'UserAuth/sign_up.html', {'user_form': user_form, 'profile_form':profile_form, 'signed_up':signed_up}, context)
 
 def user_login(request):
     context = RequestContext(request)
