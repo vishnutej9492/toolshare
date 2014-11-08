@@ -3,5 +3,5 @@ from Sharing import views
 
 urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
-    url(r'^approve/', views.mytools, name='approve'),
+    url(r'^requests/', views.mytools, name='requests'),
 )
