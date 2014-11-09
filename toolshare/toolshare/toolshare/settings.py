@@ -96,3 +96,5 @@ TEMPLATE_LOADERS = (
                 )
 
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
+
+MEDIA_URL = '/media/'

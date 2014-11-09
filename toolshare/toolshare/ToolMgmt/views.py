@@ -16,7 +16,7 @@ def mytools(request):
 
 def register(request):
     if request.POST:
-        form = RegisterToolForm(request.POST)
+        form = RegisterToolForm(request.POST, request.FILES)
         if form.is_valid():
             name = form.cleaned_data['name']
             description = form.cleaned_data['description']
@@ -25,7 +25,7 @@ def register(request):
 
             user_profile = UserProfile.objects.get( user = request.user)
             new_tool = Tool(name=name, description=description, active=True,
-                            category=category, status=status, owner = user_profile)
+                            category=category, status=status, owner = user_profile, image = request.FILES['image'])
             new_tool.save()
             messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully created' % new_tool)
             return HttpResponseRedirect(reverse('toolmgmt:detail', kwargs={'tool_id': new_tool.id}))
@@ -44,6 +44,7 @@ class RegisterToolForm(forms.Form):
     description = forms.CharField(label="Description", max_length=200)
     category = forms.ModelChoiceField(label="Category",queryset=ToolCategory.objects.all(), error_messages=error_category)
     status = forms.ModelChoiceField(label="Status",queryset=ToolStatus.objects.all())
+    image = forms.ImageField(label="Image")
 
 def detail(request, tool_id):
     if (request.method == 'GET'):
