@@ -90,8 +90,6 @@ def user_edit(request):
         profile_form= UserProfileForm(data=request.POST)
         if edit_form.is_valid() and profile_form.is_valid():
             user=edit_form.save()
-            #if user.password is not None and len(user.password) > 0:
-            user.set_password(user.password)
             user.save()
             profile=profile_form.save(commit=False)
             profile.user=user
