@@ -1,5 +1,7 @@
 from django.db import models
 from UserAuth.models import UserProfile
+from ToolMgmt.models import Tool
+
 # Create your models here.
 
 class ShareZone(models.Model):
@@ -16,3 +18,23 @@ class Shed(models.Model):
     sharezone = models.ForeignKey(ShareZone)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
+
+
+class arrangement(models.Model):
+    date = models.DateTimeField()
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    pickup_arrangement = models.CharField(verbose_name="Arrangement", max_length=200)
+
+    def __str__(self):
+        return self.name
+
+class sharing(models.Model):
+
+    def __str__(self):
+        return self.name
+
+class request(models.Model):
+    approved = models.BooleanField()
+    def __str__(self):
+        return self.name
