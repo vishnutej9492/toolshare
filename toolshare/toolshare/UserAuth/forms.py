@@ -36,20 +36,20 @@ class UserProfileForm(forms.ModelForm):
                      '%s x %s pixels or smaller.' % (max_width, max_height))
 
             #validate content type
-            main, sub = avatar.content_type.split('/')
+            main, sub = profile_photo.content_type.split('/')
             if not (main == 'image' and sub in ['jpeg', 'pjpeg', 'gif', 'png']):
                 raise forms.ValidationError(u'Please use a JPEG, '
                     'GIF or PNG image.')
 
             #validate file size
-            if len(avatar) > (20 * 1024):
+            if len(profile_photo) > (20 * 1024):
                 raise forms.ValidationError(
-                    u'Avatar file size may not exceed 20k.')
+                    u'profile_photo file size may not exceed 20k.')
 
         except AttributeError:
             """
             Handles case when we are updating the user profile
-            and do not supply a new avatar
+            and do not supply a new profile_photo
             """
             pass
 
