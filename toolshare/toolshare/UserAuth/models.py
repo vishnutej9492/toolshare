@@ -26,6 +26,7 @@ class UserProfile(models.Model):
     state = USStateField(choices = STATE_CHOICES)
     reminder_preferences =models.IntegerField(choices = REMINDER_CHOICES) 
     pickup_loc = models.CharField(verbose_name="Pickup arrangements",max_length = 100)
+    profile_photo = models.ImageField(upload_to="images/users/", blank=True, null=True)
 
     def __unicode__(self):
         return self.user.username
