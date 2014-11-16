@@ -8,4 +8,5 @@ urlpatterns = patterns('',
     url(r'^tools/mytools/', views.mytools, name='mytools'),
     url(r'^tools/register/$', views.register, name="register"),
     url(r'^tools/(?P<tool_id>\d+)/$', views.detail, name='detail'),
+    url(r'^tools/(?P<tool_id>\d+)/edit/$', views.tool_edit, name='tool_editition'),
 )

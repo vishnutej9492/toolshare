@@ -5,6 +5,10 @@ from UserAuth.models import UserProfile
 from django.contrib import messages
 from django import forms
 from django.core.urlresolvers import reverse
+from django.forms.models import model_to_dict
+
+from django.template import RequestContext
+from django.shortcuts import render_to_response
 
 def index(request):
     all_tools = Tool.objects.all()
@@ -15,25 +19,52 @@ def mytools(request):
     return render(request, 'ToolMgmt/mytools.html', {'my_tools': my_tools})
 
 def register(request):
+    context = RequestContext(request)
     if request.POST:
-        form = RegisterToolForm(request.POST, request.FILES)
+        form = RegisterToolModelForm(request.POST, request.FILES)
         if form.is_valid():
-            name = form.cleaned_data['name']
-            description = form.cleaned_data['description']
-            category = form.cleaned_data['category']
-            status = form.cleaned_data['status']
-
-            user_profile = UserProfile.objects.get( user = request.user)
-            new_tool = Tool(name=name, description=description, active=True,
-                            category=category, status=status, owner = user_profile, image = request.FILES['image'])
+            new_tool = form.save()
+            new_tool.owner = UserProfile.objects.get( user = request.user)
+            new_tool.actire = True
             new_tool.save()
             messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully created' % new_tool)
             return HttpResponseRedirect(reverse('toolmgmt:detail', kwargs={'tool_id': new_tool.id}))
         else:
-            return render(request, 'ToolMgmt/register.html',{'form' : form})
+            return render_to_response('ToolMgmt/register.html', {'form': form}, context)
     else:
-        form = RegisterToolForm()
-        return render(request, 'ToolMgmt/register.html',{'form' : form})
+        form = RegisterToolModelForm()
+        return render_to_response('ToolMgmt/register.html', {'form': form}, context)
+
+class RegisterToolModelForm(forms.ModelForm):
+    class Meta:
+        model = Tool
+        fields= ('name', 'description', 'category', 'status', 'image')
+
+    def clean_profile_photo(self):
+        image = self.cleaned_data['image']
+        return image
+
+def tool_edit(request, tool_id):
+    context = RequestContext(request)
+    tool = Tool.objects.get(id=tool_id)
+    if request.POST:
+        form = ToolEditModelForm(request.POST, request.FILES, instance=tool)
+        if form.is_valid():
+            new_tool = form.save()
+            new_tool.owner = UserProfile.objects.get( user = request.user)
+            new_tool.save()
+            messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully created' % new_tool)
+            return HttpResponseRedirect(reverse('toolmgmt:detail', kwargs={'tool_id': new_tool.id}))
+        else:
+            return render_to_response('ToolMgmt/edit.html', {'form': form}, context)
+    else:
+        form = ToolEditModelForm(instance=tool)
+        return render_to_response('ToolMgmt/edit.html', {'form': form, 'tool' : tool}, context)
+
+class ToolEditModelForm(forms.ModelForm):
+    class Meta:
+        model = Tool
+        fields= ('name', 'description', 'category', 'status', 'image', 'active')
 
 class RegisterToolForm(forms.Form):
     error_category = {
