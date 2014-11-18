@@ -13,39 +13,59 @@
 </head>
 <body>
  
-<div class="row">
-<div class="large-3 columns">
-<h1><img src="http://placehold.it/400x100&text=Logo"></h1>
-</div>
-<div class="large-9 columns">
-<ul class="button-group right">
-<li><a href="/home" class="small button">Home</a></li>
-<li><a href="/about" class="small button">About</a></li>
-{% if user.is_authenticated %}
-<li><a href="/toolmgmt/tools" class="small button">Tool Listing</a></li>
-<li><a href="/toolmgmt/tools/mytools" class="small button">My Tools</a></li>
-<li><a href={% url 'users:edit' %} class="small button">Edit Profile</a></li>
-<li><a href={% url 'users:logout' %} class="small button">{{ user.username }} - Logout</a></li>
-{% else %}
-<li><a href="/users/login/" class="small button">Login</a></li>
-{% endif %}
-</ul>
-</div>
-</div>
-
-<div class="row">
-<div class="large-12 columns">
- 
 <nav class="top-bar" data-topbar>
 <ul class="title-area">
- 
-<li class="name">
-<h1><a href="#">Messages</a></h1>
+</ul>
+<section class="top-bar-section">
+<ul class="left">
+<li class="divider"></li>
+<li><a href="/home">Home</a></li>
+<li class="divider"></li>
+<li><a href="/about" >About</a></li>
+<li class="divider"></li>
+</ul>
+{% if user.is_authenticated %}
+<ul class="left">
+<li class="divider"></li>
+<li><a href="/toolmgmt/tools" >Tool Listing</a></li>
+<li class="divider"></li>
+<li><a href="/toolmgmt/tools/mytools" >My Tools</a></li>
+<li class="divider"></li>
+</ul>
+<ul class="right">
+<li class="has-dropdown">
+<a href="#"> {{ user.username }} </a>
+<ul class="dropdown">
+<li><a href={% url 'users:edit' %}>Edit Profile</a></li>
+<li class="divider"></li>
+<li><a href={% url 'users:logout' %}>Logout</a></li>
+</ul>
 </li>
+</ul>
+{% else %}
+<ul class="right">
+<li class="divider"></li>
+<li><a href="/users/login/">Login</a></li>
+</ul>
+{% endif %}
+</ul>
+</section>
+</nav> 
+
+</br>
+<div class="row">
+<div class="large-12 columns">
+<style>
+  li {color: white;
+      font-family: Helvetica;
+      font-weight: normal;}
+</style>
+<nav class="top-bar" data-topbar>
+<ul class="title-area">
 {% if messages %}
 <ul class="messages">
 {% for message in messages %}
-<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+<li{% if message.tags %} class="{{ message.tags }}"{% endif %} >{{ message }}</li>
 {% endfor %}
 </ul>
 {% endif %}
