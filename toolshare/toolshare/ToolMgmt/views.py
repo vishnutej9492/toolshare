@@ -6,12 +6,12 @@ from django.contrib import messages
 from django import forms
 from django.core.urlresolvers import reverse
 from django.forms.models import model_to_dict
-
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
 
+@login_required(login_url='users:login')
 def index(request):
     all_tools = Tool.objects.all()
     paginator = Paginator(all_tools, 6)
@@ -26,10 +26,12 @@ def index(request):
 
     return render(request, 'ToolMgmt/index.html', {'all_tools': paged_tools})
 
+@login_required(login_url='users:login')
 def mytools(request):
     my_tools = Tool.objects.filter( owner = request.user.profile)
     return render(request, 'ToolMgmt/mytools.html', {'my_tools': my_tools})
 
+@login_required(login_url='users:login')
 def register(request):
     context = RequestContext(request)
     if request.POST:
@@ -47,6 +49,7 @@ def register(request):
         form = ToolModelForm()
         return render_to_response('ToolMgmt/register.html', {'form': form}, context)
 
+@login_required(login_url='users:login')
 def tool_edit(request, tool_id):
     context = RequestContext(request)
     tool = Tool.objects.get(id=tool_id)
@@ -75,6 +78,7 @@ class ToolModelForm(forms.ModelForm):
         model = Tool
         fields= ('name', 'description', 'category', 'status', 'image', 'identifier', 'active')
 
+@login_required(login_url='users:login')
 def detail(request, tool_id):
     if (request.method == 'GET'):
         tool = Tool.objects.get(pk=tool_id)
