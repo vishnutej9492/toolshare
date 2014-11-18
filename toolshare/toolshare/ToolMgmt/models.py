@@ -25,9 +25,5 @@ class Tool(models.Model):
     image = models.ImageField(upload_to="images/tools/", blank=True, null=True)
     identifier = models.CharField(verbose_name="Identifier", blank=True, null=True, max_length=200)
 
-    def get_absolute_url(self):
-        return "/toolmgmt/%i/" % self.id
-
-
     def __str__(self):
         return self.name
