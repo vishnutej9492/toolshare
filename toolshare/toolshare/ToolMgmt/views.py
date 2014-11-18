@@ -21,7 +21,7 @@ def mytools(request):
 def register(request):
     context = RequestContext(request)
     if request.POST:
-        form = RegisterToolModelForm(request.POST, request.FILES)
+        form = ToolModelForm(request.POST, request.FILES)
         if form.is_valid():
             new_tool = form.save()
             new_tool.owner = UserProfile.objects.get( user = request.user)
@@ -32,23 +32,14 @@ def register(request):
         else:
             return render_to_response('ToolMgmt/register.html', {'form': form}, context)
     else:
-        form = RegisterToolModelForm()
+        form = ToolModelForm()
         return render_to_response('ToolMgmt/register.html', {'form': form}, context)
-
-class RegisterToolModelForm(forms.ModelForm):
-    class Meta:
-        model = Tool
-        fields= ('name', 'description', 'category', 'status', 'image')
-
-    def clean_profile_photo(self):
-        image = self.cleaned_data['image']
-        return image
 
 def tool_edit(request, tool_id):
     context = RequestContext(request)
     tool = Tool.objects.get(id=tool_id)
     if request.POST:
-        form = ToolEditModelForm(request.POST, request.FILES, instance=tool)
+        form = ToolModelForm(request.POST, request.FILES, instance=tool)
         if form.is_valid():
             new_tool = form.save()
             new_tool.owner = UserProfile.objects.get( user = request.user)
@@ -58,24 +49,13 @@ def tool_edit(request, tool_id):
         else:
             return render_to_response('ToolMgmt/edit.html', {'form': form}, context)
     else:
-        form = ToolEditModelForm(instance=tool)
+        form = ToolModelForm(instance=tool)
         return render_to_response('ToolMgmt/edit.html', {'form': form, 'tool' : tool}, context)
 
-class ToolEditModelForm(forms.ModelForm):
+class ToolModelForm(forms.ModelForm):
     class Meta:
         model = Tool
         fields= ('name', 'description', 'category', 'status', 'image', 'active')
-
-class RegisterToolForm(forms.Form):
-    error_category = {
-        'required': 'You must select a category.',
-        'invalid': 'Wrong selection.'
-    }
-    name = forms.CharField(label="Name", max_length=100)
-    description = forms.CharField(label="Description", max_length=200)
-    category = forms.ModelChoiceField(label="Category",queryset=ToolCategory.objects.all(), error_messages=error_category)
-    status = forms.ModelChoiceField(label="Status",queryset=ToolStatus.objects.all())
-    image = forms.ImageField(label="Image")
 
 def detail(request, tool_id):
     if (request.method == 'GET'):
