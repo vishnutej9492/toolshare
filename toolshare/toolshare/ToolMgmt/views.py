@@ -10,9 +10,21 @@ from django.forms.models import model_to_dict
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 def index(request):
     all_tools = Tool.objects.all()
-    return render(request, 'ToolMgmt/index.html', {'all_tools': all_tools})
+    paginator = Paginator(all_tools, 6)
+    page = request.GET.get('page')
+
+    try:
+        paged_tools = paginator.page(page)
+    except PageNotAnInteger:
+        paged_tools = paginator.page(1)
+    except EmptyPage:
+        paged_tools = paginator.page(paginator.num_pages)
+
+    return render(request, 'ToolMgmt/index.html', {'all_tools': paged_tools})
 
 def mytools(request):
     my_tools = Tool.objects.filter( owner = request.user.profile)
