@@ -69,10 +69,11 @@ class ToolModelForm(forms.ModelForm):
         'required': 'You must select a category.',
         # 'invalid': 'Wrong selection.'
     }
+    identifier = forms.CharField(label="identifier", help_text="Unique identifier to distinguish between similar tools", required=False)
     category = forms.ModelChoiceField(label="Category",queryset=ToolCategory.objects.all(), error_messages=error_category)
     class Meta:
         model = Tool
-        fields= ('name', 'description', 'category', 'status', 'image', 'active')
+        fields= ('name', 'description', 'category', 'status', 'image', 'identifier', 'active')
 
 def detail(request, tool_id):
     if (request.method == 'GET'):
