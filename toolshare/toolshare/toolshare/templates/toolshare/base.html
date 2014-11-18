@@ -1,37 +1,110 @@
-<html>
-  <head>
-    <title>
-      {% block title_html %}{% endblock %}
-    </title>
-  </head>
-  <body>
-    <header>
-      <a href="/home">home</a> |
-      <a href="/about">about</a> |
-      {% if user.is_authenticated %}
-        <a href="/toolmgmt/tools">Tool listing</a> |
-        <a href="/toolmgmt/tools/mytools">My tools</a> |
-        <a href={% url 'users:edit' %}>Edit profile</a> |
-        {{ user.username }}(<a href={% url 'users:logout' %}>Logout</a>)
-      {% else %}
-        <a href="/users/login/">Login</a>
-      {% endif %}
-    </header>
-    {% if messages %}
-      <ul class="messages">
-          {% for message in messages %}
-          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-          {% endfor %}
-      </ul>
-    {% endif %}
-    <h1>
-      ToolShare webapp {% block h1 %}{% endblock %}
-    </h1>
-    <article>
-      {% block article_content %}{% endblock %}
-    </article>
-    <footer>
-      <div class="footer">SWEN 610 - RIT, Rochester, NY - 2014</div>
-    </footer>
-  </body>
+<!doctype html>
+<!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
+<html class="no-js" lang="en" data-useragent="Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title> {% block title_html %} {% endblock %}</title>
+<meta name="description" content="Documentation and reference library for ZURB Foundation. JavaScript, CSS, components, grid and more."/>
+<meta name="author" content="ZURB, inc. ZURB network also includes zurb.com"/>
+<meta name="copyright" content="ZURB, inc. Copyright (c) 2014"/>
+<link rel="stylesheet" href="http://foundation.zurb.com/assets/css/templates/foundation.css"/>
+<script src="http://foundation.zurb.com/assets/js/modernizr.js"></script>
+</head>
+<body>
+ 
+<div class="row">
+<div class="large-3 columns">
+<h1><img src="http://placehold.it/400x100&text=Logo"></h1>
+</div>
+<div class="large-9 columns">
+<ul class="button-group right">
+<li><a href="/home" class="small button">Home</a></li>
+<li><a href="/about" class="small button">About</a></li>
+{% if user.is_authenticated %}
+<li><a href="/toolmgmt/tools" class="small button">Tool Listing</a></li>
+<li><a href="/toolmgmt/tools/mytools" class="small button">My Tools</a></li>
+<li><a href={% url 'users:edit' %} class="small button">Edit Profile</a></li>
+<li><a href={% url 'users:logout' %} class="small button">{{ user.username }} - Logout</a></li>
+{% else %}
+<li><a href="/users/login/" class="small button">Login</a></li>
+{% endif %}
+</ul>
+</div>
+</div>
+
+<div class="row">
+<div class="large-12 columns">
+ 
+<nav class="top-bar" data-topbar>
+<ul class="title-area">
+ 
+<li class="name">
+<h1><a href="#">Messages</a></h1>
+</li>
+{% if messages %}
+<ul class="messages">
+{% for message in messages %}
+<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+</ul>
+</nav> 
+</div>
+</div>
+
+</br>
+
+</div>
+ 
+<div class="row">
+<div class="large-4 columns">
+</div>
+<div class="large-8 columns">
+<h4>{% block h1 %}{% endblock %}</h4>
+<div class="row">
+<div class="large-6 columns">
+</div>
+</div>
+</div>
+</div>
+ 
+<div class="row">
+<div class="large-12 columns">
+<h4>{% block article_content %}{% endblock %}</h4>
+</div>
+<div class="large-4 columns">
+</div>
+</div>
+ 
+<footer class="row">
+<div class="large-12 columns">
+<hr/>
+<div class="row">
+<div class="large-6 columns">
+<p>&copy; SWEN 610 - TEAM5 - RIT, Rochester, NY - 2014</p>
+</div>
+</div>
+</div>
+</footer>
+<script>
+  document.write('<script src=js/vendor/' +
+  ('__proto__' in {} ? 'zepto' : 'jquery') +
+  '.js><\/script>')
+  </script>
+<script src="http://foundation.zurb.com/assets/js/jquery.js"></script>
+<script src="js/foundation.min.js"></script>
+<script>
+    $(document).foundation();
+  </script>
+<script src="http://foundation.zurb.com/assets/js/templates/jquery.js"></script>
+<script src="http://foundation.zurb.com/assets/js/templates/foundation.js"></script>
+<script>
+      $(document).foundation();
+
+      var doc = document.documentElement;
+      doc.setAttribute('data-useragent', navigator.userAgent);
+    </script>
+</body>
 </html>
