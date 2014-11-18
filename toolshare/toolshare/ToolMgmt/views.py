@@ -53,6 +53,11 @@ def tool_edit(request, tool_id):
         return render_to_response('ToolMgmt/edit.html', {'form': form, 'tool' : tool}, context)
 
 class ToolModelForm(forms.ModelForm):
+    error_category = {
+        'required': 'You must select a category.',
+        # 'invalid': 'Wrong selection.'
+    }
+    category = forms.ModelChoiceField(label="Category",queryset=ToolCategory.objects.all(), error_messages=error_category)
     class Meta:
         model = Tool
         fields= ('name', 'description', 'category', 'status', 'image', 'active')
