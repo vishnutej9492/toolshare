@@ -1,5 +1,6 @@
 from django.db import models
 from UserAuth.models import UserProfile
+from Sharing.models import ShareZone,Shed
 
 class ToolCategory(models.Model):
     name = models.CharField(verbose_name="Name", max_length=100)
@@ -23,6 +24,8 @@ class Tool(models.Model):
     status = models.ForeignKey(ToolStatus)
     owner = models.ForeignKey(UserProfile, null=True)
     image = models.ImageField(upload_to="images/tools/", blank=True, null=True)
+    in_shed = models.BooleanField(default = False)
+    shed = models.ForeignKey(Shed, related_name='sheds', null = True, blank = True)
 
     def get_absolute_url(self):
         return "/toolmgmt/%i/" % self.id
