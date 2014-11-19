@@ -4,6 +4,7 @@ from UserAuth.models import UserProfile
 from localflavor.us.forms import USZipCodeField
 from localflavor.us.forms import USStateField
 from django.forms import ModelForm
+from django.core.files.images import get_image_dimensions
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(),label='Password',max_length=16)
@@ -22,9 +23,37 @@ class UserForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields= ('add_line1','add_line2','zipcode','reminder_preferences','pickup_loc')
+        fields= ('add_line1','add_line2','zipcode','reminder_preferences','pickup_loc','profile_photo')
+    def clean_profile_photo(self):
+        profile_photo = self.cleaned_data['profile_photo']
+        try:
+            w, h = get_image_dimensions(profile_photo)
+            #validate dimensions
+            max_width = max_height = 200
+            if w > max_width or h > max_height:
+                raise forms.ValidationError(
+                    u'Please use an image that is '
+                     '%s x %s pixels or smaller.' % (max_width, max_height))
 
-class UserEdit1Form(forms.ModelForm):
+            #validate content type
+            main, sub = profile_photo.content_type.split('/')
+            if not (main == 'image' and sub in ['jpeg', 'pjpeg', 'gif', 'png']):
+                raise forms.ValidationError(u'Please use a JPEG, '
+                    'GIF or PNG image.')
+
+            #validate file size
+            if len(profile_photo) > (20 * 1024):
+                raise forms.ValidationError(
+                    u'profile_photo file size may not exceed 20k.')
+
+        except AttributeError:
+            """
+            Handles case when we are updating the user profile
+            and do not supply a new profile_photo
+            """
+            pass
+
+class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
         fields= ('email', 'first_name','last_name')

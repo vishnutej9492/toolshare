@@ -35,9 +35,17 @@
             <td>Status:</td>
             <td>{{ tool.status }}</td>
         </tr>
+        <tr>
+            <td>Image:</td>
+            {% if tool.image %}
+                <td><img src="{{ tool.image.url }}" width="300" ></td>
+            {% else %}
+                <td>no image found</td>
+            {% endif %}
+        </tr>
         </thead>
       </table>
     <button type="submit">Activate/Deactivate</button>
     <br>
-    <a href="/toolmgmt">Back</a> | <a href="#">Edit tool</a>
+    <a href="{% url 'toolmgmt:tools' %}">Back</a> | <a href="#">Edit tool</a>
 {% endblock %}

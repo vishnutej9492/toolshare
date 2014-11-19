@@ -19,13 +19,14 @@ class UserProfile(models.Model):
         (WEEKLY, 'In a Week'),
         (SOMETIMES, 'Sometimes'), # extensible.
     ) 
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, related_name='profile')
     add_line1 = models.CharField(verbose_name="Address Line 1",max_length = 100)
     add_line2 = models.CharField(verbose_name="Address Line 2",max_length = 100)
     zipcode = models.IntegerField(verbose_name ="Zipcode")
     state = USStateField(choices = STATE_CHOICES)
     reminder_preferences =models.IntegerField(choices = REMINDER_CHOICES) 
     pickup_loc = models.CharField(verbose_name="Pickup arrangements",max_length = 100)
+    profile_photo = models.ImageField(upload_to="images/users/", blank=True, null=True)
 
     def __unicode__(self):
         return self.user.username
