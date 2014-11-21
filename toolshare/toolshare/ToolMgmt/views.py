@@ -5,47 +5,80 @@ from UserAuth.models import UserProfile
 from django.contrib import messages
 from django import forms
 from django.core.urlresolvers import reverse
+from django.forms.models import model_to_dict
+from django.template import RequestContext
+from django.shortcuts import render_to_response
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
 
+@login_required(login_url='users:login')
 def index(request):
     all_tools = Tool.objects.all()
-    return render(request, 'ToolMgmt/index.html', {'all_tools': all_tools})
+    paginator = Paginator(all_tools, 6)
+    page = request.GET.get('page')
 
+    try:
+        paged_tools = paginator.page(page)
+    except PageNotAnInteger:
+        paged_tools = paginator.page(1)
+    except EmptyPage:
+        paged_tools = paginator.page(paginator.num_pages)
+
+    return render(request, 'ToolMgmt/index.html', {'all_tools': paged_tools})
+
+@login_required(login_url='users:login')
 def mytools(request):
     my_tools = Tool.objects.filter( owner = request.user.profile)
     return render(request, 'ToolMgmt/mytools.html', {'my_tools': my_tools})
 
+@login_required(login_url='users:login')
 def register(request):
+    context = RequestContext(request)
     if request.POST:
-        form = RegisterToolForm(request.POST, request.FILES)
+        form = ToolModelForm(request.POST, request.FILES)
         if form.is_valid():
-            name = form.cleaned_data['name']
-            description = form.cleaned_data['description']
-            category = form.cleaned_data['category']
-            status = form.cleaned_data['status']
-
-            user_profile = UserProfile.objects.get( user = request.user)
-            new_tool = Tool(name=name, description=description, active=True,
-                            category=category, status=status, owner = user_profile, image = request.FILES['image'])
+            new_tool = form.save()
+            new_tool.owner = UserProfile.objects.get( user = request.user)
+            new_tool.actire = True
             new_tool.save()
             messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully created' % new_tool)
             return HttpResponseRedirect(reverse('toolmgmt:detail', kwargs={'tool_id': new_tool.id}))
         else:
-            return render(request, 'ToolMgmt/register.html',{'form' : form})
+            return render_to_response('ToolMgmt/register.html', {'form': form}, context)
     else:
-        form = RegisterToolForm()
-        return render(request, 'ToolMgmt/register.html',{'form' : form})
+        form = ToolModelForm()
+        return render_to_response('ToolMgmt/register.html', {'form': form}, context)
 
-class RegisterToolForm(forms.Form):
+@login_required(login_url='users:login')
+def tool_edit(request, tool_id):
+    context = RequestContext(request)
+    tool = Tool.objects.get(id=tool_id)
+    if request.POST:
+        form = ToolModelForm(request.POST, request.FILES, instance=tool)
+        if form.is_valid():
+            new_tool = form.save()
+            new_tool.owner = UserProfile.objects.get( user = request.user)
+            new_tool.save()
+            messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully created' % new_tool)
+            return HttpResponseRedirect(reverse('toolmgmt:detail', kwargs={'tool_id': new_tool.id}))
+        else:
+            return render_to_response('ToolMgmt/edit.html', {'form': form}, context)
+    else:
+        form = ToolModelForm(instance=tool)
+        return render_to_response('ToolMgmt/edit.html', {'form': form, 'tool' : tool}, context)
+
+class ToolModelForm(forms.ModelForm):
     error_category = {
         'required': 'You must select a category.',
-        'invalid': 'Wrong selection.'
+        # 'invalid': 'Wrong selection.'
     }
-    name = forms.CharField(label="Name", max_length=100)
-    description = forms.CharField(label="Description", max_length=200)
+    identifier = forms.CharField(label="identifier", help_text="Unique identifier to distinguish between similar tools", required=False)
     category = forms.ModelChoiceField(label="Category",queryset=ToolCategory.objects.all(), error_messages=error_category)
-    status = forms.ModelChoiceField(label="Status",queryset=ToolStatus.objects.all())
-    image = forms.ImageField(label="Image")
+    class Meta:
+        model = Tool
+        fields= ('name', 'description', 'category', 'status', 'image', 'identifier', 'active')
 
+@login_required(login_url='users:login')
 def detail(request, tool_id):
     if (request.method == 'GET'):
         tool = Tool.objects.get(pk=tool_id)

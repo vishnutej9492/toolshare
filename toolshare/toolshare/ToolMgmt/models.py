@@ -23,10 +23,7 @@ class Tool(models.Model):
     status = models.ForeignKey(ToolStatus)
     owner = models.ForeignKey(UserProfile, null=True)
     image = models.ImageField(upload_to="images/tools/", blank=True, null=True)
-
-    def get_absolute_url(self):
-        return "/toolmgmt/%i/" % self.id
-
+    identifier = models.CharField(verbose_name="Identifier", blank=True, null=True, max_length=200)
 
     def __str__(self):
         return self.name

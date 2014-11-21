@@ -38,5 +38,20 @@
     <span>No tool.</span>
   {% endif %}
 
+  <div class="pagination">
+    <span class="step-links">
+        {% if all_tools.has_previous %}
+            <a href="?page={{ all_tools.previous_page_number }}">previous</a>
+        {% endif %}
+        <span class="current">
+            Page {{ all_tools.number }} of {{ all_tools.paginator.num_pages }}.
+        </span>
+        {% if all_tools.has_next %}
+            <a href="?page={{ all_tools.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+  </div>
+
+
   <a href={% url 'toolmgmt:register' %}>New tool</a>
 {% endblock %}

@@ -17,6 +17,7 @@
           <td>Status</td>
           <td></td>
           <td></td>
+          <td></td>
         </tr>
       </thead>
       <tbody>
@@ -28,6 +29,7 @@
           <td>{{ tool.status }}</td>
           <td>{% if tool.image %}<img src="{{ tool.image.url }}" width="100">{% else %}no image{% endif %}</td>
           <td><a href="{% url 'toolmgmt:detail' tool.id %}">show</a></td>
+          <td><a href="{% url 'toolmgmt:tool_editition' tool.id %}">Edit</a></td>
         </tr>
       {% endfor %}
       </tbody>
