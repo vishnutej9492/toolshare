@@ -131,8 +131,7 @@ def changepassword(request):
 
 #Helper Methods
 def CreateAllocateZone(code):
-    OldZone = ShareZone.objects.get(zipcode = int(code)) 
-    if not OldZone:
+    if not ShareZone.objects.filter(zipcode = code):
         NewZone = ShareZone(int(code))
         NewZone.name =  "ToolShare Zone " + str(code)
         NewZone.description = "Zipcode sharezone"
@@ -140,4 +139,5 @@ def CreateAllocateZone(code):
         NewZone.save()
         return NewZone
     else:
+        OldZone = ShareZone.objects.get(zipcode = code) 
         return OldZone
