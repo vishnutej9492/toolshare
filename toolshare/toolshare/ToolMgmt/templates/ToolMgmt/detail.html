@@ -47,5 +47,5 @@
       </table>
     <button type="submit">Activate/Deactivate</button>
     <br>
-    <a href="{% url 'toolmgmt:tools' %}">Back</a> | <a href="#">Edit tool</a>
+    <a href="{% url 'toolmgmt:tools' %}">Back</a> | <a href={% url 'toolmgmt:tool_editition' tool.id %}>Edit tool</a>
 {% endblock %}
