@@ -25,10 +25,7 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields= ('add_line1','add_line2','zipcode','reminder_preferences','pickup_loc','profile_photo')
-
-    def clean_profile_photo(self):
-        profile_photo = self.cleaned_data['profile_photo']
-        return profile_photo
+        # fields= ('add_line1','add_line2','reminder_preferences','pickup_loc','profile_photo')
 
 class UserEditForm(forms.ModelForm):
     class Meta:

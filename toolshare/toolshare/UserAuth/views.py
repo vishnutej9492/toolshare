@@ -128,16 +128,16 @@ def changepassword(request):
                 'UserAuth/changepassword.html',
                 {'changepasswordform':changepasswordform},
                 context)
+
 #Helper Methods
- 
-
 def CreateAllocateZone(code):
-    try:
-        share_zone = ShareZone.objects.get(zipcode = int(code))
-    except ShareZone.DoesNotExist:
-        share_zone = ShareZone(zipcode = code)
-        share_zone.name =  "ToolShare Zone " + code
-        share_zone.description = "Zipcode sharezone"
-        share_zone.save()
-
-    return share_zone
+    if not ShareZone.objects.filter(zipcode = code):
+        new_sharezone = ShareZone(zipcode = code)
+        new_sharezone.name =  "ToolShare Zone " + str(code)
+        new_sharezone.description = "Zipcode sharezone"
+        new_sharezone.zipcode = code 
+        new_sharezone.save()
+        return new_sharezone
+    else:
+        old_sharezone = ShareZone.objects.get(zipcode = code) 
+        return old_sharezone
