@@ -4,6 +4,7 @@ from UserAuth.models import UserProfile
 from localflavor.us.forms import USZipCodeField
 from localflavor.us.forms import USStateField
 from django.forms import ModelForm
+from django.core.files.images import get_image_dimensions
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(),label='Password',max_length=16)
@@ -22,7 +23,11 @@ class UserForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields= ('add_line1','add_line2','zipcode','reminder_preferences','pickup_loc')
+        fields= ('add_line1','add_line2','zipcode','reminder_preferences','pickup_loc','profile_photo')
+
+    def clean_profile_photo(self):
+        profile_photo = self.cleaned_data['profile_photo']
+        return profile_photo
 
 class UserEditForm(forms.ModelForm):
     class Meta:
