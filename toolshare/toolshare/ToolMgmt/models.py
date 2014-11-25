@@ -22,6 +22,10 @@ class Tool(models.Model):
     category = models.ForeignKey(ToolCategory)
     status = models.ForeignKey(ToolStatus)
     owner = models.ForeignKey(UserProfile, null=True)
+    image = models.ImageField(upload_to="images/tools/", blank=True, null=True)
+
+    def get_absolute_url(self):
+        return "/toolmgmt/%i/" % self.id
 
     def get_absolute_url(self):
         return "/toolmgmt/%i/" % self.id

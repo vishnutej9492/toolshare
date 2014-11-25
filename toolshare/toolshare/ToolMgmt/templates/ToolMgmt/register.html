@@ -6,7 +6,7 @@
   {{ bloc.super }}
 {% endblock %}
 {% block article_content %}
-    <form action= {% url 'toolmgmt:register' %} method="post">
+    <form  enctype="multipart/form-data" action= {% url 'toolmgmt:register' %} method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Register" />
