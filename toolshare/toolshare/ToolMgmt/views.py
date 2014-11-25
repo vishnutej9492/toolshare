@@ -1,9 +1,9 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from ToolMgmt.models import Tool
-from ToolMgmt.forms import ToolForm
-from django.views.generic.edit import FormView
+from ToolMgmt.models import Tool, ToolCategory, ToolStatus
 from UserAuth.models import UserProfile
+from django.contrib import messages
+from django import forms
 
 def index(request):
     all_tools = Tool.objects.all()
@@ -14,19 +14,36 @@ def mytools(request):
     my_tools = Tool.objects.filter( owner = currentprofile)
     return render(request, 'ToolMgmt/mytools.html', {'my_tools': my_tools})
 
-class RegisterTool(FormView):
-    form_class = ToolForm
-    template_name = 'ToolMgmt/register.html'
+def register(request):
+    if request.POST:
+        form = RegisterToolForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            description = form.cleaned_data['description']
+            category = form.cleaned_data['category']
+            status = form.cleaned_data['status']
 
-    def get(self, request, *args, **kwargs):
-        form = self.form_class(initial=self.initial)
-        return render(request, self.template_name, {'form': form})
+            user_profile = UserProfile.objects.get( user = request.user)
+            new_tool = Tool(name=name, description=description, active=True,
+                            category=category, status=status, owner = user_profile)
+            new_tool.save()
+            messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully created' % new_tool)
+            return HttpResponseRedirect('/toolmgmt/' + new_tool.id.__str__())
+        else:
+            return render(request, 'ToolMgmt/register.html',{'form' : form})
+    else:
+        form = RegisterToolForm()
+        return render(request, 'ToolMgmt/register.html',{'form' : form})
 
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(initial=self.initial)
-        form.register(request)
-        return HttpResponseRedirect('/toolmgmt')
-
+class RegisterToolForm(forms.Form):
+    error_category = {
+        'required': 'You must select a category.',
+        'invalid': 'Wrong selection.'
+    }
+    name = forms.CharField(label="Name", max_length=100)
+    description = forms.CharField(label="Description", max_length=200)
+    category = forms.ModelChoiceField(label="Category",queryset=ToolCategory.objects.all(), error_messages=error_category)
+    status = forms.ModelChoiceField(label="Status",queryset=ToolStatus.objects.all())
 
 def detail(request, tool_id):
     if (request.method == 'GET'):
