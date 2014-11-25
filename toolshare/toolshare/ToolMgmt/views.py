@@ -4,14 +4,14 @@ from ToolMgmt.models import Tool, ToolCategory, ToolStatus
 from UserAuth.models import UserProfile
 from django.contrib import messages
 from django import forms
+from django.core.urlresolvers import reverse
 
 def index(request):
     all_tools = Tool.objects.all()
     return render(request, 'ToolMgmt/index.html', {'all_tools': all_tools})
 
 def mytools(request):
-    currentprofile = UserProfile.objects.get( user = request.user)
-    my_tools = Tool.objects.filter( owner = currentprofile)
+    my_tools = Tool.objects.filter( owner = request.user.profile)
     return render(request, 'ToolMgmt/mytools.html', {'my_tools': my_tools})
 
 def register(request):
@@ -28,7 +28,7 @@ def register(request):
                             category=category, status=status, owner = user_profile)
             new_tool.save()
             messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully created' % new_tool)
-            return HttpResponseRedirect('/toolmgmt/' + new_tool.id.__str__())
+            return HttpResponseRedirect(reverse('toolmgmt:detail', kwargs={'tool_id': new_tool.id}))
         else:
             return render(request, 'ToolMgmt/register.html',{'form' : form})
     else:
@@ -56,4 +56,4 @@ def detail(request, tool_id):
         else:
             tool.active = True
         tool.save()
-        return HttpResponseRedirect('/toolmgmt/' + tool_id)
+        return HttpResponseRedirect(reverse('toolmgmt:detail', kwargs={'tool_id': tool_id}))

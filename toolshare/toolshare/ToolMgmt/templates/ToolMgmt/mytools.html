@@ -25,7 +25,7 @@
           <td>{{ tool.name }}</td>
           <td>{{ tool.description }}</td>
           <td>{{ tool.status }}</td>
-          <td><a href="/toolmgmt/{{tool.id}}">show</a></td>
+          <td><a href="{% url 'toolmgmt:detail' tool.id %}">show</a></td>
         </tr>
       {% endfor %}
       </tbody>
@@ -34,5 +34,5 @@
     <span>No tool.</span>
   {% endif %}
 
-  <a href="/toolmgmt/register">New tool</a>
+  <a href="{% url 'toolmgmt:register' %}">New tool</a>
 {% endblock %}

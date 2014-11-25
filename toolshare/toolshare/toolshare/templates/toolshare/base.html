@@ -9,8 +9,8 @@
       <a href="/home">home</a> |
       <a href="/about">about</a> |
       {% if user.is_authenticated %}
-        <a href="/toolmgmt">Tool listing</a> |
-        <a href="/toolmgmt/mytools">My tools</a> |
+        <a href="/toolmgmt/tools">Tool listing</a> |
+        <a href="/toolmgmt/tools/mytools">My tools</a> |
         <a href="/login/edit1/">Edit profile</a> |
         {{ user.username }}(<a href="/login/logout/">Logout</a>)
       {% else %}
