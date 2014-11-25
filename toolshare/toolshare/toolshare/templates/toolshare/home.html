@@ -1,13 +1,47 @@
+
 {% extends "base.html" %}
-{% block title_html %}
-  Home
-{% endblock %}
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title> {% block title_html %} Home {% endblock %}</title>
+<meta name="description" content="Documentation and reference library for ZURB Foundation. JavaScript, CSS, components, grid and more."/>
+<meta name="author" content="ZURB, inc. ZURB network also includes zurb.com"/>
+<meta name="copyright" content="ZURB, inc. Copyright (c) 2014"/>
+<link rel="stylesheet" href="http://foundation.zurb.com/assets/css/templates/foundation.css"/>
+<script src="http://foundation.zurb.com/assets/js/modernizr.js"></script>
 {% block h1 %}
   {{ bloc.super }}
 {% endblock %}
+
 {% block article_content %}
+<div class="row">
+<div class="large-12 columns">
+<div id="featured" data-orbit>
+<img src="http://placehold.it/1200x500&text=Slide Image 1" alt="slide image">
+<img src="http://placehold.it/1200x500&text=Slide Image 2" alt="slide image">
+<img src="http://placehold.it/1200x500&text=Slide Image 3" alt="slide image">
+</div>
+</div>
+</div>
     <h1>Home</h1>
     <p>
       Toolshare system application
     </p>
 {% endblock %}
+<script>
+  document.write('<script src=js/vendor/' +
+  ('__proto__' in {} ? 'zepto' : 'jquery') +
+  '.js><\/script>')
+  </script>
+<script src="http://foundation.zurb.com/assets/js/jquery.js"></script>
+<script src="js/foundation.min.js"></script>
+<script>
+    $(document).foundation();
+  </script>
+<script src="http://foundation.zurb.com/assets/js/templates/jquery.js"></script>
+<script src="http://foundation.zurb.com/assets/js/templates/foundation.js"></script>
+<script>
+      $(document).foundation();
+
+      var doc = document.documentElement;
+      doc.setAttribute('data-useragent', navigator.userAgent);
+    </script>
