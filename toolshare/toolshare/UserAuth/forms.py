@@ -21,6 +21,7 @@ class UserForm(forms.ModelForm):
         fields= ('username','email','first_name','last_name')
 
 class UserProfileForm(forms.ModelForm):
+    zipcode = USZipCodeField()
     class Meta:
         model = UserProfile
         fields= ('add_line1','add_line2','zipcode','reminder_preferences','pickup_loc','profile_photo')

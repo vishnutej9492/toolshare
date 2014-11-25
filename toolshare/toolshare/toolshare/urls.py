@@ -12,5 +12,6 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^users/', include('UserAuth.urls',namespace="users")),
     url(r'^toolmgmt/', include('ToolMgmt.urls', namespace="toolmgmt")),
+    url(r'^sharing/', include('Sharing.urls', namespace="Sharing")),
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT,}),
 )

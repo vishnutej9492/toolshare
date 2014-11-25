@@ -13,6 +13,7 @@ from django import forms
 from django.core import validators
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from Sharing.models import ShareZone
 
 @login_required(login_url='users:login')
 def index(request):
@@ -37,6 +38,8 @@ def sign_up(request):
             user.save()
             profile=profile_form.save(commit=False)
             profile.user=user
+            zone = CreateAllocateZone(request.POST['zipcode'])
+            profile.sharezone = zone
             profile.save()
             messages.add_message(request, messages.SUCCESS, 'Successfully signed up.')
             signed_up=True
@@ -125,3 +128,16 @@ def changepassword(request):
                 'UserAuth/changepassword.html',
                 {'changepasswordform':changepasswordform},
                 context)
+#Helper Methods
+ 
+
+def CreateAllocateZone(code):
+    try:
+        share_zone = ShareZone.objects.get(zipcode = int(code))
+    except ShareZone.DoesNotExist:
+        share_zone = ShareZone(zipcode = code)
+        share_zone.name =  "ToolShare Zone " + code
+        share_zone.description = "Zipcode sharezone"
+        share_zone.save()
+
+    return share_zone
