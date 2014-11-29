@@ -68,7 +68,7 @@ def tool_edit(request, tool_id):
                 messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully created' % new_tool)
                 return HttpResponseRedirect(reverse('toolmgmt:detail', kwargs={'tool_id': new_tool.id}))
             else:
-                return render_to_response('ToolMgmt/edit.html', {'form': form}, context)
+                return render_to_response('ToolMgmt/edit.html', {'form': form, 'tool' : tool}, context)
         else:
             form = ToolModelForm(instance=tool)
             return render_to_response('ToolMgmt/edit.html', {'form': form, 'tool' : tool}, context)
