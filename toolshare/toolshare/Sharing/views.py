@@ -171,7 +171,7 @@ class RequestModelForm(forms.ModelForm):
 
 
 def asked_requests_index(request):
-    requests = Request.objects.all()
+    requests = Request.objects.filter(borrower=request.user.profile)
     return render(request, 'Sharing/asked_requests_index.html', {'requests': requests})
 
 def received_requests_index(request):
