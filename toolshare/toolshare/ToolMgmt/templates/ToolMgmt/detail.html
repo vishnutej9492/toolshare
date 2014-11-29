@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+      {% extends "base.html" %}
 {% block title_html %}
   Tool detail
 {% endblock %}
@@ -45,7 +45,12 @@
         </tr>
         </thead>
       </table>
-    <button type="submit">Activate/Deactivate</button>
+      {% if is_owner %}
+            <button class="button" type="submit">Activate/Deactivate</button>
+            <a class="button" href={% url 'toolmgmt:tool_editition' tool.id %}>Edit tool</a>
+            <a class="button" href={% url 'sharing:tooltransfer' tool.id %}> Transfer to Shed </a>
+
+      {% endif %}
     <br>
     <a href="{% url 'toolmgmt:tools' %}">Back</a> | <a href={% url 'toolmgmt:tool_editition' tool.id %}>Edit tool</a>
 {% endblock %}

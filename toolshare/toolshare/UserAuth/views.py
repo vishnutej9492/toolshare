@@ -7,6 +7,7 @@ from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import pdb
+from .utils import CreateAllocateZone
 from django.http import HttpResponseRedirect,HttpResponse
 from django.contrib.auth.forms import PasswordChangeForm
 from django import forms
