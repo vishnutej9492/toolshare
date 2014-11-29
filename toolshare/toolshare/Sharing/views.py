@@ -14,9 +14,11 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import pdb
 from django.core.exceptions import ObjectDoesNotExist
-
 from Sharing.models import Arrangement, Request
 from django import forms
+
+import datetime
+from django.utils.timezone import utc
 
 # Create your views here.
 ##++++++++++++++All things related to Shed here++++++++++++++++##
@@ -175,8 +177,10 @@ def asked_requests_index(request):
     return render(request, 'Sharing/asked_requests_index.html', {'requests': requests})
 
 def received_requests_index(request):
-    approved_requests = Request.objects.filter(lender=request.user.profile).filter(approved=True)
-    waiting_requests = Request.objects.filter(lender=request.user.profile).filter(approved=False)
+    now = datetime.datetime.utcnow().replace(tzinfo=utc)
+    waiting_requests = Request.objects.filter(lender=request.user.profile).filter(approved=False).filter(start_date__gte=now)
+    approved_requests = Request.objects.filter(lender=request.user.profile).filter(approved=True).filter(start_date__gte=now)
+    past_requests = Request.objects.filter(lender=request.user.profile).filter(start_date__lt=now)
     return render(request, 'Sharing/received_requests_index.html', {'approved_requests': approved_requests, 'waiting_requests': waiting_requests})
 
 def asked_request_detail(request, tool_request_id):
