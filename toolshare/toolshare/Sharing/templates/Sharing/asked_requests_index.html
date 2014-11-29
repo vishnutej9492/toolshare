@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title_html %}
+  Tool listing
+{% endblock %}
+{% block h1 %}
+  {{ bloc.super }}
+{% endblock %}
+{% block article_content %}
+  <h1>Asked request listing</h1>
+  {% if requests|length > 0 %}
+    <table>
+      <thead>
+        <tr>
+          <td>thing</td>
+        </tr>
+      </thead>
+      <tbody>
+      {% for request in requests %}
+        <tr>
+          <td>{{ request }}</td>
+          <td><a href="#">show</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <span>No requests.</span>
+  {% endif %}
+{% endblock %}

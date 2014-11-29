@@ -27,16 +27,17 @@ class Arrangement(models.Model):
     pickup_arrangement = models.CharField(verbose_name="Arrangement", max_length=200)
     borrower = models.ForeignKey('UserAuth.UserProfile',related_name='borrowers')
     lender = models.ForeignKey('UserAuth.UserProfile',related_name='lenders')
+    tool = models.ForeignKey('ToolMgmt.Tool',related_name='tools', null=True)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
 
-    def __str__(self):
-        return str(self.lender.username) + "==>" + str(self.borrower.username)
-
 class Sharing(Arrangement): 
-    comment = models.CharField(verbose_name="Arrangement", max_length=200)
+    comment = models.CharField(verbose_name="Comment about the sharing", max_length=200)
     returned = models.BooleanField(default=False)
 
 class Request(Arrangement):
-    msg = models.CharField(verbose_name="Arrangement", max_length=200)
+    msg = models.CharField(verbose_name="Arrangement message for requesting", max_length=200)
     approved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "<"+ str(self.borrower) + "> has reuqested <" + str(self.lender) + "> a <" + str(self.tool) + ">"

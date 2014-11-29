@@ -15,7 +15,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import pdb
 from django.core.exceptions import ObjectDoesNotExist
 
-
+from Sharing.models import Arrangement, Request
+from django import forms
 
 # Create your views here.
 ##++++++++++++++All things related to Shed here++++++++++++++++##
@@ -139,3 +140,36 @@ def tooltransfer(request,tool_id):
 def returntool(request):
     return HttpResponse("Return tool to the owner from the shed")
 ######+++++++++++++++All things related to Shed end here+++++++++++++++#########
+
+def create_request(request, tool_id):
+    context = RequestContext(request)
+    tool = Tool.objects.get(id = tool_id)
+    if request.POST:
+        form = RequestModelForm(request.POST)
+        if form.is_valid():
+            new_request = form.save(commit=False)
+            new_request.pickup_arrangement = tool.owner.pickup_loc
+            new_request.borrower = request.user.profile
+            new_request.lender = tool.owner
+            new_request.tool = tool
+            new_request.save()
+            form.save_m2m()
+            messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully requested to %s' % (tool, new_request.lender))
+
+            return HttpResponseRedirect(reverse('sharing:asked-requests'))
+        else:
+            return render_to_response('Sharing/create_request.html', {'form': form, 'tool': tool}, context)
+    else:
+        print("GET")
+        form = RequestModelForm()
+        return render_to_response('Sharing/create_request.html', {'form': form, 'tool': tool}, context)
+
+class RequestModelForm(forms.ModelForm):
+    class Meta:
+        model = Request
+        fields= ( 'start_date', 'end_date','msg')
+
+
+def asked_requests_index(request):
+    requests = Request.objects.all()
+    return render(request, 'Sharing/asked_requests_index.html', {'requests': requests})
