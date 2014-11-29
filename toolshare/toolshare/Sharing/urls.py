@@ -12,5 +12,6 @@ urlpatterns = patterns('',
     url(r'sheds/tooltransfer/(?P<tool_id>\d+)/$',views.tooltransfer,name = 'tooltransfer'),
     #+++++++++++++++++SHED url ends here ++++++++++++++++++++++++++++++++++#
     url(r'^create-request/(?P<tool_id>\d+)/$', views.create_request, name='create-request'),
+    url(r'^received-requests/$', views.received_requests_index, name='received-requests'),
     url(r'^asked-requests/$', views.asked_requests_index, name='asked-requests'),
 )

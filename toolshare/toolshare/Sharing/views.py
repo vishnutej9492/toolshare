@@ -173,3 +173,7 @@ class RequestModelForm(forms.ModelForm):
 def asked_requests_index(request):
     requests = Request.objects.all()
     return render(request, 'Sharing/asked_requests_index.html', {'requests': requests})
+
+def received_requests_index(request):
+    requests = ["request1", "request2", "request3"]
+    return render(request, 'Sharing/received_requests_index.html', {'requests': requests})

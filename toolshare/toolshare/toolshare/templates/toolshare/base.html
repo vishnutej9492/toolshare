@@ -26,14 +26,24 @@
 </ul>
 {% if user.is_authenticated %}
 <ul class="left">
-<li class="divider"></li>
-<li><a href="/toolmgmt/tools" >Tool Listing</a></li>
-<li class="divider"></li>
-<li><a href="/toolmgmt/tools/mytools" >My Tools</a></li>
-<li class="divider"></li>
-<li><a href="/sharing/sheds" >Sheds</a></li>
-<li class="divider"></li>
+  <li class="divider"></li>
+  <li><a href="/toolmgmt/tools" >Tool Listing</a></li>
+  <li class="divider"></li>
+  <li><a href="/toolmgmt/tools/mytools" >My Tools</a></li>
+  <li class="divider"></li>
+  <li><a href="/sharing/sheds" >Sheds</a></li>
+  <li class="divider"></li>
+
+  <li class="has-dropdown">
+    <a href="#"> Requests </a>
+    <ul class="dropdown">
+      <li><a href={% url 'sharing:asked-requests' %}>Asked requests</a></li>
+      <li class="divider"></li>
+      <li><a href={% url 'sharing:received-requests' %}>Received requests</a></li>
+    </ul>
+  </li>
 </ul>
+
 <ul class="right">
 <li class="has-dropdown">
 <a href="#"> {{ user.username }} </a>
