@@ -25,11 +25,14 @@ class Arrangement(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     pickup_arrangement = models.CharField(verbose_name="Arrangement", max_length=200)
-    borrower = models.ForeignKey('UserAuth.UserProfile',related_name='borrowers')
-    lender = models.ForeignKey('UserAuth.UserProfile',related_name='lenders')
+    borrower = models.ForeignKey('UserAuth.UserProfile',related_name='asked_requests')
+    lender = models.ForeignKey('UserAuth.UserProfile',related_name='recieved_requests')
     tool = models.ForeignKey('ToolMgmt.Tool',related_name='tools', null=True)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return "borrower: <"+ str(self.borrower) + "> lender: <" + str(self.lender) + ">"
 
 class Sharing(Arrangement): 
     comment = models.CharField(verbose_name="Comment about the sharing", max_length=200)

@@ -28,6 +28,10 @@
             <td>{{ tool_request.msg }}</td>
         </tr>
         <tr>
+            <td>Approved:</td>
+            <td>{{ tool_request.approved }}</td>
+        </tr>
+        <tr>
             <td>Image:</td>
             {% if tool_request.tool.image %}
                 <td><img src="{{ tool_request.tool.image.url }}" width="300" ></td>
@@ -37,9 +41,9 @@
         </tr>
         </thead>
       </table>
-      {% if is_owner %}
+      {% if can_approve %}
             <button class="button" type="submit">Approve Request</button>
-            <a class="button" href="#">Edit rtool request</a>
+            <a class="button" href="#">Edit tool request</a>
       {% endif %}
     <br>
     <a href="{% url 'sharing:received-requests' %}">Back</a>

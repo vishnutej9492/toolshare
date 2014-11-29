@@ -180,14 +180,21 @@ def received_requests_index(request):
 
 def received_requests_detail(request, tool_request_id):
     profile = UserProfile.objects.get(user = request.user)
-    # tool_request = profile.lenders
-    print(profile.lenders.all())
-    if True:
+    tool_request = Request.objects.get(id = tool_request_id )
+
+    if(profile == tool_request.lender):
         can_approve = True
     else:
         can_approve = False
+
     if request.POST:
-        pass
+        if can_approve:
+            tool_request.approved = True
+            tool_request.save()
+            messages.add_message(request, messages.SUCCESS, 'Request was approved successfully')
+            return HttpResponseRedirect(reverse('sharing:received-requests'))
+        else:
+            pass
     else:
         tool_request = Request.objects.get(pk=tool_request_id)
-        return render(request, 'Sharing/requestdetail.html', {'tool_request': tool_request,'can_approve':can_approve})
+        return render(request, 'Sharing/received_request_detail.html', {'tool_request': tool_request,'can_approve':can_approve})
