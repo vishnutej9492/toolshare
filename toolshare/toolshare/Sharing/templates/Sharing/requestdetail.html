@@ -1,0 +1,46 @@
+      {% extends "base.html" %}
+{% block title_html %}
+  Tool request detail
+{% endblock %}
+{% block h1 %}
+  {{ bloc.super }}
+{% endblock %}
+{% block article_content %} 
+    <h1>Tool Request Detail</h1>
+    <form action="{% url 'sharing:received-request-detail' tool_request.id %}" method="post">
+      <table>
+        {% csrf_token %}
+        <thead>
+          <tr>
+            <td>ID:</td>
+            <td>{{ tool_request.id}}</td>
+          </tr>
+        <tr>
+            <td>Start date:</td>
+            <td>{{ tool_request.start_date }}</td>
+        </tr>
+        <tr>
+            <td>End date:</td>
+            <td>{{ tool_request.send_date }}</td>
+        </tr>
+        <tr>
+            <td>Message:</td>
+            <td>{{ tool_request.msg }}</td>
+        </tr>
+        <tr>
+            <td>Image:</td>
+            {% if tool_request.tool.image %}
+                <td><img src="{{ tool_request.tool.image.url }}" width="300" ></td>
+            {% else %}
+                <td>no image found</td>
+            {% endif %}
+        </tr>
+        </thead>
+      </table>
+      {% if is_owner %}
+            <button class="button" type="submit">Approve Request</button>
+            <a class="button" href="#">Edit rtool request</a>
+      {% endif %}
+    <br>
+    <a href="{% url 'sharing:received-requests' %}">Back</a>
+{% endblock %}

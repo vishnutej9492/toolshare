@@ -177,3 +177,17 @@ def asked_requests_index(request):
 def received_requests_index(request):
     requests = Request.objects.filter(lender=request.user.profile)
     return render(request, 'Sharing/received_requests_index.html', {'requests': requests})
+
+def received_requests_detail(request, tool_request_id):
+    profile = UserProfile.objects.get(user = request.user)
+    # tool_request = profile.lenders
+    print(profile.lenders.all())
+    if True:
+        can_approve = True
+    else:
+        can_approve = False
+    if request.POST:
+        pass
+    else:
+        tool_request = Request.objects.get(pk=tool_request_id)
+        return render(request, 'Sharing/requestdetail.html', {'tool_request': tool_request,'can_approve':can_approve})
