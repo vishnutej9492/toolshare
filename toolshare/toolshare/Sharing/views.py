@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from UserAuth.models import UserProfile
 from ToolMgmt.models import Tool
 from ToolMgmt.utils import Is_Owner
-from Sharing.models import Shed, ShareZone, UserShedAssignation
+from Sharing.models import Shed, ShareZone
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from .forms import ShedCreateForm, ShedEditForm
@@ -58,9 +58,8 @@ def shedcreate(request):
         newshed = form.save(commit = False)
         newshed.sharezone = ShareZone.objects.get(zipcode = profile.sharezone.zipcode)
         newshed.save()
-
-        assignation = UserShedAssignation(user_profile=profile ,shed=newshed)
-        assignation.save()
+        newshed.coordinators.add(profile)
+        newshed.save()
 
         messages.add_message(request,messages.SUCCESS,"Shed %s created!" %newshed)
         return HttpResponseRedirect(reverse('sharing:sheddetail',kwargs={'shed_id': newshed.id}))
@@ -75,7 +74,8 @@ def sheddeactivate(request):
 
 @login_required(login_url='users:login')
 def shededit(request,shed_id):
-    if Shed.objects.get(pk=shed_id).user_shed_assignations.filter(user_profile=request.user.profile).exists():
+    if request.user.profile in Shed.objects.get(pk=shed_id).coordinators.all():
+        print(request.user.profile.sheds.all()) 
         shed = Shed.objects.get(pk=shed_id)
         if not shed:
             return HttpRespone("No shed ")
@@ -83,9 +83,6 @@ def shededit(request,shed_id):
             form = ShedEditForm()
             context = RequestContext(request)
             if request.POST:
-                print("--------------------")
-                print(request.POST)
-                print("--------------------")
                 form = ShedEditForm(request.POST, instance = shed)
                 shedchange = form.save(commit=False)
                 shedchange.sharezone = request.user.profile.sharezone
@@ -102,7 +99,7 @@ def shededit(request,shed_id):
 @login_required(login_url='users:login')
 def sheddetail(request,shed_id):
     profile = UserProfile.objects.get(user = request.user)
-    if Shed.objects.get(pk=shed_id).user_shed_assignations.filter(user_profile=request.user.profile).exists():
+    if profile in Shed.objects.get(pk=shed_id).coordinators.all():
         is_coord = True
     else:
         is_coord = False

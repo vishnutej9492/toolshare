@@ -21,8 +21,9 @@
         </tr>
         </thead>
       </table>
+  <h3>Tools in shed</h3>
   {%if shed.tools|length > 0 %}
-<table>
+  <table>
       <thead>
         <tr>
           <td>ID</td>
@@ -53,7 +54,16 @@
   {% endif %}
 
         <br/>
-{%if is_coord %}
+  <h3>Coordinators</h3>
+  <table>
+    {% for coordinator in shed.coordinators.all %}
+      <tr>
+        <td>{{ coordinator }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  {%if is_coord %}
       <a class="button" href="{% url 'sharing:shededit' shed.id %}">Edit</a>
         {% else %}
         Not a coordinator
