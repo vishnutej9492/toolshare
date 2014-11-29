@@ -178,7 +178,11 @@ def received_requests_index(request):
     requests = Request.objects.filter(lender=request.user.profile)
     return render(request, 'Sharing/received_requests_index.html', {'requests': requests})
 
-def received_requests_detail(request, tool_request_id):
+def asked_request_detail(request, tool_request_id):
+    tool_request = Request.objects.get(id = tool_request_id )
+    return render(request, 'Sharing/asked_request_detail.html', {'tool_request': tool_request})
+
+def received_request_detail(request, tool_request_id):
     profile = UserProfile.objects.get(user = request.user)
     tool_request = Request.objects.get(id = tool_request_id )
 

@@ -11,14 +11,23 @@
     <table>
       <thead>
         <tr>
-          <td>thing</td>
+          <td>Request</td>
+          <td></td>
+          <td>From</td>
+          <td>To</td>
+          <td>Accepted</td>
+          <td></td>
         </tr>
       </thead>
       <tbody>
       {% for request in requests %}
         <tr>
           <td>{{ request }}</td>
-          <td><a href="#">show</a></td>
+          <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="100">{% else %}no image{% endif %}</td>
+          <td>{{ request.start_date }}</td>
+          <td>{{ request.end_date }}</td>
+          <td>{{ request.approved }}</td>
+          <td><a href={% url 'sharing:asked-request-detail' request.id %}>show</a></td>
         </tr>
       {% endfor %}
       </tbody>

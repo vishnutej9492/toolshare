@@ -14,5 +14,6 @@ urlpatterns = patterns('',
     url(r'^create-request/(?P<tool_id>\d+)/$', views.create_request, name='create-request'),
     url(r'^received-requests/$', views.received_requests_index, name='received-requests'),
     url(r'^asked-requests/$', views.asked_requests_index, name='asked-requests'),
-    url(r'^asked-requests/(?P<tool_request_id>\d+)/$', views.received_requests_detail, name='received-request-detail'),
+    url(r'^received-requests/(?P<tool_request_id>\d+)/$', views.received_request_detail, name='received-request-detail'),
+    url(r'^asked-requests/(?P<tool_request_id>\d+)/$', views.asked_request_detail, name='asked-request-detail'),
 )
