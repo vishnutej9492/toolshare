@@ -21,12 +21,12 @@ class Shed(models.Model):
         return self.name
 
 class UserShedAssignation(models.Model):
-    user_profile = models.ForeignKey('UserAuth.UserProfile', related_name='user_shed_assignments', unique=True)
+    user_profile = models.ForeignKey('UserAuth.UserProfile', related_name='user_shed_assignations', unique=True)
     shed = models.ForeignKey(Shed, related_name='user_shed_assignations', unique = True)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
     def __str__(self):
-        return str(self.user_profile)
+        return "<" + str(self.user_profile) + "> coordinates <" + str(self.shed) + ">"
 
 class Arrangement(models.Model):
     start_date = models.DateTimeField()

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from Sharing.models import Shed
+from Sharing.models import Shed, UserShedAssignation
 from UserAuth.models import UserProfile
 from localflavor.us.forms import USZipCodeField
 from localflavor.us.forms import USStateField
@@ -14,7 +14,7 @@ class ShedCreateForm(forms.ModelForm):
 
 #May be the form is not required at all but I am adding it because, atleast we get indepedence of different behaviour.
 class ShedEditForm(forms.ModelForm):
-    the_assignations = forms.ModelMultipleChoiceField(queryset=UserProfile.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
+    user_shed_assignations = forms.ModelMultipleChoiceField(queryset=UserProfile.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
 
     # def __init__(self, *args, **kwargs):
     #     super(ShedEditForm, self).__init__(*args, **kwargs)
@@ -22,8 +22,8 @@ class ShedEditForm(forms.ModelForm):
     #         shed = kwargs.pop('instance')
     #         self.fields['user_shed_assignations'] = forms.ModelMultipleChoiceField(
     #             required=False,
-    #             # queryset = shed.user_shed_assignations.all(),
-    #             queryset = UserProfile.objects.all(),
+    #             queryset = shed.user_shed_assignations.all(),
+    #             # queryset = UserProfile.objects.all(),
     #             widget=forms.CheckboxSelectMultiple)
     class Meta:
         model = Shed
