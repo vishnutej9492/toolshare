@@ -6,8 +6,9 @@
   {{ bloc.super }}
 {% endblock %}
 {% block article_content %}
-  <h1>Received request listing</h1>
-  {% if requests|length > 0 %}
+  
+  <h1>Received requests (waiting)</h1>
+  {% if waiting_requests|length > 0 %}
     <table>
       <thead>
         <tr>
@@ -19,7 +20,7 @@
         </tr>
       </thead>
       <tbody>
-      {% for request in requests %}
+      {% for request in waiting_requests %}
         <tr>
           <td>{{ request }}</td>
           <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="100">{% else %}no image{% endif %}</td>
@@ -30,6 +31,35 @@
       {% endfor %}
       </tbody>
     </table>
+  {% else %}
+    <span>No requests.</span>
+  {% endif %}
+
+  <h3>Approved requests</h3>
+  {% if approved_requests|length > 0 %}
+    <table>
+      <thead>
+        <tr>
+          <td>Request</td>
+          <td></td>
+          <td>From</td>
+          <td>To</td>
+          <td></td>
+        </tr>
+      </thead>
+      <tbody>
+      {% for request in approved_requests %}
+        <tr>
+          <td>{{ request }}</td>
+          <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="50">{% else %}no image{% endif %}</td>
+          <td>{{ request.start_date }}</td>
+          <td>{{ request.end_date }}</td>
+          <td><a href={% url 'sharing:received-request-detail' request.id %}>Detail/Approve...</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
   {% else %}
     <span>No requests.</span>
   {% endif %}

@@ -175,8 +175,9 @@ def asked_requests_index(request):
     return render(request, 'Sharing/asked_requests_index.html', {'requests': requests})
 
 def received_requests_index(request):
-    requests = Request.objects.filter(lender=request.user.profile)
-    return render(request, 'Sharing/received_requests_index.html', {'requests': requests})
+    approved_requests = Request.objects.filter(lender=request.user.profile).filter(approved=True)
+    waiting_requests = Request.objects.filter(lender=request.user.profile).filter(approved=False)
+    return render(request, 'Sharing/received_requests_index.html', {'approved_requests': approved_requests, 'waiting_requests': waiting_requests})
 
 def asked_request_detail(request, tool_request_id):
     tool_request = Request.objects.get(id = tool_request_id )
