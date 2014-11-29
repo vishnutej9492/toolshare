@@ -40,4 +40,4 @@ class Request(Arrangement):
     approved = models.BooleanField(default=False)
 
     def __str__(self):
-        return "<"+ str(self.borrower) + "> has reuqested <" + str(self.lender) + "> a <" + str(self.tool) + ">"
+        return "<"+ str(self.borrower) + "> has requested <" + str(self.lender) + "> a <" + str(self.tool) + ">"
