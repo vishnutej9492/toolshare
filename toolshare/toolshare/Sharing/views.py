@@ -189,7 +189,10 @@ def received_requests_detail(request, tool_request_id):
 
     if request.POST:
         if can_approve:
-            tool_request.approved = True
+            if 'btn_approve' in request.POST:
+                tool_request.approved = True
+            else:
+                tool_request.approved = False
             tool_request.save()
             messages.add_message(request, messages.SUCCESS, 'Request was approved successfully')
             return HttpResponseRedirect(reverse('sharing:received-requests'))
