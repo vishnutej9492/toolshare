@@ -26,7 +26,6 @@ class Tool(models.Model):
     image = models.ImageField(upload_to="images/tools/", blank=True, null=True)
     identifier = models.CharField(verbose_name="Identifier", blank=True, null=True, max_length=200)
     shed = models.ForeignKey(Shed, related_name='tools', null = True, blank = True)
-    in_shed = models.BooleanField(default = False)
 
     def __str__(self):
         return self.name
