@@ -18,6 +18,12 @@ class Shed(models.Model):
     updated_at = models.DateTimeField(auto_now = True)
     coordinators = models.ManyToManyField('UserAuth.UserProfile', related_name = 'sheds', null =True,blank = True)
 
+    def iscoordinator(self,profile):
+        if profile in self.coordinators.all():
+            return True
+        else:
+            return False
+
     def __str__(self):
         return self.name
 

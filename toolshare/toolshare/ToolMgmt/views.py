@@ -145,8 +145,12 @@ class ToolModelForm(forms.ModelForm):
 def detail(request, tool_id):
     tool = Tool.objects.get(pk=tool_id)
     is_owner = Is_Owner( request.user.profile, tool)
+    iscoordinator = False
+    if tool.inshed():
+        shed = tool.shed
+        iscoordinator = shed.iscoordinator(request.user.profile)
     if (request.method == 'GET'):
-        return render(request, 'ToolMgmt/detail.html', {'tool': tool,'is_owner':is_owner})
+        return render(request, 'ToolMgmt/detail.html', {'tool': tool,'is_owner':is_owner,'user':request.user.profile,'iscoordinator':iscoordinator,})
     else:
         tool = Tool.objects.get(pk=tool_id)
         if tool.active:
