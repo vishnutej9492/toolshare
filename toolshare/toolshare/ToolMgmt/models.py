@@ -29,3 +29,9 @@ class Tool(models.Model):
 
     def __str__(self):
         return self.name
+
+    def inshed(self):
+        if not self.shed:
+            return False
+        else:
+            return True
