@@ -84,9 +84,62 @@ class ToolModelForm(forms.ModelForm):
 
     identifier = forms.CharField(label="Identifier", help_text="Unique identifier to distinguish between similar tools", required=False)
     category = forms.ModelChoiceField(label="Category",queryset=ToolCategory.objects.all(), error_messages=error_category)
+    
+    def __init__(self, *args, **kwargs):
+        super(ToolModelForm, self).__init__(*args, **kwargs)
+        instance = getattr(self, 'instance', None)
+        if self.instance.inshed():
+            self.fields['name'].widget.attrs['readonly'] = True
+            self.fields['description'].widget.attrs['readonly'] = True
+            self.fields['category'].widget.attrs['readonly'] = True
+            self.fields['status'].widget.attrs['readonly'] = True
+            self.fields['image'].widget.attrs['readonly'] = True
+            self.fields['identifier'].widget.attrs['readonly'] = True
+            self.fields['active'].widget.attrs['readonly'] = True
     class Meta:
         model = Tool
         fields= ('name', 'description', 'category', 'status', 'image', 'identifier', 'active')
+    def clean_name(self):
+        if self.instance.inshed:
+            return self.instance.name
+        else:
+            return self.cleaned_data.get('name')
+    
+    def clean_description(self):
+        if self.instance.inshed:
+            return self.instance.description
+        else:
+            return self.cleaned_data.get('description')
+    
+    def clean_category(self):
+        if self.instance.inshed:
+            return self.instance.category
+        else:
+            return self.cleaned_data.get('category')
+    def clean_status(self):
+        if self.instance.inshed:
+            return self.instance.status
+        else:
+            return self.cleaned_data.get('status')
+    def clean_image(self):
+        if self.instance.inshed:
+            return self.instance.image
+        else:
+            return self.cleaned_data.get('image')
+    def clean_identifier(self):
+        if self.instance.inshed:
+            return self.instance.identifier
+        else:
+            return self.cleaned_data.get('identifier')
+
+    def clean_active(self):
+        if self.instance.inshed:
+            return self.instance.active
+        else:
+            return self.cleaned_data.get('active')
+
+
+
 
 @login_required(login_url='users:login')
 def detail(request, tool_id):
