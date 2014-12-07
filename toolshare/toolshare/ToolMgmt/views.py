@@ -82,7 +82,7 @@ class ToolModelForm(forms.ModelForm):
         # 'invalid': 'Wrong selection.'
     }
 
-    identifier = forms.CharField(label="Identifier", help_text="Unique identifier to distinguish between similar tools", required=False)
+    identifier = forms.CharField(label="Identifier", help_text="Unique identifier to distinguish between similar tools", required=True)
     category = forms.ModelChoiceField(label="Category",queryset=ToolCategory.objects.all(), error_messages=error_category)
     class Meta:
         model = Tool
