@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     url(r'sheds/(?P<shed_id>\d+)/coords/$', views.shedcoords, name='shedcoords'),
     url(r'sheds/(?P<shed_id>\d+)/coords/add/$',views.shedaddcoords,name='shedaddcoords'),
     url(r'sheds/tooltransfer/(?P<tool_id>\d+)/$',views.tooltransfer,name = 'tooltransfer'),
+    url(r'sheds/returntool/(?<tool_id>\d+)/$',views.returntool,name = 'returntool'),
     #+++++++++++++++++SHED url ends here ++++++++++++++++++++++++++++++++++#
     url(r'^create-request/(?P<tool_id>\d+)/$', views.create_request, name='create-request'),
     url(r'^received-requests/$', views.received_requests_index, name='received-requests'),
