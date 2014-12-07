@@ -22,7 +22,7 @@ class UserProfile(models.Model):
     ) 
     user = models.OneToOneField(User, related_name='profile')
     add_line1 = models.CharField(verbose_name="Address Line 1",max_length = 100)
-    add_line2 = models.CharField(verbose_name="Address Line 2",max_length = 100)
+    add_line2 = models.CharField(verbose_name="Address Line 2",max_length = 100, blank= True)
     state = USStateField(choices = STATE_CHOICES)
     reminder_preferences =models.IntegerField(choices = REMINDER_CHOICES) 
     pickup_loc = models.CharField(verbose_name="Pickup arrangements",max_length = 100)
