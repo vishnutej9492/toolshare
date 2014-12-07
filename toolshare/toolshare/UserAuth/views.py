@@ -15,6 +15,7 @@ from django.core import validators
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from Sharing.models import ShareZone
+import pdb
 
 @login_required(login_url='users:login')
 def index(request):
@@ -85,9 +86,14 @@ def user_edit(request):
     edited1=False
     user1 = request.user
     #instill the instance in the form
+
     edit_form= UserEditForm(instance=request.user)
     current_profile = UserProfile.objects.get(user = request.user)
+    zipcode =current_profile.sharezone.zipcode
     profile_form= UserProfileForm(instance = current_profile)
+    profile_form.fields['zipcode'].initial = zipcode
+
+
 
     if request.method == 'POST':
         edit_form= UserEditForm(data=request.POST,instance = request.user)
