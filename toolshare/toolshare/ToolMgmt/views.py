@@ -16,8 +16,7 @@ import pdb
 
 @login_required(login_url='users:login')
 def index(request):
-    all_tools = Tool.objects.all()
-    all_tools = Tool.objects.filter(owner__sharezone = request.user.profile.sharezone)
+    all_tools = Tool.objects.filter(owner__sharezone = request.user.profile.sharezone).filter(active=True)
     paginator = Paginator(all_tools, 6)
     page = request.GET.get('page')
 
