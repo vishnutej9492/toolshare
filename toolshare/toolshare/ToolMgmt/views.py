@@ -20,6 +20,7 @@ def index(request):
     all_tools = Tool.objects.filter(owner__sharezone = request.user.profile.sharezone)
     paginator = Paginator(all_tools, 6)
     page = request.GET.get('page')
+    #
 
     try:
         paged_tools = paginator.page(page)
