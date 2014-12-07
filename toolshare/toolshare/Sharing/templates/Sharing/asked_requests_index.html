@@ -16,6 +16,7 @@
         <td>To</td>
         <td>Accepted</td>
         <td></td>
+        <td></td>
       </tr>
     </thead>
     <tbody>
@@ -27,6 +28,7 @@
         <td>{{ request.end_date }}</td>
         <td>{{ request.approved }}</td>
         <td><a href={% url 'sharing:asked-request-detail' request.id %}>show</a></td>
+        <td><a href={% url 'sharing:asked-request-edit' request.id %}>Edit</a></td>
       </tr>
     {% endfor %}
     </tbody>
@@ -74,7 +76,7 @@
     {% for request in past_requests %}
       <tr>
         <td>{{ request }}</td>
-        <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="100">{% else %}no image{% endif %}</td>
+        <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="50">{% else %}no image{% endif %}</td>
         <td>{{ request.start_date }}</td>
         <td>{{ request.end_date }}</td>
         <td>{{ request.approved }}</td>
