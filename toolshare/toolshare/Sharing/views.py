@@ -173,8 +173,14 @@ class RequestModelForm(forms.ModelForm):
 
 
 def asked_requests_index(request):
-    requests = Request.objects.filter(borrower=request.user.profile)
-    return render(request, 'Sharing/asked_requests_index.html', {'requests': requests})
+    # requests = Request.objects.filter(borrower=request.user.profile)
+    # return render(request, 'Sharing/asked_requests_index.html', {'requests': requests})
+
+    now = datetime.datetime.utcnow().replace(tzinfo=utc)
+    waiting_requests = Request.objects.filter(borrower=request.user.profile).filter(approved=False).filter(start_date__gte=now)
+    approved_requests = Request.objects.filter(borrower=request.user.profile).filter(approved=True).filter(start_date__gte=now)
+    past_requests = Request.objects.filter(borrower=request.user.profile).filter(start_date__lt=now)
+    return render(request, 'Sharing/asked_requests_index.html', {'approved_requests': approved_requests, 'waiting_requests': waiting_requests, 'past_requests': past_requests})
 
 def received_requests_index(request):
     now = datetime.datetime.utcnow().replace(tzinfo=utc)
