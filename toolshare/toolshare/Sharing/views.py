@@ -170,6 +170,15 @@ class RequestModelForm(forms.ModelForm):
     class Meta:
         model = Request
         fields= ( 'start_date', 'end_date','msg')
+    def clean(self):
+        start_date = self.cleaned_data.get('start_date')
+        end_date = self.cleaned_data.get('end_date')
+        if start_date > end_date:
+            raise forms.ValidationError("Start date cannot be greater that end date")
+        now = datetime.datetime.utcnow().replace(tzinfo=utc)
+        if start_date < now:
+            raise forms.ValidationError("Start date cannot be lower than now")
+        return self.cleaned_data
 
 
 def asked_requests_index(request):
