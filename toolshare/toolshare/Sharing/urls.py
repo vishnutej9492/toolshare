@@ -10,11 +10,14 @@ urlpatterns = patterns('',
     url(r'sheds/(?P<shed_id>\d+)/coords/$', views.shedcoords, name='shedcoords'),
     url(r'sheds/(?P<shed_id>\d+)/coords/add/$',views.shedaddcoords,name='shedaddcoords'),
     url(r'sheds/tooltransfer/(?P<tool_id>\d+)/$',views.tooltransfer,name = 'tooltransfer'),
-    url(r'sheds/returntool/(?<tool_id>\d+)/$',views.returntool,name = 'returntool'),
+    url(r'sheds/returntool/(?P<tool_id>\d+)/$',views.returntool,name = 'returntool'),
     #+++++++++++++++++SHED url ends here ++++++++++++++++++++++++++++++++++#
     url(r'^create-request/(?P<tool_id>\d+)/$', views.create_request, name='create-request'),
     url(r'^received-requests/$', views.received_requests_index, name='received-requests'),
     url(r'^asked-requests/$', views.asked_requests_index, name='asked-requests'),
     url(r'^received-requests/(?P<tool_request_id>\d+)/$', views.received_request_detail, name='received-request-detail'),
     url(r'^asked-requests/(?P<tool_request_id>\d+)/$', views.asked_request_detail, name='asked-request-detail'),
+
+    #+++++++++++++++++++Search Tool Functionality ++++++++++++++++++++++++++#
+    url(r'^searchtools/$', views.searchtools , name = 'searchtools'),
 )

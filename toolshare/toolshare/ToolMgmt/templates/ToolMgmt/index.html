@@ -7,6 +7,10 @@
 {% endblock %}
 {% block article_content %}
   <h1>Tool listing</h1>
+<label>Search Tool<label>
+<input type="text" />
+<a class="button" href="#">Search</a>
+<br />
   {% if all_tools|length > 0 %}
     <table>
       <thead>

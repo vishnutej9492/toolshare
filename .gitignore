@@ -63,6 +63,7 @@ docs/_build/
 .project
 .DS Store
 *.py.swn
+*.py.swm
 # exclude LibreOffice temp files.
 .~lock.*
 

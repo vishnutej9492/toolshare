@@ -154,7 +154,13 @@ def returntool(request,tool_id):
             messages.add_message(request,messages.ERROR,"You are not authorised to return the tool")
             return HttpResponseRedirect(reverse('toolmgmt:detail',kwargs = {'tool_id':tool_id}))  
 ######+++++++++++++++All things related to Shed end here+++++++++++++++#########
+#######++++++++++++++All things related to search here +++++++++++++++++########
+def searchtools(request):
 
+    return HttpResponse("searchtools")
+
+
+#########+++++++++++++All things related to search ends here ++++++++++++########
 def create_request(request, tool_id):
     context = RequestContext(request)
     tool = Tool.objects.get(id = tool_id)
