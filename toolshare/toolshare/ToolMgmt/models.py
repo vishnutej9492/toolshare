@@ -1,6 +1,7 @@
 from django.db import models
 from UserAuth.models import UserProfile
 from Sharing.models import ShareZone, Shed
+import pdb
 
 class ToolCategory(models.Model):
     name = models.CharField(verbose_name="Name", max_length=100)
