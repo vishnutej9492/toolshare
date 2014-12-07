@@ -181,7 +181,7 @@ def received_requests_index(request):
     waiting_requests = Request.objects.filter(lender=request.user.profile).filter(approved=False).filter(start_date__gte=now)
     approved_requests = Request.objects.filter(lender=request.user.profile).filter(approved=True).filter(start_date__gte=now)
     past_requests = Request.objects.filter(lender=request.user.profile).filter(start_date__lt=now)
-    return render(request, 'Sharing/received_requests_index.html', {'approved_requests': approved_requests, 'waiting_requests': waiting_requests})
+    return render(request, 'Sharing/received_requests_index.html', {'approved_requests': approved_requests, 'waiting_requests': waiting_requests, 'past_requests': past_requests})
 
 def asked_request_detail(request, tool_request_id):
     tool_request = Request.objects.get(id = tool_request_id )

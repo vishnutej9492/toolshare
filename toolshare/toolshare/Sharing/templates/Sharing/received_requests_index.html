@@ -8,7 +8,6 @@
 {% block article_content %}
   
   <h1>Received requests (waiting)</h1>
-  {% if waiting_requests|length > 0 %}
     <table>
       <thead>
         <tr>
@@ -31,12 +30,9 @@
       {% endfor %}
       </tbody>
     </table>
-  {% else %}
-    <span>No requests.</span>
-  {% endif %}
 
   <h4>Approved requests</h4 >
-  {% if approved_requests|length > 0 %}
+
     <table>
       <thead>
         <tr>
@@ -59,11 +55,9 @@
       {% endfor %}
       </tbody>
     </table>
-  {% else %}
-    <span>No requests.</span>
-  {% endif %}
+
   <h4>Past requests</h4>
-  {% if past_requests|length > 0 %}
+
     <table>
       <thead>
         <tr>
@@ -86,7 +80,5 @@
       {% endfor %}
       </tbody>
     </table>
-  {% else %}
-    <span>No requests.</span>
-  {% endif %}
+
 {% endblock %}
