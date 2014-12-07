@@ -193,6 +193,26 @@ def asked_request_detail(request, tool_request_id):
     tool_request = Request.objects.get(id = tool_request_id )
     return render(request, 'Sharing/asked_request_detail.html', {'tool_request': tool_request})
 
+def asked_request_edit(request, tool_request_id):
+    context = RequestContext(request)
+    tool_request = Request.objects.get(id = tool_request_id)
+    if tool_request.borrower == request.user.profile:
+        if request.POST:
+            form = RequestModelForm(request.POST, request.FILES, instance=tool_request)
+            if form.is_valid():
+                new_tool_request = form.save()
+                new_tool_request.save()
+                messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully edited' % new_tool_request)
+                return HttpResponseRedirect(reverse('sharing:asked-request-detail', kwargs = {'tool_request_id': new_tool_request.id}))
+            else:
+                return render_to_response('Sharing/asked_request_edit.html', {'form': form, 'tool_request' : tool_request}, context)
+        else:
+            form = RequestModelForm(instance=tool_request)
+            return render_to_response('Sharing/asked_request_edit.html', {'form': form, 'tool_request' : tool_request}, context)
+    else:
+        messages.add_message(request,messages.ERROR, 'You are not authorised to edit this tool request')
+        return HttpResponseRedirect(reverse('sharing:asked-request-detail', kwargs = {'tool_request_id':tool_request_id}))
+
 def received_request_detail(request, tool_request_id):
     profile = UserProfile.objects.get(user = request.user)
     tool_request = Request.objects.get(id = tool_request_id )
