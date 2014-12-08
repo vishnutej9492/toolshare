@@ -184,9 +184,11 @@ class RequestModelForm(forms.ModelForm):
 
 def asked_requests_index(request):
     now = datetime.datetime.utcnow().replace(tzinfo=utc)
-    waiting_requests = Request.objects.filter(borrower=request.user.profile).filter(approved=False).filter(end_date__gte=now)
-    approved_requests = Request.objects.filter(borrower=request.user.profile).filter(approved=True).filter(end_date__gte=now)
-    past_requests = Request.objects.filter(borrower=request.user.profile).filter(end_date__lt=now)
+    waiting_requests = Request.objects.filter(borrower=request.user.profile).filter(approved=False).filter(end_date__gte=now).order_by('-start_date')
+    approved_requests = Request.objects.filter(Q(borrower=request.user.profile) & Q(approved=True) &
+                                               Q(end_date__gte=now) & Q(sharing__isnull=True)).order_by('start_date')
+    past_requests = Request.objects.filter(Q(borrower=request.user.profile) &
+                                          (Q(end_date__lt=now) | Q(sharing__isnull=False))).order_by('-start_date')
     return render(request, 'Sharing/asked_requests_index.html', {'approved_requests': approved_requests, 'waiting_requests': waiting_requests, 'past_requests': past_requests})
 
 def received_requests_index(request):
