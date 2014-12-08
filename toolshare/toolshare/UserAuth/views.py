@@ -15,6 +15,8 @@ from django.core import validators
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from Sharing.models import ShareZone
+from UserAuth.utils import CreateAllocateZone
+import pdb
 
 @login_required(login_url='users:login')
 def index(request):
@@ -85,9 +87,14 @@ def user_edit(request):
     edited1=False
     user1 = request.user
     #instill the instance in the form
+
     edit_form= UserEditForm(instance=request.user)
     current_profile = UserProfile.objects.get(user = request.user)
+    zipcode =current_profile.sharezone.zipcode
     profile_form= UserProfileForm(instance = current_profile)
+    profile_form.fields['zipcode'].initial = zipcode
+
+
 
     if request.method == 'POST':
         edit_form= UserEditForm(data=request.POST,instance = request.user)
@@ -97,6 +104,9 @@ def user_edit(request):
             #if user.password is not None and len(user.password) > 0:
             user.save()
             profile=profile_form.save(commit=False)
+            if zipcode != profile_form.cleaned_data['zipcode']:
+                zone =  CreateAllocateZone(profile_form.cleaned_data['zipcode'])
+                profile.sharezone = zone
             profile.user=user
             profile.save()
             edited1=True
