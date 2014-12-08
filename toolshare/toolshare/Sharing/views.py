@@ -289,8 +289,8 @@ class SharingModelForm(forms.ModelForm):
 
 def given_tools_index(request):
     now = datetime.datetime.utcnow().replace(tzinfo=utc)
-    current = Sharing.objects.filter(lender=request.user.profile).filter(returned=False).order_by('-start_date')
-    past = Sharing.objects.filter(Q(lender=request.user.profile) & (Q(end_date__lt=now) | Q(returned=True))).order_by('-start_date')
+    current = Sharing.objects.filter( Q(lender=request.user.profile) & Q(returned=False) & Q(finished=False)).order_by('-start_date')
+    past = Sharing.objects.filter(Q(lender=request.user.profile) & (Q(end_date__lt=now) | Q(finished=True))).order_by('-start_date')
     return render(request, 'Sharing/given_tools.html', {'current_given_tools': current, 'past_given_tools': past })
 
 class ReturnSharingModelForm(forms.ModelForm):
@@ -313,6 +313,7 @@ def given_tool_edit(request, tool_sharing_id):
             form = ReturnSharingModelForm(request.POST, request.FILES, instance=tool_sharing)
             if form.is_valid():
                 new_tool_sharing = form.save()
+                new_tool_sharing.finished = True
                 new_tool_sharing.save()
                 messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully set as returned' % new_tool_sharing)
                 return HttpResponseRedirect(reverse('sharing:given-tools'))
