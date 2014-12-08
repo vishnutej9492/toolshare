@@ -133,6 +133,12 @@
   </script>
 <script src="http://foundation.zurb.com/assets/js/templates/jquery.js"></script>
 <script src="http://foundation.zurb.com/assets/js/templates/foundation.js"></script>
+<script>
+      $(document).foundation();
+
+      var doc = document.documentElement;
+      doc.setAttribute('data-useragent', navigator.userAgent);
+    </script>
 <script src="https://rawgit.com/xdan/datetimepicker/master/jquery.js"></script>
 <script src="https://rawgit.com/xdan/datetimepicker/master/jquery.datetimepicker.js"></script>
 <script>
@@ -151,11 +157,5 @@ startDate:  '2014/12/08',
 format: 'Y-m-d H:i'
 });
 </script>
-<script>
-      $(document).foundation();
-
-      var doc = document.documentElement;
-      doc.setAttribute('data-useragent', navigator.userAgent);
-    </script>
 </body>
 </html>
