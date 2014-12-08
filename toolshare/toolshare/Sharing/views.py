@@ -164,6 +164,8 @@ def create_request(request, tool_id):
     else:
         print("GET")
         form = RequestModelForm()
+        form.fields['start_date'].widget.attrs['id'] = 'datetimepicker'
+        form.fields['end_date'].widget.attrs['id'] = 'datetimepicker2'
         return render_to_response('Sharing/create_request.html', {'form': form, 'tool': tool}, context)
 
 class RequestModelForm(forms.ModelForm):
