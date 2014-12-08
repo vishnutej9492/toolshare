@@ -43,7 +43,6 @@ def register(request):
         if form.is_valid():
             new_tool = form.save()
             new_tool.owner = UserProfile.objects.get( user = request.user)
-            new_tool.actire = True
             new_tool.save()
             messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully created' % new_tool)
             return HttpResponseRedirect(reverse('toolmgmt:detail', kwargs={'tool_id': new_tool.id}))
@@ -65,7 +64,7 @@ def tool_edit(request, tool_id):
                 new_tool = form.save()
                 new_tool.owner = UserProfile.objects.get( user = request.user)
                 new_tool.save()
-                messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully created' % new_tool)
+                messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully edited' % new_tool)
                 return HttpResponseRedirect(reverse('toolmgmt:detail', kwargs={'tool_id': new_tool.id}))
             else:
                 return render_to_response('ToolMgmt/edit.html', {'form': form, 'tool' : tool}, context)

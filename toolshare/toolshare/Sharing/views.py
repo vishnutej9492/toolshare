@@ -14,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import pdb
 from django.core.exceptions import ObjectDoesNotExist
-from Sharing.models import Arrangement, Request
+from Sharing.models import Arrangement, Request, Sharing
 from django import forms
 
 import datetime
@@ -164,28 +164,63 @@ def create_request(request, tool_id):
     else:
         print("GET")
         form = RequestModelForm()
+        form.fields['start_date'].widget.attrs['id'] = 'datetimepicker'
+        form.fields['end_date'].widget.attrs['id'] = 'datetimepicker2'
         return render_to_response('Sharing/create_request.html', {'form': form, 'tool': tool}, context)
 
 class RequestModelForm(forms.ModelForm):
     class Meta:
         model = Request
         fields= ( 'start_date', 'end_date','msg')
+    def clean(self):
+        start_date = self.cleaned_data.get('start_date')
+        end_date = self.cleaned_data.get('end_date')
+        if start_date > end_date:
+            raise forms.ValidationError("Start date cannot be greater that end date")
+        now = datetime.datetime.utcnow().replace(tzinfo=utc)
+        if start_date < now:
+            raise forms.ValidationError("Start date cannot be lower than now")
+        return self.cleaned_data
 
 
 def asked_requests_index(request):
-    requests = Request.objects.filter(borrower=request.user.profile)
-    return render(request, 'Sharing/asked_requests_index.html', {'requests': requests})
+    now = datetime.datetime.utcnow().replace(tzinfo=utc)
+    waiting_requests = Request.objects.filter(borrower=request.user.profile).filter(approved=False).filter(end_date__gte=now)
+    approved_requests = Request.objects.filter(borrower=request.user.profile).filter(approved=True).filter(end_date__gte=now)
+    past_requests = Request.objects.filter(borrower=request.user.profile).filter(end_date__lt=now)
+    return render(request, 'Sharing/asked_requests_index.html', {'approved_requests': approved_requests, 'waiting_requests': waiting_requests, 'past_requests': past_requests})
 
 def received_requests_index(request):
     now = datetime.datetime.utcnow().replace(tzinfo=utc)
-    waiting_requests = Request.objects.filter(lender=request.user.profile).filter(approved=False).filter(start_date__gte=now)
-    approved_requests = Request.objects.filter(lender=request.user.profile).filter(approved=True).filter(start_date__gte=now)
-    past_requests = Request.objects.filter(lender=request.user.profile).filter(start_date__lt=now)
-    return render(request, 'Sharing/received_requests_index.html', {'approved_requests': approved_requests, 'waiting_requests': waiting_requests})
+    waiting_requests = Request.objects.filter(lender=request.user.profile).filter(approved=False).filter(end_date__gte=now)
+    approved_requests = Request.objects.filter(lender=request.user.profile).filter(approved=True).filter(end_date__gte=now)
+    past_requests = Request.objects.filter(lender=request.user.profile).filter(end_date__lt=now)
+    return render(request, 'Sharing/received_requests_index.html', {'approved_requests': approved_requests, 'waiting_requests': waiting_requests, 'past_requests': past_requests})
 
 def asked_request_detail(request, tool_request_id):
     tool_request = Request.objects.get(id = tool_request_id )
     return render(request, 'Sharing/asked_request_detail.html', {'tool_request': tool_request})
+
+def asked_request_edit(request, tool_request_id):
+    context = RequestContext(request)
+    tool_request = Request.objects.get(id = tool_request_id)
+    now = datetime.datetime.utcnow().replace(tzinfo=utc)
+    if((tool_request.borrower == request.user.profile) and (tool_request.start_date >= now)):
+        if request.POST:
+            form = RequestModelForm(request.POST, request.FILES, instance=tool_request)
+            if form.is_valid():
+                new_tool_request = form.save()
+                new_tool_request.save()
+                messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully edited' % new_tool_request)
+                return HttpResponseRedirect(reverse('sharing:asked-request-detail', kwargs = {'tool_request_id': new_tool_request.id}))
+            else:
+                return render_to_response('Sharing/asked_request_edit.html', {'form': form, 'tool_request' : tool_request}, context)
+        else:
+            form = RequestModelForm(instance=tool_request)
+            return render_to_response('Sharing/asked_request_edit.html', {'form': form, 'tool_request' : tool_request}, context)
+    else:
+        messages.add_message(request,messages.ERROR, 'You are not authorised to edit this tool request')
+        return HttpResponseRedirect(reverse('sharing:asked-request-detail', kwargs = {'tool_request_id':tool_request_id}))
 
 def received_request_detail(request, tool_request_id):
     profile = UserProfile.objects.get(user = request.user)
@@ -210,3 +245,41 @@ def received_request_detail(request, tool_request_id):
     else:
         tool_request = Request.objects.get(pk=tool_request_id)
         return render(request, 'Sharing/received_request_detail.html', {'tool_request': tool_request,'can_approve':can_approve})
+
+def create_sharing(request, tool_request_id):
+    context = RequestContext(request)
+    tool_request = Request.objects.get(id = tool_request_id)
+    now = datetime.datetime.utcnow().replace(tzinfo=utc)
+
+    if((tool_request.lender == request.user.profile) and (now >= tool_request.start_date and now <= tool_request.end_date)):
+        if request.POST:
+            form = SharingModelForm(request.POST)
+            if form.is_valid():
+                new_sharing = form.save(commit=False)
+                new_sharing.pickup_arrangement = tool_request.pickup_arrangement
+                new_sharing.borrower = tool_request.borrower
+                new_sharing.lender = tool_request.lender
+                new_sharing.tool = tool_request.tool
+                new_sharing.start_date = tool_request.start_date
+                new_sharing.end_date = tool_request.end_date
+                new_sharing.save()
+                form.save_m2m()
+                messages.add_message(request, messages.SUCCESS, 'Tool %s is now in possesion of %s' % (new_sharing.tool, new_sharing.borrower))
+
+                return HttpResponseRedirect(reverse('sharing:asked-requests'))
+            else:
+                return render_to_response('Sharing/create_sharing.html', {'form': form, 'tool_request': tool_request.tool}, context)
+        else:
+            print("GET")
+            form = SharingModelForm(initial={'start_date' : tool_request.start_date, 'end_date' : tool_request.end_date})
+            form.fields['start_date'].widget.attrs['readonly'] = True
+            form.fields['end_date'].widget.attrs['readonly'] = True
+            return render_to_response('Sharing/create_sharing.html', {'form': form, 'tool_request': tool_request }, context)
+    else:
+        messages.add_message(request,messages.ERROR, 'You are not authorised to share a tool outside its requesting time period')
+        return HttpResponseRedirect(reverse('sharing:received-requests')) #, kwargs = {'tool_request_id':tool_request_id}))
+
+class SharingModelForm(forms.ModelForm):
+    class Meta:
+        model = Sharing
+        fields= ('start_date', 'end_date', 'comment',)
