@@ -16,7 +16,7 @@ import pdb
 from django.core.exceptions import ObjectDoesNotExist
 from Sharing.models import Arrangement, Request, Sharing
 from django import forms
-
+from django.db.models import Q
 import datetime
 from django.utils.timezone import utc
 
@@ -182,7 +182,6 @@ class RequestModelForm(forms.ModelForm):
             raise forms.ValidationError("Start date cannot be lower than now")
         return self.cleaned_data
 
-
 def asked_requests_index(request):
     now = datetime.datetime.utcnow().replace(tzinfo=utc)
     waiting_requests = Request.objects.filter(borrower=request.user.profile).filter(approved=False).filter(end_date__gte=now)
@@ -193,8 +192,10 @@ def asked_requests_index(request):
 def received_requests_index(request):
     now = datetime.datetime.utcnow().replace(tzinfo=utc)
     waiting_requests = Request.objects.filter(lender=request.user.profile).filter(approved=False).filter(end_date__gte=now)
-    approved_requests = Request.objects.filter(lender=request.user.profile).filter(approved=True).filter(end_date__gte=now)
-    past_requests = Request.objects.filter(lender=request.user.profile).filter(end_date__lt=now)
+    approved_requests = Request.objects.filter(Q(lender=request.user.profile) & Q(approved=True) &
+                                               Q(end_date__gte=now) & Q(sharing__isnull=True)).order_by('start_date')
+    past_requests = Request.objects.filter(Q(lender=request.user.profile) &
+                                          (Q(end_date__lt=now) | Q(sharing__isnull=False))).order_by('-start_date')
     return render(request, 'Sharing/received_requests_index.html', {'approved_requests': approved_requests, 'waiting_requests': waiting_requests, 'past_requests': past_requests})
 
 def asked_request_detail(request, tool_request_id):
