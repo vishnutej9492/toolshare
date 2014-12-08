@@ -37,6 +37,7 @@ class Arrangement(models.Model):
 class Sharing(Arrangement): 
     comment = models.CharField(verbose_name="Comment about the sharing", max_length=200)
     returned = models.BooleanField(default=False)
+    finished = models.BooleanField(default=False)
     rated = models.PositiveSmallIntegerField(default=1)
     sharing_comment = models.CharField(verbose_name="Comment about on how the sharing", max_length=200, null =True, blank = True)
 
