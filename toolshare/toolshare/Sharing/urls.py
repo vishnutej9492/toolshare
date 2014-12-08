@@ -20,4 +20,5 @@ urlpatterns = patterns('',
     url(r'^received-requests/(?P<tool_request_id>\d+)/$', views.received_request_detail, name='received-request-detail'),
     url(r'^asked-requests/(?P<tool_request_id>\d+)/$', views.asked_request_detail, name='asked-request-detail'),
     url(r'^asked-requests/(?P<tool_request_id>\d+)/edit$', views.asked_request_edit, name='asked-request-edit'),
+    url(r'^given-tools/$', views.given_tools_index, name='given-tools'),
 )

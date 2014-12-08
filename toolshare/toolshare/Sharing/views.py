@@ -286,3 +286,9 @@ class SharingModelForm(forms.ModelForm):
     class Meta:
         model = Sharing
         fields= ('start_date', 'end_date', 'comment',)
+
+def given_tools_index(request):
+    now = datetime.datetime.utcnow().replace(tzinfo=utc)
+    current = Sharing.objects.filter(lender=request.user.profile).filter(returned=False).order_by('-start_date')
+    past = Sharing.objects.filter(Q(lender=request.user.profile) & (Q(end_date__lt=now) & Q(returned=True))).order_by('-start_date')
+    return render(request, 'Sharing/given_tools.html', {'current_given_tools': current, 'past_given_tools': past })
