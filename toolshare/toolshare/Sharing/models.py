@@ -41,6 +41,7 @@ class Sharing(Arrangement):
 class Request(Arrangement):
     msg = models.CharField(verbose_name="Arrangement message for requesting", max_length=200)
     approved = models.BooleanField(default=False)
+    sharing = models.OneToOneField(Sharing, related_name='request', null =True, blank = True)
 
     def __str__(self):
         return "<"+ str(self.borrower) + "> has requested <" + str(self.lender) + "> a <" + str(self.tool) + ">"

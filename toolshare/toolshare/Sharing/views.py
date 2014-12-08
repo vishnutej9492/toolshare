@@ -264,6 +264,8 @@ def create_sharing(request, tool_request_id):
                 new_sharing.end_date = tool_request.end_date
                 new_sharing.save()
                 form.save_m2m()
+                tool_request.sharing = new_sharing
+                tool_request.save()
                 messages.add_message(request, messages.SUCCESS, 'Tool %s is now in possesion of %s' % (new_sharing.tool, new_sharing.borrower))
 
                 return HttpResponseRedirect(reverse('sharing:asked-requests'))
