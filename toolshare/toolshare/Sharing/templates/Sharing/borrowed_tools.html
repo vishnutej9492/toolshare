@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title_html %}
+  Borrowed tools from the community
+{% endblock %}
+{% block h1 %}
+  {{ bloc.super }}
+{% endblock %}
+{% block article_content %}
+  
+  <h1>Current borrowed tools</h1>
+  <table>
+    <thead>
+      <tr>
+        <td>Lender</td>
+        <td>tool</td>
+        <td>From</td>
+        <td>To</td>
+        <td>Returned</td>
+        <td></td>
+      </tr>
+    </thead>
+    <tbody>
+    {% for request in current_borrowed_tools %}
+      <tr>
+        <td>{{ request.lender }}</td>
+        <td>
+
+          <div>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="100">{% else %}no image{% endif %} | {{ request.tool.name }} </div>
+        </td>
+        <td>{{ request.start_date }}</td>
+        <td>{{ request.end_date }}</td>
+        <td>{{ request.returned }}</td>
+        <td><a href={% url 'sharing:given-tool-edit' request.id %}>End sharing...</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <h1>Past borrowed tools</h1>
+  <table>
+    <thead>
+      <tr>
+        <td>lender</td>
+        <td>tool</td>
+        <td>From</td>
+        <td>To</td>
+        <td>Returned</td>
+        <td>Comment</td>
+        <td>Rated</td>
+      </tr>
+    </thead>
+    <tbody>
+    {% for request in past_borrowed_tools %}
+      <tr>
+        <td>{{ request.lender }}</td>
+        <td>
+
+          <div>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="100">{% else %}no image{% endif %} | {{ request.tool.name }} </div>
+        </td>
+        <td>{{ request.start_date }}</td>
+        <td>{{ request.end_date }}</td>
+        <td>{{ request.returned }}</td>
+        <td>{{ request.sharing_comment }} </td>
+        <td>{{ request.rated }} </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

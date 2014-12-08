@@ -325,3 +325,9 @@ def given_tool_edit(request, tool_sharing_id):
     else:
         messages.add_message(request,messages.ERROR, 'You are not authorised to edit this tool sharing')
         return HttpResponseRedirect(reverse('sharing:given-tools'))
+
+def borrowed_tools_index(request):
+    now = datetime.datetime.utcnow().replace(tzinfo=utc)
+    current = Sharing.objects.filter( Q(borrower=request.user.profile) & Q(returned=False) & Q(finished=False)).order_by('-start_date')
+    past = Sharing.objects.filter(Q(borrower=request.user.profile) & (Q(end_date__lt=now) | Q(finished=True))).order_by('-start_date')
+    return render(request, 'Sharing/borrowed_tools.html', {'current_borrowed_tools': current, 'past_borrowed_tools': past })
