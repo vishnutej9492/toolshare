@@ -24,7 +24,8 @@ class UserProfileForm(forms.ModelForm):
     zipcode = USZipCodeField()
     class Meta:
         model = UserProfile
-        fields= ('add_line1','add_line2','reminder_preferences','pickup_loc','profile_photo')
+        fields= ('add_line1','add_line2','zipcode','reminder_preferences','pickup_loc','profile_photo')
+        # fields= ('add_line1','add_line2','reminder_preferences','pickup_loc','profile_photo')
 
 class UserEditForm(forms.ModelForm):
     class Meta:

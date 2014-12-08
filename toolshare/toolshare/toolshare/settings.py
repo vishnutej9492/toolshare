@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'localflavor',
     'ToolMgmt',
     'south',
+
 )
 
 MIDDLEWARE_CLASSES = (

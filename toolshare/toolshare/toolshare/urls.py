@@ -6,16 +6,12 @@ from django.views.generic import RedirectView
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'toolshare.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
     url(r'^$', RedirectView.as_view(url='home/'), name='home'),
     url(r'^home/', TemplateView.as_view(template_name='home.html'), name='home'),
     url(r'^about/', TemplateView.as_view(template_name='about.html'), name='about'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^users/', include('UserAuth.urls',namespace="users")),
     url(r'^toolmgmt/', include('ToolMgmt.urls', namespace="toolmgmt")),
-    url(r'^sharing/', include('Sharing.urls', namespace="Sharing")),
+    url(r'^sharing/', include('Sharing.urls', namespace="sharing")),
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT,}),
 )

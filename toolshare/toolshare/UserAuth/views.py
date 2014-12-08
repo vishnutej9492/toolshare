@@ -7,6 +7,7 @@ from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import pdb
+from .utils import CreateAllocateZone
 from django.http import HttpResponseRedirect,HttpResponse
 from django.contrib.auth.forms import PasswordChangeForm
 from django import forms
@@ -38,7 +39,7 @@ def sign_up(request):
             user.save()
             profile=profile_form.save(commit=False)
             profile.user=user
-            zone = CreateAllocateZone(int(request.POST['zipcode']))
+            zone = CreateAllocateZone(request.POST['zipcode'])
             profile.sharezone = zone
             profile.save()
             messages.add_message(request, messages.SUCCESS, 'Successfully signed up.')
@@ -132,12 +133,12 @@ def changepassword(request):
 #Helper Methods
 def CreateAllocateZone(code):
     if not ShareZone.objects.filter(zipcode = code):
-        NewZone = ShareZone(int(code))
-        NewZone.name =  "ToolShare Zone " + str(code)
-        NewZone.description = "Zipcode sharezone"
-        NewZone.zipcode = code 
-        NewZone.save()
-        return NewZone
+        new_sharezone = ShareZone(zipcode = code)
+        new_sharezone.name =  "ToolShare Zone " + str(code)
+        new_sharezone.description = "Zipcode sharezone"
+        new_sharezone.zipcode = code 
+        new_sharezone.save()
+        return new_sharezone
     else:
-        OldZone = ShareZone.objects.get(zipcode = code) 
-        return OldZone
+        old_sharezone = ShareZone.objects.get(zipcode = code) 
+        return old_sharezone

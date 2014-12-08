@@ -7,7 +7,7 @@
 {% endblock %}
 {% block article_content %}
     <h1>Edit</h1>
-        <form id="edit_form" method="post" action="{%url 'users:edit' %}" enctype="multipart/form-data">
+    <form id="edit_form" method="post" action="{%url 'users:edit' %}" enctype="multipart/form-data">
         {% csrf_token %}
         <a href={% url 'users:change_password'%}>Change password</a><br>
         {{ edit_form.as_p }}
