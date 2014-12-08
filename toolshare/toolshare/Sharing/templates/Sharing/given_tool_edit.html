@@ -1,0 +1,18 @@
+      {% extends "base.html" %}
+{% block title_html %}
+  Tool sharing detail
+{% endblock %}
+{% block h1 %}
+  {{ bloc.super }}
+{% endblock %}
+{% block article_content %} 
+
+
+  <h1> Tool sharing edit </h1>
+  <form  enctype="multipart/form-data" action= {% url 'sharing:given-tool-edit' tool_sharing.id %} method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input class="button" type="submit" value="Edit" />
+  </form>
+  <a class="button" href="{% url 'sharing:given-tools' %}">Back</a>
+{% endblock %}

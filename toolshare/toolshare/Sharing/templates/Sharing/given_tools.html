@@ -30,7 +30,7 @@
         <td>{{ request.start_date }}</td>
         <td>{{ request.end_date }}</td>
         <td>{{ request.returned }}</td>
-        <td><a href='#' >End sharing...</a></td>
+        <td><a href={% url 'sharing:given-tool-edit' request.id %}>End sharing...</a></td>
       </tr>
     {% endfor %}
     </tbody>

@@ -290,5 +290,37 @@ class SharingModelForm(forms.ModelForm):
 def given_tools_index(request):
     now = datetime.datetime.utcnow().replace(tzinfo=utc)
     current = Sharing.objects.filter(lender=request.user.profile).filter(returned=False).order_by('-start_date')
-    past = Sharing.objects.filter(Q(lender=request.user.profile) & (Q(end_date__lt=now) & Q(returned=True))).order_by('-start_date')
+    past = Sharing.objects.filter(Q(lender=request.user.profile) & (Q(end_date__lt=now) | Q(returned=True))).order_by('-start_date')
     return render(request, 'Sharing/given_tools.html', {'current_given_tools': current, 'past_given_tools': past })
+
+class ReturnSharingModelForm(forms.ModelForm):
+    class Meta:
+        model = Sharing
+        fields= ('returned', 'rated', 'sharing_comment')
+    def clean(self):
+        rated = self.cleaned_data.get('rated')
+        if rated < 1 or rated > 5:
+            raise forms.ValidationError("Rate Should be from 1 to 5")
+        return self.cleaned_data
+
+
+def given_tool_edit(request, tool_sharing_id):
+    context = RequestContext(request)
+    tool_sharing = Sharing.objects.get(id = tool_sharing_id)
+    now = datetime.datetime.utcnow().replace(tzinfo=utc)
+    if((tool_sharing.lender == request.user.profile) and (tool_sharing.returned == False)):
+        if request.POST:
+            form = ReturnSharingModelForm(request.POST, request.FILES, instance=tool_sharing)
+            if form.is_valid():
+                new_tool_sharing = form.save()
+                new_tool_sharing.save()
+                messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully set as returned' % new_tool_sharing)
+                return HttpResponseRedirect(reverse('sharing:given-tools'))
+            else:
+                return render_to_response('Sharing/given_tool_edit.html', {'form': form, 'tool_sharing' : tool_sharing}, context)
+        else:
+            form = ReturnSharingModelForm(instance=tool_sharing)
+            return render_to_response('Sharing/given_tool_edit.html', {'form': form, 'tool_sharing' : tool_sharing}, context)
+    else:
+        messages.add_message(request,messages.ERROR, 'You are not authorised to edit this tool sharing')
+        return HttpResponseRedirect(reverse('sharing:given-tools'))
