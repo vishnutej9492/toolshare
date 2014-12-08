@@ -45,6 +45,7 @@
         <td>From</td>
         <td>To</td>
         <td>Returned</td>
+        <td>Comment</td>
         <td>Rated</td>
       </tr>
     </thead>
@@ -59,6 +60,7 @@
         <td>{{ request.start_date }}</td>
         <td>{{ request.end_date }}</td>
         <td>{{ request.returned }}</td>
+        <td>{{ request.sharing_comment }} </td>
         <td>{{ request.rated }} </td>
       </tr>
     {% endfor %}
