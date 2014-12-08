@@ -8,6 +8,7 @@
 <meta name="description" content="Documentation and reference library for ZURB Foundation. JavaScript, CSS, components, grid and more."/>
 <meta name="author" content="ZURB, inc. ZURB network also includes zurb.com"/>
 <meta name="copyright" content="ZURB, inc. Copyright (c) 2014"/>
+<link rel="stylesheet" type="text/css" href="https://rawgit.com/xdan/datetimepicker/master/jquery.datetimepicker.css"/>
 <link rel="stylesheet" href="http://foundation.zurb.com/assets/css/templates/foundation.css"/>
 <script src="http://foundation.zurb.com/assets/js/modernizr.js"></script>
 </head>
@@ -138,5 +139,23 @@
       var doc = document.documentElement;
       doc.setAttribute('data-useragent', navigator.userAgent);
     </script>
+<script src="https://rawgit.com/xdan/datetimepicker/master/jquery.js"></script>
+<script src="https://rawgit.com/xdan/datetimepicker/master/jquery.datetimepicker.js"></script>
+<script>
+$('#datetimepicker').datetimepicker({
+dayOfWeekStart : 1,
+lang:'en',
+disabledDates:['1986/01/08','1986/01/09','1986/01/10'],
+startDate:  '2014/12/08',
+format: 'Y-m-d H:i'
+});
+$('#datetimepicker2').datetimepicker({
+dayOfWeekStart : 1,
+lang:'en',
+disabledDates:['1986/01/08','1986/01/09','1986/01/10'],
+startDate:  '2014/12/08',
+format: 'Y-m-d H:i'
+});
+</script>
 </body>
 </html>
