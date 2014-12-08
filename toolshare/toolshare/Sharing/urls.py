@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from Sharing import views
+from django.views.generic import RedirectView
 
 urlpatterns = patterns('',
     #+++++++++++++++ URLS related to the SHED over here+++++++++++++++++++ #
@@ -11,6 +12,7 @@ urlpatterns = patterns('',
     url(r'sheds/(?P<shed_id>\d+)/coords/add/$',views.shedaddcoords,name='shedaddcoords'),
     url(r'sheds/tooltransfer/(?P<tool_id>\d+)/$',views.tooltransfer,name = 'tooltransfer'),
     #+++++++++++++++++SHED url ends here ++++++++++++++++++++++++++++++++++#
+    url(r'^$', RedirectView.as_view(url='received-requests/', permanent=False), name='received-requests'),
     url(r'^create-request/(?P<tool_id>\d+)/$', views.create_request, name='create-request'),
     url(r'^create-sharing/(?P<tool_request_id>\d+)/$', views.create_sharing, name='create-sharing'),
     url(r'^received-requests/$', views.received_requests_index, name='received-requests'),
