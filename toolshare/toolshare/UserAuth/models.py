@@ -39,7 +39,9 @@ class UserProfile(models.Model):
         result = cursor.fetchone()
         if result != None:
             result = result[0]
-        return result
+        else:
+            result = "no rated"
+        return str(result)
 
     def __unicode__(self):
         return self.user.username
