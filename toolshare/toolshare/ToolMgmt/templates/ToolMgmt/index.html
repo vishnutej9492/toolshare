@@ -16,6 +16,7 @@
           <td>Description</td>
           <td>Status</td>
           <td>Owner</td>
+          <td>In shed</td>
           <td></td>
           <td></td>
           <td></td>
@@ -29,6 +30,11 @@
           <td>{{ tool.description }}</td>
           <td>{{ tool.status }}</td>
           <td>{{ tool.owner }}</td>
+          {% if tool.shed %}
+            <td><a href="{% url 'sharing:sheddetail' tool.shed.id %}">{{ tool.in_shed }}</a></td>
+          {% else %}
+            <td>{{ tool.in_shed }}</td>
+          {% endif %}
           <td>{% if tool.image %}<img src="{{ tool.image.url }}" width="100">{% else %}no image{% endif %}</td>
           <td><a class="button" href="{% url 'toolmgmt:detail' tool.id %}">Show</a></td>
           <td><a class="button" href="{% url 'sharing:create-request' tool.id %}">Ask</a></td>
