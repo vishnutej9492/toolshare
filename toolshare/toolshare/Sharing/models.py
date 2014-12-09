@@ -84,6 +84,14 @@ class Request(Arrangement):
     approved = models.BooleanField(default=False)
     sharing = models.OneToOneField(Sharing, related_name='request', null =True, blank = True)
 
+    def can_approve(self, profile):
+        result = False
+        if self.tool.shed == None:
+            result = (profile == self.lender)
+        else:
+            result = (profile in self.tool.shed.coordinators.all())
+        return result
+
     def __str__(self):
         if(self.tool.shed_id == None):
             lender = self.lender
