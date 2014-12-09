@@ -214,7 +214,7 @@ def asked_request_edit(request, tool_request_id):
     context = RequestContext(request)
     tool_request = Request.objects.get(id = tool_request_id)
     now = datetime.datetime.utcnow().replace(tzinfo=utc)
-    if((tool_request.borrower == request.user.profile) and (tool_request.start_date >= now)):
+    if(tool_request.borrower == request.user.profile and tool_request.approved == False and tool_request.sharing==None and tool_request.end_date > now):
         if request.POST:
             form = RequestModelForm(request.POST, request.FILES, instance=tool_request)
             if form.is_valid():
