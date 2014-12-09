@@ -235,10 +235,7 @@ def received_request_detail(request, tool_request_id):
     profile = UserProfile.objects.get(user = request.user)
     tool_request = Request.objects.get(id = tool_request_id )
 
-    if(profile == tool_request.lender):
-        can_approve = True
-    else:
-        can_approve = False
+    can_approve = tool_request.can_approve(profile)
 
     if request.POST:
         if can_approve:
@@ -248,7 +245,10 @@ def received_request_detail(request, tool_request_id):
                 tool_request.approved = False
             tool_request.save()
             messages.add_message(request, messages.SUCCESS, 'Request was approved successfully')
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            if tool_request.tool.in_shed():
+                return HttpResponseRedirect(reverse('sharing:received-requests-coordinator'))
+            else:
+                return HttpResponseRedirect(reverse('sharing:received-requests'))
         else:
             pass
     else:
