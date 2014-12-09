@@ -260,35 +260,39 @@ def create_sharing(request, tool_request_id):
     tool_request = Request.objects.get(id = tool_request_id)
     now = datetime.datetime.utcnow().replace(tzinfo=utc)
 
-    if((tool_request.lender == request.user.profile) and (now >= tool_request.start_date and now <= tool_request.end_date)):
-        if request.POST:
-            form = SharingModelForm(request.POST)
-            if form.is_valid():
-                new_sharing = form.save(commit=False)
-                new_sharing.pickup_arrangement = tool_request.pickup_arrangement
-                new_sharing.borrower = tool_request.borrower
-                new_sharing.lender = tool_request.lender
-                new_sharing.tool = tool_request.tool
-                new_sharing.start_date = tool_request.start_date
-                new_sharing.end_date = tool_request.end_date
-                new_sharing.save()
-                form.save_m2m()
-                tool_request.sharing = new_sharing
-                tool_request.save()
-                messages.add_message(request, messages.SUCCESS, 'Tool %s is now in possesion of %s' % (new_sharing.tool, new_sharing.borrower))
+    if(tool_request.lender == request.user.profile):
+        if(now >= tool_request.start_date and now <= tool_request.end_date):
+            if request.POST:
+                form = SharingModelForm(request.POST)
+                if form.is_valid():
+                    new_sharing = form.save(commit=False)
+                    new_sharing.pickup_arrangement = tool_request.pickup_arrangement
+                    new_sharing.borrower = tool_request.borrower
+                    new_sharing.lender = tool_request.lender
+                    new_sharing.tool = tool_request.tool
+                    new_sharing.start_date = tool_request.start_date
+                    new_sharing.end_date = tool_request.end_date
+                    new_sharing.save()
+                    form.save_m2m()
+                    tool_request.sharing = new_sharing
+                    tool_request.save()
+                    messages.add_message(request, messages.SUCCESS, 'Tool %s is now in possesion of %s' % (new_sharing.tool, new_sharing.borrower))
 
-                return HttpResponseRedirect(reverse('sharing:asked-requests'))
+                    return HttpResponseRedirect(reverse('sharing:asked-requests'))
+                else:
+                    return render_to_response('Sharing/create_sharing.html', {'form': form, 'tool_request': tool_request.tool, 'back' : request.META.get('HTTP_REFERER')}, context)
             else:
-                return render_to_response('Sharing/create_sharing.html', {'form': form, 'tool_request': tool_request.tool}, context)
+                print("GET")
+                form = SharingModelForm(initial={'start_date' : tool_request.start_date, 'end_date' : tool_request.end_date})
+                form.fields['start_date'].widget.attrs['readonly'] = True
+                form.fields['end_date'].widget.attrs['readonly'] = True
+                return render_to_response('Sharing/create_sharing.html', {'form': form, 'tool_request': tool_request, 'back' : request.META.get('HTTP_REFERER') }, context)
         else:
-            print("GET")
-            form = SharingModelForm(initial={'start_date' : tool_request.start_date, 'end_date' : tool_request.end_date})
-            form.fields['start_date'].widget.attrs['readonly'] = True
-            form.fields['end_date'].widget.attrs['readonly'] = True
-            return render_to_response('Sharing/create_sharing.html', {'form': form, 'tool_request': tool_request }, context)
+            messages.add_message(request,messages.ERROR, 'You cannot share a tool outside its requesting time period')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        messages.add_message(request,messages.ERROR, 'You are not authorised to share a tool outside its requesting time period')
-        return HttpResponseRedirect(reverse('sharing:received-requests')) #, kwargs = {'tool_request_id':tool_request_id}))
+        messages.add_message(request,messages.ERROR, 'You are not authorised  to share this tool')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 class SharingModelForm(forms.ModelForm):
     class Meta:
