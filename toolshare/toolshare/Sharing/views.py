@@ -223,10 +223,10 @@ def asked_request_edit(request, tool_request_id):
                 messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully edited' % new_tool_request)
                 return HttpResponseRedirect(reverse('sharing:asked-request-detail', kwargs = {'tool_request_id': new_tool_request.id}))
             else:
-                return render_to_response('Sharing/asked_request_edit.html', {'form': form, 'tool_request' : tool_request}, context)
+                return render_to_response('Sharing/asked_request_edit.html', {'form': form, 'tool_request' : tool_request, 'back' : request.META.get('HTTP_REFERER')}, context)
         else:
             form = RequestModelForm(instance=tool_request)
-            return render_to_response('Sharing/asked_request_edit.html', {'form': form, 'tool_request' : tool_request}, context)
+            return render_to_response('Sharing/asked_request_edit.html', {'form': form, 'tool_request' : tool_request, 'back' : request.META.get('HTTP_REFERER')}, context)
     else:
         messages.add_message(request,messages.ERROR, 'You are not authorised to edit this tool request')
         return HttpResponseRedirect(reverse('sharing:asked-request-detail', kwargs = {'tool_request_id':tool_request_id}))
