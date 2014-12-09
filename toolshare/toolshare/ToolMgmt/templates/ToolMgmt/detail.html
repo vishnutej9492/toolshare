@@ -40,7 +40,7 @@
             {% if tool.image %}
                 <td><img src="{{ tool.image.url }}" width="300" ></td>
             {% else %}
-                <td>no image found</td>
+                <td> No image found</td>
             {% endif %}
         </tr>
         </thead>
@@ -48,7 +48,7 @@
       {% if is_owner %}
             <button class="button" type="submit">Activate/Deactivate</button>
             <a class="button" href={% url 'toolmgmt:tool_editition' tool.id %}>Edit tool</a>
-            <a class="button" href={% url 'sharing:tooltransfer' tool.id %}> Transfer to Shed </a>
+            <a class="button" href={% url 'sharing:tooltransfer' tool.id %}>Transfer to Shed</a>
 
       {% endif %}
     <br>
