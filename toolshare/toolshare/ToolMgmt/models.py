@@ -30,3 +30,6 @@ class Tool(models.Model):
 
     def __str__(self):
         return self.name
+
+    def in_shed(self):
+        return self.shed!=None
