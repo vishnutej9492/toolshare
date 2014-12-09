@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from localflavor.us.models import USStateField
 from localflavor.us.us_states import STATE_CHOICES
 from localflavor.us.models import USPostalCodeField
-from Sharing.models import ShareZone
-# Create your models here.
+from Sharing.models import ShareZone, Sharing
+from django.db import connection
 
 class UserProfile(models.Model):
     NOREMINDER = 0
@@ -28,6 +28,18 @@ class UserProfile(models.Model):
     pickup_loc = models.CharField(verbose_name="Pickup arrangements",max_length = 100)
     profile_photo = models.ImageField(upload_to="images/users/", blank=True, null=True)
     sharezone = models.ForeignKey(ShareZone, related_name = 'members',null = True,blank = True)
+
+    def rate(self):
+        cursor = connection.cursor()
+        cursor.execute("SELECT ROUND(SUM(Sharing_sharing.rated)*1.0/count(*),2) as rate " +
+                       "FROM Sharing_sharing, Sharing_arrangement " +
+                       "WHERE Sharing_sharing.arrangement_ptr_id = Sharing_arrangement .id " +
+                       "AND borrower_id=%s " +
+                       "GROUP BY borrower_id", [self.id])
+        result = cursor.fetchone()
+        if result != None:
+            result = result[0]
+        return result
 
     def __unicode__(self):
         return self.user.username
