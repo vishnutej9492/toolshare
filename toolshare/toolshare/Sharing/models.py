@@ -1,4 +1,6 @@
 from django.db import models
+import datetime
+from django.utils.timezone import utc
 
 class ShareZone(models.Model):   
     name = models.CharField(verbose_name="Name", max_length=100)
@@ -17,6 +19,45 @@ class Shed(models.Model):
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
     coordinators = models.ManyToManyField('UserAuth.UserProfile', related_name = 'sheds', null =True,blank = True)
+
+    def waiting_asked_requests(self):
+        now = datetime.datetime.utcnow().replace(tzinfo=utc)
+        waiting_requests = Request.objects.raw("SELECT * FROM Sharing_request, Sharing_arrangement, ToolMgmt_tool " +
+                                               "WHERE Sharing_request.arrangement_ptr_id = Sharing_arrangement .id " +
+                                               "AND Sharing_arrangement.tool_id = ToolMgmt_tool.id " +
+                                               "AND ToolMgmt_tool.shed_id = %s " +
+                                               "AND Sharing_request.approved=0 " +
+                                               "AND Sharing_request.sharing_id isnull " +
+                                               "AND Sharing_arrangement.end_date >= %s " +
+                                               "ORDER BY  Sharing_arrangement.start_date DESC", [self.id, now] )
+        print(waiting_requests)
+        return list(waiting_requests)
+
+    def approved_asked_requests(self):
+        now = datetime.datetime.utcnow().replace(tzinfo=utc)
+        approved_requests = Request.objects.raw("SELECT * FROM Sharing_request, Sharing_arrangement, ToolMgmt_tool " +
+                                               "WHERE Sharing_request.arrangement_ptr_id = Sharing_arrangement .id " +
+                                               "AND Sharing_arrangement.tool_id = ToolMgmt_tool.id " +
+                                               "AND ToolMgmt_tool.shed_id = %s " +
+                                               "AND Sharing_request.approved=1 " +
+                                               "AND Sharing_request.sharing_id isnull " +
+                                               "AND Sharing_arrangement.end_date >= %s " +
+                                               "ORDER BY  Sharing_arrangement.start_date DESC", [self.id, now] )
+        print(approved_requests)
+        return list(approved_requests)
+
+    def past_asked_requests(self):
+        now = datetime.datetime.utcnow().replace(tzinfo=utc)
+        approved_requests = Request.objects.raw("SELECT * FROM Sharing_request, Sharing_arrangement, ToolMgmt_tool " +
+                                               "WHERE Sharing_request.arrangement_ptr_id = Sharing_arrangement .id " +
+                                               "AND Sharing_arrangement.tool_id = ToolMgmt_tool.id " +
+                                               "AND ToolMgmt_tool.shed_id = %s " +
+                                               "AND Sharing_request.approved=1 " +
+                                               "AND Sharing_request.sharing_id notnull " +
+                                               "AND Sharing_arrangement.end_date < %s " +
+                                               "ORDER BY  Sharing_arrangement.start_date DESC", [self.id, now] )
+        print(approved_requests)
+        return list(approved_requests)
 
     def __str__(self):
         return self.name

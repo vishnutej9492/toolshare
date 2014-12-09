@@ -202,6 +202,16 @@ def received_requests_index(request):
                                           (Q(end_date__lt=now) | Q(sharing__isnull=False))).order_by('-start_date')
     return render(request, 'Sharing/received_requests_index.html', {'approved_requests': approved_requests, 'waiting_requests': waiting_requests, 'past_requests': past_requests})
 
+def received_requests_coordinator_index(request):
+    sheds = request.user.profile.sheds
+    now = datetime.datetime.utcnow().replace(tzinfo=utc)
+    waiting_requests = Request.objects.filter(lender=request.user.profile).filter(approved=False).filter(end_date__gte=now)
+    approved_requests = Request.objects.filter(Q(lender=request.user.profile) & Q(approved=True) &
+                                               Q(end_date__gte=now) & Q(sharing__isnull=True)).order_by('start_date')
+    past_requests = Request.objects.filter(Q(lender=request.user.profile) &
+                                          (Q(end_date__lt=now) | Q(sharing__isnull=False))).order_by('-start_date')
+    return render(request, 'Sharing/received_requests_coordinator_index.html', {'approved_requests': approved_requests, 'waiting_requests': waiting_requests, 'past_requests': past_requests, 'sheds' : sheds})
+
 def asked_request_detail(request, tool_request_id):
     tool_request = Request.objects.get(id = tool_request_id )
     return render(request, 'Sharing/asked_request_detail.html', {'tool_request': tool_request})

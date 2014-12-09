@@ -38,16 +38,22 @@
   <li class="has-dropdown">
     <a href="#"> Requests </a>
     <ul class="dropdown">
-      <li><a href={% url 'sharing:received-requests' %}>Received requests</a></li>
+      {% if user.profile.is_coordinator %}
+      <li><a href={% url 'sharing:received-requests-coordinator' %}>Received requests (to sheds)</a></li>
       <li class="divider"></li>
+      {% endif %}
+      <li><a href={% url 'sharing:received-requests' %}>Received requests</a></li>
       <li><a href={% url 'sharing:asked-requests' %}>Asked requests</a></li>
     </ul>
   </li>
   <li class="has-dropdown">
     <a href="#"> Sharing </a>
     <ul class="dropdown">
-      <li><a href={% url 'sharing:given-tools' %}>Given tools</a></li>
+      {% if user.profile.is_coordinator %}
+      <li><a href={% url 'sharing:received-requests-coordinator' %}>Given tools (from sheds)</a></li>
       <li class="divider"></li>
+      {% endif %}
+      <li><a href={% url 'sharing:given-tools' %}>Given tools</a></li>
       <li><a href={% url 'sharing:borrowed-tools' %}>Borrowed tools</a></li>
     </ul>
   </li>
