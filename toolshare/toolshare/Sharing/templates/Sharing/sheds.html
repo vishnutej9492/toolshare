@@ -6,7 +6,7 @@
   {{ bloc.super }}
 {% endblock %}
 {% block article_content %}
-  <h1>shed listing</h1>
+  <h1>Shed Listing</h1>
   {% if all_sheds|length > 0 %}
     <table>
       <thead>
@@ -31,6 +31,7 @@
     </table>
   {% else %}
     <span>No sheds in your Sharezone. Dare to Create one!</span>
+    <br>
   {% endif %}
 
   <div class="pagination">
