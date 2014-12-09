@@ -260,7 +260,7 @@ def create_sharing(request, tool_request_id):
     tool_request = Request.objects.get(id = tool_request_id)
     now = datetime.datetime.utcnow().replace(tzinfo=utc)
 
-    if(tool_request.lender == request.user.profile):
+    if(tool_request.can_approve(request.user.profile)):
         if(now >= tool_request.start_date and now <= tool_request.end_date):
             if request.POST:
                 form = SharingModelForm(request.POST)
