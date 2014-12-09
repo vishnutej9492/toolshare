@@ -22,7 +22,7 @@ class Shed(models.Model):
 
     def waiting_asked_requests(self):
         now = datetime.datetime.utcnow().replace(tzinfo=utc)
-        waiting_requests = Request.objects.raw("SELECT * FROM Sharing_request, Sharing_arrangement, ToolMgmt_tool " +
+        waiting_requests = Request.objects.raw("SELECT Sharing_request.* FROM Sharing_request, Sharing_arrangement, ToolMgmt_tool " +
                                                "WHERE Sharing_request.arrangement_ptr_id = Sharing_arrangement .id " +
                                                "AND Sharing_arrangement.tool_id = ToolMgmt_tool.id " +
                                                "AND ToolMgmt_tool.shed_id = %s " +
@@ -34,7 +34,7 @@ class Shed(models.Model):
 
     def approved_asked_requests(self):
         now = datetime.datetime.utcnow().replace(tzinfo=utc)
-        approved_requests = Request.objects.raw("SELECT * FROM Sharing_request, Sharing_arrangement, ToolMgmt_tool " +
+        approved_requests = Request.objects.raw("SELECT Sharing_request.* FROM Sharing_request, Sharing_arrangement, ToolMgmt_tool " +
                                                "WHERE Sharing_request.arrangement_ptr_id = Sharing_arrangement .id " +
                                                "AND Sharing_arrangement.tool_id = ToolMgmt_tool.id " +
                                                "AND ToolMgmt_tool.shed_id = %s " +
@@ -46,7 +46,7 @@ class Shed(models.Model):
 
     def past_asked_requests(self):
         now = datetime.datetime.utcnow().replace(tzinfo=utc)
-        approved_requests = Request.objects.raw("SELECT * FROM Sharing_request, Sharing_arrangement, ToolMgmt_tool " +
+        approved_requests = Request.objects.raw("SELECT Sharing_request.* FROM Sharing_request, Sharing_arrangement, ToolMgmt_tool " +
                                                "WHERE Sharing_request.arrangement_ptr_id = Sharing_arrangement .id " +
                                                "AND Sharing_arrangement.tool_id = ToolMgmt_tool.id " +
                                                "AND ToolMgmt_tool.shed_id = %s " +
