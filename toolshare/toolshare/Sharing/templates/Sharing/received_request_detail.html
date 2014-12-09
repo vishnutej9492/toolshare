@@ -12,6 +12,10 @@
         {% csrf_token %}
         <thead>
         <tr>
+            <td>Borrower:</td>
+            <td>{{ tool_request.borrower }} (rate: {{ tool_request.borrower.rate }})</td>
+        </tr>
+        <tr>
             <td>Start date:</td>
             <td>{{ tool_request.start_date }}</td>
         </tr>

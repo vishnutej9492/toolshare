@@ -10,12 +10,12 @@
         {% csrf_token %}
         <table>
           <tr>
-            <td>{% if tool_request.tool.image %}<img src="{{ tool_request.tool.image.url }}" width="300">{% else %}no image{% endif %}</td>
-            <td>owner: {{ tool_request.lender }} </td>
-            <td>owner rate: {{ tool_request.lender.rate }} </td>
-            <td>pickup arrengement: {{ tool_request.lender.pickup_loc }} </td>
-            <td>Start date: {{ tool_request.start_date }} </td>
-            <td>End date: {{ tool_request.end_date }} </td>
+            <td>{% if tool_request.tool.image %}<img src="{{ tool_request.tool.image.url }}" width="200">{% else %}no image{% endif %}</td>
+            <td><b>lender:</b> <br>{{ tool_request.lender }} <br> (rate: {{ tool_request.lender.rate }})</td>
+            <td><b>borrower:</b> <br> {{ tool_request.borrower }} <br> (rate: {{ tool_request.borrower.rate }}) </td>
+            <td><b>pickup arrengement:</b> <br>{{ tool_request.lender.pickup_loc }} </td>
+            <td><b>Start date:</b> <br>{{ tool_request.start_date }} </td>
+            <td><b>End date:</b> <br>{{ tool_request.end_date }} </td>
           </tr>
         </table>
         {{ form.as_p }}
