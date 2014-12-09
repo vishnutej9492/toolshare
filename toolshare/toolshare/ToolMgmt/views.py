@@ -105,7 +105,7 @@ def detail(request, tool_id):
         shed = tool.shed
         iscoordinator = shed.iscoordinator(request.user.profile)
     if (request.method == 'GET'):
-        return render(request, 'ToolMgmt/detail.html', {'tool': tool,'is_owner':is_owner,'user':request.user.profile,'iscoordinator':iscoordinator,})
+        return render(request, 'ToolMgmt/detail.html', {'tool': tool,'is_owner':is_owner,'iscoordinator':iscoordinator,})
     else:
         tool = Tool.objects.get(pk=tool_id)
         if tool.active:
