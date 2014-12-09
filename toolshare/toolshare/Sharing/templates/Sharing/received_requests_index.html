@@ -22,7 +22,7 @@
     {% for request in waiting_requests %}
       <tr>
         <td>{{ request }}</td>
-        <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="100">{% else %}no image{% endif %}</td>
+        <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="100">{% else %} No image {% endif %}</td>
         <td>{{ request.start_date }}</td>
         <td>{{ request.end_date }}</td>
         <td><a href={% url 'sharing:received-request-detail' request.id %}>Detail/Approve...</a></td>
@@ -47,7 +47,7 @@
     {% for request in approved_requests %}
       <tr>
         <td>{{ request }}</td>
-        <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="50">{% else %}no image{% endif %}</td>
+        <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="50">{% else %} No image {% endif %}</td>
         <td>{{ request.start_date }}</td>
         <td>{{ request.end_date }}</td>
         <td><a href={% url 'sharing:received-request-detail' request.id %}>Detail/Approve...</a></td>
@@ -72,7 +72,7 @@
     {% for request in past_requests %}
       <tr>
         <td>{{ request }}</td>
-        <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="50">{% else %}no image{% endif %}</td>
+        <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="50">{% else %} No image{% endif %}</td>
         <td>{{ request.start_date }}</td>
         <td>{{ request.end_date }}</td>
         <td>{{ request.approved }}</td>

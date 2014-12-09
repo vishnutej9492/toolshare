@@ -37,14 +37,14 @@
   <div class="pagination">
     <span class="step-links">
         {% if all_sheds.has_previous %}
-            <a class="button" href="?page={{ all_sheds.previous_page_number }}">previous</a>
-            <a href="?page={{ all_sheds.previous_page_number }}">previous</a>
+            <a class="button" href="?page={{ all_sheds.previous_page_number }}">Previous</a>
+            <a href="?page={{ all_sheds.previous_page_number }}">Previous</a>
         {% endif %}
         <span class="current">
             Page {{ all_sheds.number }} of {{ all_sheds.paginator.num_pages }}.
         </span>
         {% if all_sheds.has_next %}
-            <a class="button" href="?page={{ all_sheds.next_page_number }}">next</a>
+            <a class="button" href="?page={{ all_sheds.next_page_number }}">Next</a>
         {% endif %}
     </span>
   </div>

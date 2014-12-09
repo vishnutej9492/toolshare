@@ -24,7 +24,7 @@
       {% for request in s.current_given_tools %}
         <tr>
           <td>{{ request }}</td>
-          <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="100">{% else %}no image{% endif %}</td>
+          <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="100">{% else %} No Image {% endif %}</td>
           <td>{{ request.start_date }}</td>
           <td>{{ request.end_date }}</td>
           <td><a href={% url 'sharing:given-tool-edit' request.id %}>End sharing...</a></td>
@@ -32,7 +32,6 @@
       {% endfor %}
       </tbody>
     </table>
-
     <h1>Past given tools</h1>
     <table>
       <thead>

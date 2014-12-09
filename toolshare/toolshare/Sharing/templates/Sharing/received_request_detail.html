@@ -36,7 +36,7 @@
             {% if tool_request.tool.image %}
                 <td><img src="{{ tool_request.tool.image.url }}" width="300" ></td>
             {% else %}
-                <td>no image found</td>
+                <td> No image found</td>
             {% endif %}
         </tr>
         </thead>
@@ -45,5 +45,5 @@
             <button class="button" type="submit" name="btn_approve">Approve Request</button>
             <button class="button" type="submit" name="btn_reject">Reject Request</button>
       {% endif %}
-      <a class="small button" href="{{back}}">Cancel</a>
+      <a class="button" href="{{back}}">Cancel</a>
 {% endblock %}

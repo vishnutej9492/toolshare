@@ -6,7 +6,7 @@
   {{ bloc.super }}
 {% endblock %}
 {% block article_content %}
-  <h1>Asked request</h1>
+  <h1>Asked requests</h1>
   <table>
     <thead>
       <tr>
@@ -27,14 +27,14 @@
         <td>{{ request.start_date }}</td>
         <td>{{ request.end_date }}</td>
         <td>{{ request.approved }}</td>
-        <td><a href={% url 'sharing:asked-request-detail' request.id %}>show</a></td>
+        <td><a href={% url 'sharing:asked-request-detail' request.id %}>Show</a></td>
         <td><a href={% url 'sharing:asked-request-edit' request.id %}>Edit</a></td>
       </tr>
     {% endfor %}
     </tbody>
   </table>
 
-  <h1>Approved asked request</h1>
+  <h1>Approved asked requests</h1>
   <table>
     <thead>
       <tr>
@@ -54,7 +54,7 @@
         <td>{{ request.start_date }}</td>
         <td>{{ request.end_date }}</td>
         <td>{{ request.approved }}</td>
-        <td><a href={% url 'sharing:asked-request-detail' request.id %}>show</a></td>
+        <td><a href={% url 'sharing:asked-request-detail' request.id %}>Show</a></td>
       </tr>
     {% endfor %}
     </tbody>
@@ -80,7 +80,7 @@
         <td>{{ request.start_date }}</td>
         <td>{{ request.end_date }}</td>
         <td>{{ request.approved }}</td>
-        <td><a href={% url 'sharing:asked-request-detail' request.id %}>show</a></td>
+        <td><a href={% url 'sharing:asked-request-detail' request.id %}>Show</a></td>
       </tr>
     {% endfor %}
     </tbody>

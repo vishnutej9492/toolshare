@@ -10,7 +10,7 @@
         {% csrf_token %}
         <table>
           <tr>
-            <td>{% if tool.image %}<img src="{{ tool.image.url }}" width="300">{% else %}no image{% endif %}</td>
+            <td>{% if tool.image %}<img src="{{ tool.image.url }}" width="300">{% else %} No image {% endif %}</td>
             <td>owner: {{ tool.owner }} </td>
             <td>pickup arrangement: {{ tool.owner.pickup_loc }} </td>
           </tr>
