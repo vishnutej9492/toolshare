@@ -29,6 +29,9 @@ class UserProfile(models.Model):
     profile_photo = models.ImageField(upload_to="images/users/", blank=True, null=True)
     sharezone = models.ForeignKey(ShareZone, related_name = 'members',null = True,blank = True)
 
+    def is_coordinator(self):
+        return self.sheds.all().count() > 0
+
     def rate(self):
         cursor = connection.cursor()
         cursor.execute("SELECT ROUND(SUM(Sharing_sharing.rated)*1.0/count(*),2) as rate " +
