@@ -30,7 +30,6 @@ class Shed(models.Model):
                                                "AND Sharing_request.sharing_id isnull " +
                                                "AND Sharing_arrangement.end_date >= %s " +
                                                "ORDER BY  Sharing_arrangement.start_date DESC", [self.id, now] )
-        print(waiting_requests)
         return list(waiting_requests)
 
     def approved_asked_requests(self):
@@ -43,7 +42,6 @@ class Shed(models.Model):
                                                "AND Sharing_request.sharing_id isnull " +
                                                "AND Sharing_arrangement.end_date >= %s " +
                                                "ORDER BY  Sharing_arrangement.start_date DESC", [self.id, now] )
-        print(approved_requests)
         return list(approved_requests)
 
     def past_asked_requests(self):
@@ -56,7 +54,6 @@ class Shed(models.Model):
                                                "AND Sharing_request.sharing_id notnull " +
                                                "AND Sharing_arrangement.end_date < %s " +
                                                "ORDER BY  Sharing_arrangement.start_date DESC", [self.id, now] )
-        print(approved_requests)
         return list(approved_requests)
 
     def __str__(self):
@@ -88,4 +85,9 @@ class Request(Arrangement):
     sharing = models.OneToOneField(Sharing, related_name='request', null =True, blank = True)
 
     def __str__(self):
-        return "<"+ str(self.borrower) + "> has requested <" + str(self.lender) + "> a <" + str(self.tool) + ">"
+        if(self.tool.shed_id == None):
+            lender = self.lender
+        else:
+            lender = Shed.objects.filter(id=self.tool.shed_id).first()
+
+        return "<"+ str(self.borrower) + "> has requested <" + str(lender) + "> a <" + str(self.tool) + ">"
