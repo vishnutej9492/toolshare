@@ -235,7 +235,7 @@ def received_request_detail(request, tool_request_id):
     profile = UserProfile.objects.get(user = request.user)
     tool_request = Request.objects.get(id = tool_request_id )
 
-    can_approve = tool_request.can_approve(profile)
+    can_approve = tool_request.can_be_managed_by(profile)
 
     if request.POST:
         if can_approve:
@@ -260,7 +260,7 @@ def create_sharing(request, tool_request_id):
     tool_request = Request.objects.get(id = tool_request_id)
     now = datetime.datetime.utcnow().replace(tzinfo=utc)
 
-    if(tool_request.can_approve(request.user.profile)):
+    if(tool_request.can_be_managed_by(request.user.profile)):
         if(now >= tool_request.start_date and now <= tool_request.end_date):
             if request.POST:
                 form = SharingModelForm(request.POST)

@@ -72,7 +72,7 @@ class Arrangement(models.Model):
     def __str__(self):
         return "borrower: <"+ str(self.borrower) + "> lender: <" + str(self.lender) + ">"
 
-    def can_approve(self, profile):
+    def can_be_managed_by(self, profile):
         result = False
         if self.tool.shed == None:
             result = (profile == self.lender)
