@@ -72,6 +72,14 @@ class Arrangement(models.Model):
     def __str__(self):
         return "borrower: <"+ str(self.borrower) + "> lender: <" + str(self.lender) + ">"
 
+    def can_approve(self, profile):
+        result = False
+        if self.tool.shed == None:
+            result = (profile == self.lender)
+        else:
+            result = (profile in self.tool.shed.coordinators.all())
+        return result
+
 class Sharing(Arrangement): 
     comment = models.CharField(verbose_name="Comment about the sharing", max_length=200)
     returned = models.BooleanField(default=False)
@@ -83,14 +91,6 @@ class Request(Arrangement):
     msg = models.CharField(verbose_name="Arrangement message for requesting", max_length=200)
     approved = models.BooleanField(default=False)
     sharing = models.OneToOneField(Sharing, related_name='request', null =True, blank = True)
-
-    def can_approve(self, profile):
-        result = False
-        if self.tool.shed == None:
-            result = (profile == self.lender)
-        else:
-            result = (profile in self.tool.shed.coordinators.all())
-        return result
 
     def __str__(self):
         if(self.tool.shed_id == None):
