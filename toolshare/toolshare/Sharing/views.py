@@ -142,8 +142,8 @@ def tooltransfer(request,tool_id):
 
 @login_required(login_url='users:login')
 def returntool(request,tool_id):
+    tool = Tool.objects.get(pk = tool_id)
     if (tool.inshed()):
-        tool = Tool.objects.get(pk = tool_id)
         shed = tool.shed
         if shed.iscoordinator(request.user.profile):
             tool.shed = None
