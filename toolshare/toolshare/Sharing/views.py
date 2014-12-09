@@ -301,9 +301,13 @@ class SharingModelForm(forms.ModelForm):
 
 def given_tools_index(request):
     now = datetime.datetime.utcnow().replace(tzinfo=utc)
-    current = Sharing.objects.filter( Q(lender=request.user.profile) & Q(returned=False) & Q(finished=False)).order_by('-start_date')
-    past = Sharing.objects.filter(Q(lender=request.user.profile) & (Q(end_date__lt=now) | Q(finished=True))).order_by('-start_date')
+    current = Sharing.objects.filter( Q(lender=request.user.profile) & Q(returned=False) & Q(finished=False)).filter(tool__shed=None).order_by('-start_date')
+    past = Sharing.objects.filter(Q(lender=request.user.profile) & (Q(end_date__lt=now) | Q(finished=True))).filter(tool__shed=None).order_by('-start_date')
     return render(request, 'Sharing/given_tools.html', {'current_given_tools': current, 'past_given_tools': past })
+
+def given_tools_coordinator_index(request):
+    sheds = request.user.profile.sheds
+    return render(request, 'Sharing/given_tools_coordinator.html', {'sheds' : sheds})
 
 class ReturnSharingModelForm(forms.ModelForm):
     class Meta:
@@ -328,12 +332,15 @@ def given_tool_edit(request, tool_sharing_id):
                 new_tool_sharing.finished = True
                 new_tool_sharing.save()
                 messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully set as returned' % new_tool_sharing)
-                return HttpResponseRedirect(reverse('sharing:given-tools'))
+                if tool_sharing.tool.in_shed():
+                    return HttpResponseRedirect(reverse('sharing:given-tools-coordinator'))
+                else:
+                    return HttpResponseRedirect(reverse('sharing:given-tools'))
             else:
-                return render_to_response('Sharing/given_tool_edit.html', {'form': form, 'tool_sharing' : tool_sharing}, context)
+                return render_to_response('Sharing/given_tool_edit.html', {'form': form, 'tool_sharing' : tool_sharing, 'back' : request.META.get('HTTP_REFERER')}, context)
         else:
             form = ReturnSharingModelForm(instance=tool_sharing)
-            return render_to_response('Sharing/given_tool_edit.html', {'form': form, 'tool_sharing' : tool_sharing}, context)
+            return render_to_response('Sharing/given_tool_edit.html', {'form': form, 'tool_sharing' : tool_sharing, 'back' : request.META.get('HTTP_REFERER')}, context)
     else:
         messages.add_message(request,messages.ERROR, 'You are not authorised to edit this tool sharing')
         return HttpResponseRedirect(reverse('sharing:given-tools'))

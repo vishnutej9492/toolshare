@@ -56,6 +56,27 @@ class Shed(models.Model):
                                                "ORDER BY  Sharing_arrangement.start_date DESC", [self.id, now] )
         return list(approved_requests)
 
+    def current_given_tools(self):
+        now = datetime.datetime.utcnow().replace(tzinfo=utc)
+        current_tools = Sharing.objects.raw("SELECT Sharing_sharing.* FROM Sharing_sharing, Sharing_arrangement, ToolMgmt_tool " +
+                                               "WHERE Sharing_sharing.arrangement_ptr_id = Sharing_arrangement .id " +
+                                               "AND Sharing_arrangement.tool_id = ToolMgmt_tool.id " +
+                                               "AND ToolMgmt_tool.shed_id = %s " +
+                                               "AND Sharing_sharing.returned=0 " +
+                                               "AND Sharing_sharing.finished=0 " +
+                                               "ORDER BY  Sharing_arrangement.start_date DESC", [self.id] )
+        return list(current_tools)
+
+    def past_given_tools(self):
+        now = datetime.datetime.utcnow().replace(tzinfo=utc)
+        past_tools = Sharing.objects.raw("SELECT Sharing_sharing.* FROM Sharing_sharing, Sharing_arrangement, ToolMgmt_tool " +
+                                               "WHERE Sharing_sharing.arrangement_ptr_id = Sharing_arrangement .id " +
+                                               "AND Sharing_arrangement.tool_id = ToolMgmt_tool.id " +
+                                               "AND ToolMgmt_tool.shed_id = %s " +
+                                               "AND (Sharing_sharing.finished=1 OR Sharing_arrangement.end_date < %s) " +
+                                               "ORDER BY  Sharing_arrangement.start_date DESC", [self.id, now] )
+        return list(past_tools)
+
     def __str__(self):
         return self.name
 
@@ -86,6 +107,14 @@ class Sharing(Arrangement):
     finished = models.BooleanField(default=False)
     rated = models.PositiveSmallIntegerField(default=1)
     sharing_comment = models.CharField(verbose_name="Comment about on how the sharing", max_length=200, null =True, blank = True)
+
+    def __str__(self):
+        if(self.tool.shed_id == None):
+            lender = self.lender
+        else:
+            lender = Shed.objects.filter(id=self.tool.shed_id).first()
+
+        return "<"+ str(self.borrower) + "> has <" + str(self.tool) + "> from <" + str(lender) + ">"
 
 class Request(Arrangement):
     msg = models.CharField(verbose_name="Arrangement message for requesting", max_length=200)

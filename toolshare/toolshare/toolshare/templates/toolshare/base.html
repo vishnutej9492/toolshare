@@ -50,7 +50,7 @@
     <a href="#"> Sharing </a>
     <ul class="dropdown">
       {% if user.profile.is_coordinator %}
-      <li><a href={% url 'sharing:received-requests-coordinator' %}>Given tools (from sheds)</a></li>
+      <li><a href={% url 'sharing:given-tools-coordinator' %}>Given tools (from sheds)</a></li>
       <li class="divider"></li>
       {% endif %}
       <li><a href={% url 'sharing:given-tools' %}>Given tools</a></li>

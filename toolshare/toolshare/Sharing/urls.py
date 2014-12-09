@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     url(r'^asked-requests/(?P<tool_request_id>\d+)/$', views.asked_request_detail, name='asked-request-detail'),
     url(r'^asked-requests/(?P<tool_request_id>\d+)/edit$', views.asked_request_edit, name='asked-request-edit'),
     url(r'^given-tools/$', views.given_tools_index, name='given-tools'),
+    url(r'^given-tools-coordinator/$', views.given_tools_coordinator_index, name='given-tools-coordinator'),
     url(r'^given-tools/(?P<tool_sharing_id>\d+)/$', views.given_tool_edit, name='given-tool-edit'),
     url(r'^borrowed-tools/$', views.borrowed_tools_index, name='borrowed-tools'),
 )
