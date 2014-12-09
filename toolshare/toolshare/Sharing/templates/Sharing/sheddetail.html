@@ -22,7 +22,7 @@
         </thead>
       </table>
   <h3>Tools in shed</h3>
-  {%if shed.tools|length > 0 %}
+  {%if shed.tools.all|length > 0 %}
   <table>
       <thead>
         <tr>
@@ -36,7 +36,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for tool in shed.tools %}
+        {% for tool in shed.tools.all %}
         <tr>
           <td>{{ tool.id }}</td>
           <td>{{ tool.name }}</td>

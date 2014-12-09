@@ -122,6 +122,8 @@ def tooltransfer(request,tool_id):
             if shedid:
                 try:
                     shed = Shed.objects.get(pk=shedid)
+                    tool.shed = shed
+                    tool.save()
                     messages.add_message(request,messages.SUCCESS,"Tool transfered successfully!")
                     return HttpResponseRedirect(reverse('toolmgmt:tools'))
                 except DoesNotExist:
