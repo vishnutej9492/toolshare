@@ -248,12 +248,12 @@ def received_request_detail(request, tool_request_id):
                 tool_request.approved = False
             tool_request.save()
             messages.add_message(request, messages.SUCCESS, 'Request was approved successfully')
-            return HttpResponseRedirect(reverse('sharing:received-requests'))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             pass
     else:
         tool_request = Request.objects.get(pk=tool_request_id)
-        return render(request, 'Sharing/received_request_detail.html', {'tool_request': tool_request,'can_approve':can_approve})
+        return render(request, 'Sharing/received_request_detail.html', {'tool_request': tool_request,'can_approve':can_approve, 'back' : request.META.get('HTTP_REFERER')})
 
 def create_sharing(request, tool_request_id):
     context = RequestContext(request)

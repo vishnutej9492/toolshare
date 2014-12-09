@@ -41,6 +41,5 @@
             <button class="button" type="submit" name="btn_approve">Approve Request</button>
             <button class="button" type="submit" name="btn_reject">Reject Request</button>
       {% endif %}
-    <br>
-    <a href="{% url 'sharing:received-requests' %}">Back</a>
+      <a class="small button" href="{{back}}">Cancel</a>
 {% endblock %}
