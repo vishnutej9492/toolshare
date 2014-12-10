@@ -18,12 +18,16 @@ class UserForm(forms.ModelForm):
         chars = set('0123456789')
         if any((c in chars) for c in data):
             raise forms.ValidationError("No numbers allowed in first name.")
+        else:
+            return data
 
     def clean_last_name(self):
         data = self.cleaned_data['last_name']
         chars = set('0123456789')
         if any((c in chars) for c in data):
             raise forms.ValidationError("No numbers allowed in last name.")
+        else:
+            return data
 
     def clean(self):
         password1 = self.cleaned_data.get('password')

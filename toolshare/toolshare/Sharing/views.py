@@ -19,7 +19,7 @@ from django import forms
 from django.db.models import Q
 import datetime
 from django.utils.timezone import utc
-
+from .utils import GetMostUsedTool,GetFrequentBorrower,GetFrequentLender,TotalTools,TotalUsers,TotalSheds
 # Create your views here.
 ##++++++++++++++All things related to Shed here++++++++++++++++##
 @login_required(login_url='users:login')
@@ -360,3 +360,18 @@ def borrowed_tools_index(request):
     current = Sharing.objects.filter( Q(borrower=request.user.profile) & Q(returned=False) & Q(finished=False)).order_by('-start_date')
     past = Sharing.objects.filter(Q(borrower=request.user.profile) & (Q(end_date__lt=now) | Q(finished=True))).order_by('-start_date')
     return render(request, 'Sharing/borrowed_tools.html', {'current_borrowed_tools': current, 'past_borrowed_tools': past })
+
+####++++++++++++++++++++++Community Statistics+++++++++++++++++++++++++++++ ###########
+@login_required(login_url='users:login')
+def statistics(request):
+    Sharezone = request.user.profile.sharezone
+    if request.method == 'GET':
+        frequenttool = GetMostUsedTool(Sharezone)
+        frequentborrower = GetFrequentBorrower(Sharezone)
+        frequentlender = GetFrequentLender(Sharezone)
+        toolcount = TotalTools(Sharezone)
+        usercount = TotalUsers(Sharezone)
+        shedcount = TotalSheds(Sharezone)
+        username_borrow = frequentborrower.user.get_username()
+        username_lender = frequentlender.user.get_username()
+        return render(request, 'Sharing/statistics.html',{'tool':frequenttool,'borrower':username_borrow,'lender':username_lender,'totaltool':toolcount,'totaluser':usercount,'totalshed':shedcount})
