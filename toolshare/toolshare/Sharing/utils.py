@@ -3,7 +3,6 @@ from UserAuth.models import UserProfile
 from ToolMgmt.models import Tool
 from django.db.models import Count
 
-
 def GetMostUsedTool(sharezone):
     tool_list  = Sharing.objects.filter(tool__owner__sharezone = sharezone).values('tool').order_by().annotate(Count('pk'))
     finallist = [] 

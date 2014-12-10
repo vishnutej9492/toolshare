@@ -16,18 +16,28 @@
     </tr>
       <tr>
           <th>Most Active Borrower </th>
+          <td>
+        {{ borrower }}
+    </td>
     </tr>
+   
     <tr>
           <th>Most Active Lender </th>
+          <td>
+              {{ lender }}
+        </td>
     </tr>
+    
     <tr>
         <th> Total Shed in your neighbourhood </th>
     </tr>
     <tr>
         <th>Total Number of Shared Tools </th>
+        <td> {{ totaltool }} </td>
     </tr>
     <tr>
         <th> Total Number of Community Users </th>
+        <td> {{ totaluser }} </td>
     </tr>
   </table>
 {% endblock %}
