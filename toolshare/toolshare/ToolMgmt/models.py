@@ -1,6 +1,9 @@
 from django.db import models
 from UserAuth.models import UserProfile
-from Sharing.models import ShareZone, Shed
+from Sharing.models import ShareZone, Shed, Sharing, Request
+from django.db.models import Q
+import datetime
+from django.utils.timezone import utc
 
 class ToolCategory(models.Model):
     name = models.CharField(verbose_name="Name", max_length=100)
@@ -33,3 +36,11 @@ class Tool(models.Model):
 
     def is_in_shed(self):
         return self.shed!=None
+
+    def is_available(self, from_date, to_date):
+        result = False
+        now = datetime.datetime.utcnow().replace(tzinfo=utc)
+        tools = Request.objects.filter(Q(tool=self) & Q(approved=True) & Q(start_date__gte=now) &
+                                      ((Q(start_date__lte=from_date)&Q(end_date__gte=from_date)) |
+                                      (Q(start_date__lte=to_date)&Q(end_date__gte=to_date))))
+        return (tools.count() == 0)
