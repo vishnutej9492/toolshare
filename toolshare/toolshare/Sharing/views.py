@@ -145,22 +145,30 @@ def returntool(request):
     return HttpResponse("Return tool to the owner from the shed")
 ######+++++++++++++++All things related to Shed end here+++++++++++++++#########
 
+
 def create_request(request, tool_id):
     context = RequestContext(request)
     tool = Tool.objects.get(id = tool_id)
     if request.POST:
         form = RequestModelForm(request.POST)
+        form.fields['start_date'].widget.attrs['id'] = 'datetimepicker'
+        form.fields['end_date'].widget.attrs['id'] = 'datetimepicker2'
         if form.is_valid():
-            new_request = form.save(commit=False)
-            new_request.pickup_arrangement = tool.owner.pickup_loc
-            new_request.borrower = request.user.profile
-            new_request.lender = tool.owner
-            new_request.tool = tool
-            new_request.save()
-            form.save_m2m()
-            messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully requested to %s' % (tool, new_request.lender))
-
-            return HttpResponseRedirect(reverse('sharing:asked-requests'))
+            from_date = request.POST['start_date']
+            to_date = request.POST['end_date']
+            if tool.is_available(from_date, to_date):
+                new_request = form.save(commit=False)
+                new_request.pickup_arrangement = tool.owner.pickup_loc
+                new_request.borrower = request.user.profile
+                new_request.lender = tool.owner
+                new_request.tool = tool
+                new_request.save()
+                form.save_m2m()
+                messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully requested to %s' % (tool, new_request.lender))
+                return HttpResponseRedirect(reverse('sharing:asked-requests'))
+            else:
+                messages.add_message(request, messages.ERROR, 'Tool %s is not available for dates: %s to %s' % (tool, from_date, to_date))
+                return render_to_response('Sharing/create_request.html', {'form': form, 'tool': tool}, context)
         else:
             return render_to_response('Sharing/create_request.html', {'form': form, 'tool': tool}, context)
     else:
@@ -177,6 +185,8 @@ class RequestModelForm(forms.ModelForm):
     def clean(self):
         start_date = self.cleaned_data.get('start_date')
         end_date = self.cleaned_data.get('end_date')
+        if not (isinstance(start_date, datetime.date) and isinstance(end_date, datetime.date)):
+            raise forms.ValidationError("You should enter valid dates")
         if start_date > end_date:
             raise forms.ValidationError("Start date cannot be greater that end date")
         now = datetime.datetime.utcnow().replace(tzinfo=utc)
