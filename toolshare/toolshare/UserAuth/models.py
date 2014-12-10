@@ -56,6 +56,13 @@ class UserProfile(models.Model):
         return Request.objects.filter(Q(lender=self) &
                                      (Q(end_date__lt=now) | Q(sharing__isnull=False))).filter(tool__shed=None).order_by('-start_date')
 
+    def current_given_tools(self):
+        return Sharing.objects.filter( Q(lender=self) & Q(returned=False) & Q(finished=False)).filter(tool__shed=None).order_by('-start_date')
+
+    def past_given_tools(self):
+        now = datetime.datetime.utcnow().replace(tzinfo=utc)
+        return Sharing.objects.filter(Q(lender=self) & (Q(end_date__lt=now) | Q(finished=True))).filter(tool__shed=None).order_by('-start_date')
+
     def rate(self):
         cursor = connection.cursor()
         cursor.execute("SELECT ROUND(SUM(Sharing_sharing.rated)*1.0/count(*),2) as rate " +
