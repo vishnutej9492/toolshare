@@ -361,4 +361,6 @@ def statistics(request):
         frequentlender = GetFrequentLender(Sharezone)
         toolcount = TotalTools(Sharezone)
         usercount = TotalUsers(ShareZone)
+        username_borrow = frequentborrower.user.get_username()
+        username_lender = frequentlender.user.get_username()
         return render(request, 'Sharing/statistics.html',{'tool':frequenttool})
