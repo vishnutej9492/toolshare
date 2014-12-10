@@ -21,7 +21,7 @@
         </tr>
       </thead>
       <tbody>
-      {% for request in s.waiting_asked_requests %}
+      {% for request in s.waiting_received_requests %}
         <tr>
           <td>{{ request }}</td>
           <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="100">{% else %} No image {% endif %}</td>
@@ -46,7 +46,7 @@
         </tr>
       </thead>
       <tbody>
-      {% for request in s.approved_asked_requests %}
+      {% for request in s.approved_received_requests %}
         <tr>
           <td>{{ request }}</td>
           <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="50">{% else %} No image {% endif %}</td>
@@ -71,7 +71,7 @@
         </tr>
       </thead>
       <tbody>
-      {% for request in s.past_asked_requests %}
+      {% for request in s.past_received_requests %}
         <tr>
           <td>{{ request }}</td>
           <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="50">{% else %} No image {% endif %}</td>

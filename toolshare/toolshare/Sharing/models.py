@@ -20,7 +20,7 @@ class Shed(models.Model):
     updated_at = models.DateTimeField(auto_now = True)
     coordinators = models.ManyToManyField('UserAuth.UserProfile', related_name = 'sheds', null =True,blank = True)
 
-    def waiting_asked_requests(self):
+    def waiting_received_requests(self):
         now = datetime.datetime.utcnow().replace(tzinfo=utc)
         waiting_requests = Request.objects.raw("SELECT Sharing_request.* FROM Sharing_request, Sharing_arrangement, ToolMgmt_tool " +
                                                "WHERE Sharing_request.arrangement_ptr_id = Sharing_arrangement .id " +
@@ -32,7 +32,7 @@ class Shed(models.Model):
                                                "ORDER BY  Sharing_arrangement.start_date DESC", [self.id, now] )
         return list(waiting_requests)
 
-    def approved_asked_requests(self):
+    def approved_received_requests(self):
         now = datetime.datetime.utcnow().replace(tzinfo=utc)
         approved_requests = Request.objects.raw("SELECT Sharing_request.* FROM Sharing_request, Sharing_arrangement, ToolMgmt_tool " +
                                                "WHERE Sharing_request.arrangement_ptr_id = Sharing_arrangement .id " +
@@ -44,7 +44,7 @@ class Shed(models.Model):
                                                "ORDER BY  Sharing_arrangement.start_date DESC", [self.id, now] )
         return list(approved_requests)
 
-    def past_asked_requests(self):
+    def past_received_requests(self):
         now = datetime.datetime.utcnow().replace(tzinfo=utc)
         approved_requests = Request.objects.raw("SELECT Sharing_request.* FROM Sharing_request, Sharing_arrangement, ToolMgmt_tool " +
                                                "WHERE Sharing_request.arrangement_ptr_id = Sharing_arrangement .id " +
