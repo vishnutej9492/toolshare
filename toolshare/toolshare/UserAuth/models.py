@@ -71,17 +71,23 @@ class UserProfile(models.Model):
 
     def rate(self):
         cursor = connection.cursor()
-        cursor.execute("SELECT ROUND(SUM(Sharing_sharing.rated)*1.0/count(*),2) as rate " +
+        cursor.execute("SELECT ROUND(SUM(Sharing_sharing.rated)*1.0/count(*),2) as rate, count(*) as count " +
                        "FROM Sharing_sharing, Sharing_arrangement " +
                        "WHERE Sharing_sharing.arrangement_ptr_id = Sharing_arrangement .id " +
                        "AND borrower_id=%s " +
                        "GROUP BY borrower_id", [self.id])
         result = cursor.fetchone()
         if result != None:
-            result = result[0]
+            result = [float(result[0]), int(result[1])]
         else:
             result = "no rated"
-        return str(result)
+        return result
+
+    def borrower_rate(self):
+        return self.rate()[0]
+
+    def borrowed_tools_count(self):
+        return self.rate()[1]
 
     def __unicode__(self):
         return self.user.username
