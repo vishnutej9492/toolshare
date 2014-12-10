@@ -35,16 +35,16 @@ class UserProfile(models.Model):
     def is_coordinator(self):
         return self.sheds.all().count() > 0
 
-    def waiting_requests(self):
+    def waiting_received_requests(self):
         now = datetime.datetime.utcnow().replace(tzinfo=utc)
         return Request.objects.filter(lender=self).filter(approved=False).filter(end_date__gte=now).filter(tool__shed=None).order_by('-start_date')
 
-    def approved_requests(self):
+    def approved_received_requests(self):
         now = datetime.datetime.utcnow().replace(tzinfo=utc)
         return Request.objects.filter(Q(lender=self) & Q(approved=True) &
                                       Q(end_date__gte=now) & Q(sharing__isnull=True)).filter(tool__shed=None).order_by('-start_date')
 
-    def past_requests(self):
+    def past_received_requests(self):
         now = datetime.datetime.utcnow().replace(tzinfo=utc)
         return Request.objects.filter(Q(lender=self) &
                                      (Q(end_date__lt=now) | Q(sharing__isnull=False))).filter(tool__shed=None).order_by('-start_date')

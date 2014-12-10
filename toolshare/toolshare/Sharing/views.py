@@ -195,9 +195,9 @@ def asked_requests_index(request):
 
 def received_requests_index(request):
     now = datetime.datetime.utcnow().replace(tzinfo=utc)
-    waiting_requests = request.user.profile.waiting_requests()
-    approved_requests = request.user.profile.approved_requests()
-    past_requests = request.user.profile.past_requests()
+    waiting_requests = request.user.profile.waiting_received_requests()
+    approved_requests = request.user.profile.approved_received_requests()
+    past_requests = request.user.profile.past_received_requests()
     return render(request, 'Sharing/received_requests_index.html', {'approved_requests': approved_requests, 'waiting_requests': waiting_requests, 'past_requests': past_requests})
 
 def received_requests_coordinator_index(request):
