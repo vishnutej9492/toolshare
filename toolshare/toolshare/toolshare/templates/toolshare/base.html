@@ -52,7 +52,11 @@
   </li>
    <li class="divider"></li>
   <li class="has-dropdown">
-    <a href="#"> Sharing </a>
+    <a href="#">
+      {% if user.profile.has_current_given_tools %}<font color="red">O </font>{% endif %}
+      {% if user.profile.has_current_given_tools_in_shed %}<font color="green">O </font>{% endif %}
+      Sharing
+    </a>
     <ul class="dropdown">
       {% if user.profile.is_coordinator %}
       <li><a href={% url 'sharing:given-tools-coordinator' %}>Given tools (from sheds)</a></li>

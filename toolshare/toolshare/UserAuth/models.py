@@ -63,6 +63,12 @@ class UserProfile(models.Model):
         now = datetime.datetime.utcnow().replace(tzinfo=utc)
         return Sharing.objects.filter(Q(lender=self) & (Q(end_date__lt=now) | Q(finished=True))).filter(tool__shed=None).order_by('-start_date')
 
+    def has_current_given_tools(self):
+        return self.current_given_tools().count() > 0
+
+    def has_current_given_tools_in_shed(self):
+        return reduce(lambda x, y: x | len(y.current_given_tools())>0, self.sheds.all(), False)
+
     def rate(self):
         cursor = connection.cursor()
         cursor.execute("SELECT ROUND(SUM(Sharing_sharing.rated)*1.0/count(*),2) as rate " +
