@@ -19,7 +19,7 @@ from django import forms
 from django.db.models import Q
 import datetime
 from django.utils.timezone import utc
-
+from .utils import GetMostUsedTool,GetFrequentBorrower,GetFrequentLender,TotalTools,TotalUsers
 # Create your views here.
 ##++++++++++++++All things related to Shed here++++++++++++++++##
 @login_required(login_url='users:login')
@@ -352,5 +352,13 @@ def borrowed_tools_index(request):
     return render(request, 'Sharing/borrowed_tools.html', {'current_borrowed_tools': current, 'past_borrowed_tools': past })
 
 ####++++++++++++++++++++++Community Statistics+++++++++++++++++++++++++++++ ###########
+@login_required(login_url='users:login')
 def statistics(request):
-    return render(request, 'Sharing/statistics.html')
+    Sharezone = request.user.profile.sharezone
+    if request.method == 'GET':
+        frequenttool = GetMostUsedTool(Sharezone)
+        frequentborrower = GetFrequentBorrower(Sharezone)
+        frequentlender = GetFrequentLender(Sharezone)
+        toolcount = TotalTools(Sharezone)
+        usercount = TotalUsers(ShareZone)
+        return render(request, 'Sharing/statistics.html',{'tool':frequenttool})
