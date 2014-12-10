@@ -4,8 +4,11 @@ from django.contrib.auth.models import User
 from localflavor.us.models import USStateField
 from localflavor.us.us_states import STATE_CHOICES
 from localflavor.us.models import USPostalCodeField
-from Sharing.models import ShareZone, Sharing
+from Sharing.models import ShareZone, Sharing, Request
 from django.db import connection
+import datetime
+from django.utils.timezone import utc
+from django.db.models import Q
 
 class UserProfile(models.Model):
     NOREMINDER = 0
@@ -31,6 +34,20 @@ class UserProfile(models.Model):
 
     def is_coordinator(self):
         return self.sheds.all().count() > 0
+
+    def waiting_requests(self):
+        now = datetime.datetime.utcnow().replace(tzinfo=utc)
+        return Request.objects.filter(lender=self).filter(approved=False).filter(end_date__gte=now).filter(tool__shed=None).order_by('-start_date')
+
+    def approved_requests(self):
+        now = datetime.datetime.utcnow().replace(tzinfo=utc)
+        return Request.objects.filter(Q(lender=self) & Q(approved=True) &
+                                      Q(end_date__gte=now) & Q(sharing__isnull=True)).filter(tool__shed=None).order_by('-start_date')
+
+    def past_requests(self):
+        now = datetime.datetime.utcnow().replace(tzinfo=utc)
+        return Request.objects.filter(Q(lender=self) &
+                                     (Q(end_date__lt=now) | Q(sharing__isnull=False))).filter(tool__shed=None).order_by('-start_date')
 
     def rate(self):
         cursor = connection.cursor()

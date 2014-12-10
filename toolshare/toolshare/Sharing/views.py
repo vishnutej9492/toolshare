@@ -195,11 +195,9 @@ def asked_requests_index(request):
 
 def received_requests_index(request):
     now = datetime.datetime.utcnow().replace(tzinfo=utc)
-    waiting_requests = Request.objects.filter(lender=request.user.profile).filter(approved=False).filter(end_date__gte=now).filter(tool__shed=None).order_by('-start_date')
-    approved_requests = Request.objects.filter(Q(lender=request.user.profile) & Q(approved=True) &
-                                               Q(end_date__gte=now) & Q(sharing__isnull=True)).filter(tool__shed=None).order_by('-start_date')
-    past_requests = Request.objects.filter(Q(lender=request.user.profile) &
-                                          (Q(end_date__lt=now) | Q(sharing__isnull=False))).filter(tool__shed=None).order_by('-start_date')
+    waiting_requests = request.user.profile.waiting_requests()
+    approved_requests = request.user.profile.approved_requests()
+    past_requests = request.user.profile.past_requests()
     return render(request, 'Sharing/received_requests_index.html', {'approved_requests': approved_requests, 'waiting_requests': waiting_requests, 'past_requests': past_requests})
 
 def received_requests_coordinator_index(request):
