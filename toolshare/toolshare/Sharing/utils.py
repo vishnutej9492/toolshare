@@ -40,3 +40,7 @@ def TotalTools(sharezone):
 def TotalUsers(zone):
     user_count =  UserProfile.objects.filter(sharezone = zone).count() 
     return user_count
+
+def TotalSheds(zone):
+    shed_count = Shed.objects.filter(sharezone = zone).count()
+    return shed_count
