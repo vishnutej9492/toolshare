@@ -275,8 +275,10 @@ def create_sharing(request, tool_request_id):
                     tool_request.sharing = new_sharing
                     tool_request.save()
                     messages.add_message(request, messages.SUCCESS, 'Tool %s is now in possesion of %s' % (new_sharing.tool, new_sharing.borrower))
-
-                    return HttpResponseRedirect(reverse('sharing:asked-requests'))
+                    if tool_request.tool.in_shed():
+                        return HttpResponseRedirect(reverse('sharing:given-tools-coordinator'))
+                    else:
+                        return HttpResponseRedirect(reverse('sharing:given-tools'))
                 else:
                     return render_to_response('Sharing/create_sharing.html', {'form': form, 'tool_request': tool_request.tool, 'back' : request.META.get('HTTP_REFERER')}, context)
             else:
