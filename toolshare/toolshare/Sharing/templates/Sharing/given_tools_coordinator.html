@@ -50,7 +50,7 @@
         <tr>
           <td>{{ request.borrower }}</td>
           <td>
-            <div>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="100">{% else %}no image{% endif %} | {{ request.tool.name }} </div>
+            <div>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="100">{% else %} No image{% endif %} | {{ request.tool.name }} </div>
           </td>
           <td>{{ request.start_date }}</td>
           <td>{{ request.end_date }}</td>

@@ -43,7 +43,7 @@
           <td>{{ tool.description }}</td>
           <td>{{ tool.status }}</td>
           <td>{{ tool.owner }}</td>
-          <td>{% if tool.image %}<img src="{{ tool.image.url }}" width="100">{% else %}no image{% endif %}</td>
+          <td>{% if tool.image %}<img src="{{ tool.image.url }}" width="100">{% else %} No image{% endif %}</td>
           <td><a class="button" href="{% url 'toolmgmt:detail' tool.id %}">Show</a></td>
         </tr>
       {% endfor %}
@@ -67,7 +67,6 @@
       <a class="button" href="{% url 'sharing:shededit' shed.id %}">Edit</a>
         {% else %}
         Not a coordinator
-
   {% endif %}
 
 {% endblock %}

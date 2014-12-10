@@ -31,11 +31,11 @@
           {% if tool_request.tool.image %}
               <td><img src="{{ tool_request.tool.image.url }}" width="300" ></td>
           {% else %}
-              <td>no image found</td>
+              <td> No image found</td>
           {% endif %}
       </tr>
       </thead>
     </table>
     <br>
-    <a href="{% url 'sharing:asked-requests' %}">Back</a>
+    <a class="button" href="{% url 'sharing:asked-requests' %}">Back</a>
 {% endblock %}

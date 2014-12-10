@@ -35,7 +35,7 @@
           {% else %}
             <td>{{ tool.in_shed }}</td>
           {% endif %}
-          <td>{% if tool.image %}<img src="{{ tool.image.url }}" width="100">{% else %}no image{% endif %}</td>
+          <td>{% if tool.image %}<img src="{{ tool.image.url }}" width="100">{% else %} No image {% endif %}</td>
           <td><a class="button" href="{% url 'toolmgmt:detail' tool.id %}">Show</a></td>
           <td><a class="button" href="{% url 'sharing:create-request' tool.id %}">Ask</a></td>
         </tr>

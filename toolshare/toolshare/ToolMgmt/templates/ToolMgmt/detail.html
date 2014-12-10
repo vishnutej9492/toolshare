@@ -52,5 +52,5 @@
 
       {% endif %}
     <br>
-    <a href="{% url 'toolmgmt:tools' %}">Back</a> | <a href={% url 'toolmgmt:tool_editition' tool.id %}>Edit tool</a>
+    <a class="button" href="{% url 'toolmgmt:tools' %}">Back</a><a class="button" href={% url 'toolmgmt:tool_editition' tool.id %}>Edit tool</a>
 {% endblock %}

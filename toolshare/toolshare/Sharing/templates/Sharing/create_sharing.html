@@ -10,7 +10,7 @@
         {% csrf_token %}
         <table>
           <tr>
-            <td>{% if tool_request.tool.image %}<img src="{{ tool_request.tool.image.url }}" width="200">{% else %}no image{% endif %}</td>
+            <td>{% if tool_request.tool.image %}<img src="{{ tool_request.tool.image.url }}" width="200">{% else %} No image{% endif %}</td>
             <td><b>lender:</b> <br>{{ tool_request.lender }} <br> (rate: {{ tool_request.lender.rate }})</td>
             <td><b>borrower:</b> <br> {{ tool_request.borrower }} <br> (rate: {{ tool_request.borrower.rate }}) </td>
             <td><b>pickup arrengement:</b> <br>{{ tool_request.lender.pickup_loc }} </td>
@@ -19,7 +19,7 @@
           </tr>
         </table>
         {{ form.as_p }}
-        <input class="small button" type="submit" value="Share" /> <a class="small button" href="{{back}}">Cancel</a>
+        <input class="button" type="submit" value="Share" /> <a class="button" href="{{back}}">Cancel</a>
 
     </form>
 {% endblock %}
