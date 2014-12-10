@@ -362,6 +362,10 @@ def statistics(request):
         toolcount = TotalTools(Sharezone)
         usercount = TotalUsers(Sharezone)
         shedcount = TotalSheds(Sharezone)
-        username_borrow = frequentborrower.user.get_username()
-        username_lender = frequentlender.user.get_username()
+        username_borrow = None
+        username_lender = None
+        if frequentborrower:
+            username_borrow = frequentborrower.user.get_username()
+        if frequentlender:
+            username_lender = frequentlender.user.get_username()
         return render(request, 'Sharing/statistics.html',{'tool':frequenttool,'borrower':username_borrow,'lender':username_lender,'totaltool':toolcount,'totaluser':usercount,'totalshed':shedcount})
