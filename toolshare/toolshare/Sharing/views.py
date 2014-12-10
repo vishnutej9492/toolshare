@@ -350,3 +350,7 @@ def borrowed_tools_index(request):
     current = Sharing.objects.filter( Q(borrower=request.user.profile) & Q(returned=False) & Q(finished=False)).order_by('-start_date')
     past = Sharing.objects.filter(Q(borrower=request.user.profile) & (Q(end_date__lt=now) | Q(finished=True))).order_by('-start_date')
     return render(request, 'Sharing/borrowed_tools.html', {'current_borrowed_tools': current, 'past_borrowed_tools': past })
+
+####++++++++++++++++++++++Community Statistics+++++++++++++++++++++++++++++ ###########
+def statistics(request):
+    return render(request, 'Sharing/statistics.html')

@@ -25,4 +25,6 @@ urlpatterns = patterns('',
     url(r'^given-tools-coordinator/$', views.given_tools_coordinator_index, name='given-tools-coordinator'),
     url(r'^given-tools/(?P<tool_sharing_id>\d+)/$', views.given_tool_edit, name='given-tool-edit'),
     url(r'^borrowed-tools/$', views.borrowed_tools_index, name='borrowed-tools'),
+    #++++++++++++++++++++Statistics ++++++++++++++++++++++++++++++++++++++++++++++++++++++#
+    url(r'^statistics/$',views.statistics,name = "statistics"),
 )
