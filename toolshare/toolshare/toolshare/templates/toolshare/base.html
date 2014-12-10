@@ -36,7 +36,11 @@
   <li class="divider"></li>
 
   <li class="has-dropdown">
-    <a href="#"> Requests </a>
+    <a href="#">
+      {% if user.profile.has_waiting_received_requests %}<font color="red">O </font>{% endif %}
+      {% if user.profile.has_waiting_received_requests_in_shed %}<font color="green">O </font>{% endif %}
+      Requests
+    </a>
     <ul class="dropdown">
       {% if user.profile.is_coordinator %}
       <li><a href={% url 'sharing:received-requests-coordinator' %}>Received requests (to sheds)</a></li>

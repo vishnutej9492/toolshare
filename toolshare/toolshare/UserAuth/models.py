@@ -9,6 +9,7 @@ from django.db import connection
 import datetime
 from django.utils.timezone import utc
 from django.db.models import Q
+from functools import reduce
 
 class UserProfile(models.Model):
     NOREMINDER = 0
@@ -34,6 +35,12 @@ class UserProfile(models.Model):
 
     def is_coordinator(self):
         return self.sheds.all().count() > 0
+
+    def has_waiting_received_requests(self):
+        return self.waiting_received_requests().count() > 0
+
+    def has_waiting_received_requests_in_shed(self):
+        return reduce(lambda x, y: x | len(y.waiting_received_requests())>0, self.sheds.all(), False)
 
     def waiting_received_requests(self):
         now = datetime.datetime.utcnow().replace(tzinfo=utc)
