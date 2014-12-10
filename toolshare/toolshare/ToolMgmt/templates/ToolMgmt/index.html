@@ -31,9 +31,9 @@
           <td>{{ tool.status }}</td>
           <td>{{ tool.owner }}</td>
           {% if tool.shed %}
-            <td><a href="{% url 'sharing:sheddetail' tool.shed.id %}">{{ tool.in_shed }}</a></td>
+            <td><a href="{% url 'sharing:sheddetail' tool.shed.id %}">{{ tool.is_in_shed }}</a></td>
           {% else %}
-            <td>{{ tool.in_shed }}</td>
+            <td>{{ tool.is_in_shed }}</td>
           {% endif %}
           <td>{% if tool.image %}<img src="{{ tool.image.url }}" width="100">{% else %} No image {% endif %}</td>
           <td><a class="button" href="{% url 'toolmgmt:detail' tool.id %}">Show</a></td>

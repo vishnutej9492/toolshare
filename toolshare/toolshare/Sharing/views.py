@@ -243,7 +243,7 @@ def received_request_detail(request, tool_request_id):
                 tool_request.approved = False
             tool_request.save()
             messages.add_message(request, messages.SUCCESS, 'Request was approved successfully')
-            if tool_request.tool.in_shed():
+            if tool_request.tool.is_in_shed():
                 return HttpResponseRedirect(reverse('sharing:received-requests-coordinator'))
             else:
                 return HttpResponseRedirect(reverse('sharing:received-requests'))
@@ -275,7 +275,7 @@ def create_sharing(request, tool_request_id):
                     tool_request.sharing = new_sharing
                     tool_request.save()
                     messages.add_message(request, messages.SUCCESS, 'Tool %s is now in possesion of %s' % (new_sharing.tool, new_sharing.borrower))
-                    if tool_request.tool.in_shed():
+                    if tool_request.tool.is_in_shed():
                         return HttpResponseRedirect(reverse('sharing:given-tools-coordinator'))
                     else:
                         return HttpResponseRedirect(reverse('sharing:given-tools'))
@@ -332,7 +332,7 @@ def given_tool_edit(request, tool_sharing_id):
                 new_tool_sharing.finished = True
                 new_tool_sharing.save()
                 messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully set as returned' % new_tool_sharing)
-                if tool_sharing.tool.in_shed():
+                if tool_sharing.tool.is_in_shed():
                     return HttpResponseRedirect(reverse('sharing:given-tools-coordinator'))
                 else:
                     return HttpResponseRedirect(reverse('sharing:given-tools'))
