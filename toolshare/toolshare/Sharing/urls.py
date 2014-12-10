@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     url(r'sheds/(?P<shed_id>\d+)/coords/$', views.shedcoords, name='shedcoords'),
     url(r'sheds/(?P<shed_id>\d+)/coords/add/$',views.shedaddcoords,name='shedaddcoords'),
     url(r'sheds/tooltransfer/(?P<tool_id>\d+)/$',views.tooltransfer,name = 'tooltransfer'),
+    url(r'sheds/returntool/(?P<tool_id>\d+)/$',views.returntool,name = 'returntool'),
     #+++++++++++++++++SHED url ends here ++++++++++++++++++++++++++++++++++#
     url(r'^$', RedirectView.as_view(url='received-requests/', permanent=False), name='received-requests'),
     url(r'^create-request/(?P<tool_id>\d+)/$', views.create_request, name='create-request'),
@@ -27,4 +28,6 @@ urlpatterns = patterns('',
     url(r'^borrowed-tools/$', views.borrowed_tools_index, name='borrowed-tools'),
     #++++++++++++++++++++Statistics ++++++++++++++++++++++++++++++++++++++++++++++++++++++#
     url(r'^statistics/$',views.statistics,name = "statistics"),
+    #+++++++++++++++++++Search Tool Functionality ++++++++++++++++++++++++++#
+    url(r'^searchtools/$', views.searchtools , name = 'searchtools'),
 )

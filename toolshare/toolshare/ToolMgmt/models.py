@@ -4,6 +4,7 @@ from Sharing.models import ShareZone, Shed, Sharing, Request
 from django.db.models import Q
 import datetime
 from django.utils.timezone import utc
+from Sharing.models import ShareZone, Shed
 
 class ToolCategory(models.Model):
     name = models.CharField(verbose_name="Name", max_length=100)

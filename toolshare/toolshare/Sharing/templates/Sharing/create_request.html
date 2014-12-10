@@ -1,10 +1,18 @@
 {% extends "base.html" %}
+<head>
 {% block title_html %}
   Tool registration
 {% endblock %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+    alert("hi");
+});
+</script>
 {% block h1 %}
   {{ bloc.super }}
 {% endblock %}
+</head>
 {% block article_content %}
     <form action= {% url 'sharing:create-request' tool.id %} method="post" >
         {% csrf_token %}

@@ -46,11 +46,18 @@
         </thead>
       </table>
       {% if is_owner %}
-            <button class="button" type="submit">Activate/Deactivate</button>
-            <a class="button" href={% url 'toolmgmt:tool_editition' tool.id %}>Edit tool</a>
-            <a class="button" href={% url 'sharing:tooltransfer' tool.id %}>Transfer to Shed</a>
-
+            {% if not tool.in_shed  %}
+                <a class="button" href={% url 'sharing:tooltransfer' tool.id %}> Transfer to Shed </a>
+                <a class="button" href={% url 'toolmgmt:tool_editition' tool.id %}>Edit tool</a>
+                <button class="button" type="submit">Activate/Deactivate</button>
+            {% endif %}
       {% endif %}
+      {% if iscoordinator %}
+        {% if tool.inshed %}
+        <a class="button" href="{%url 'sharing:returntool' tool.id%}">Return to owner</a>
+        {% endif %}    
+      {% endif %}
+
     <br>
     <a class="button" href="{% url 'toolmgmt:tools' %}">Back</a><a class="button" href={% url 'toolmgmt:tool_editition' tool.id %}>Edit tool</a>
 {% endblock %}

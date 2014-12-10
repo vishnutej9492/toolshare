@@ -19,6 +19,7 @@ def index(request):
     all_tools = Tool.objects.filter(owner__sharezone = request.user.profile.sharezone).filter(active=True).exclude(status_id=4)
     paginator = Paginator(all_tools, 6)
     page = request.GET.get('page')
+    #
 
     try:
         paged_tools = paginator.page(page)
@@ -56,22 +57,26 @@ def tool_edit(request, tool_id):
     context = RequestContext(request)
     tool = Tool.objects.get(id=tool_id)
     is_owner = Is_Owner(request.user.profile,tool)
-    if is_owner:
-        if request.POST:
-            form = ToolModelForm(request.POST, request.FILES, instance=tool)
-            if form.is_valid():
-                new_tool = form.save()
-                new_tool.owner = UserProfile.objects.get( user = request.user)
-                new_tool.save()
-                messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully edited' % new_tool)
-                return HttpResponseRedirect(reverse('toolmgmt:detail', kwargs={'tool_id': new_tool.id}))
+    if not tool.in_shed():
+        if is_owner:
+            if request.POST:
+                form = ToolModelForm(request.POST, request.FILES, instance=tool)
+                if form.is_valid():
+                    new_tool = form.save()
+                    new_tool.owner = UserProfile.objects.get( user = request.user)
+                    new_tool.save()
+                    messages.add_message(request, messages.SUCCESS, 'Tool %s was successfully edited' % new_tool)
+                    return HttpResponseRedirect(reverse('toolmgmt:detail', kwargs={'tool_id': new_tool.id}))
+                else:
+                    return render_to_response('ToolMgmt/edit.html', {'form': form, 'tool' : tool}, context)
             else:
+                form = ToolModelForm(instance=tool)
                 return render_to_response('ToolMgmt/edit.html', {'form': form, 'tool' : tool}, context)
         else:
-            form = ToolModelForm(instance=tool)
-            return render_to_response('ToolMgmt/edit.html', {'form': form, 'tool' : tool}, context)
+            messages.add_message(request,messages.ERROR, 'You are not authorised to edit this tool')
+            return HttpResponseRedirect(reverse('toolmgmt:detail',kwargs = {'tool_id':tool_id}))
     else:
-        messages.add_message(request,messages.ERROR, 'You are not authorised to edit this tool')
+        messages.add_message(request, messages.ERROR, 'You are not allowed to edit tool when tool is in shed')
         return HttpResponseRedirect(reverse('toolmgmt:detail',kwargs = {'tool_id':tool_id}))
 
 class ToolModelForm(forms.ModelForm):
@@ -82,16 +87,23 @@ class ToolModelForm(forms.ModelForm):
 
     identifier = forms.CharField(label="Identifier", help_text="Unique identifier to distinguish between similar tools", required=True)
     category = forms.ModelChoiceField(label="Category",queryset=ToolCategory.objects.all(), error_messages=error_category)
+    
     class Meta:
         model = Tool
         fields= ('name', 'description', 'category', 'status', 'image', 'identifier', 'active')
+    
+
 
 @login_required(login_url='users:login')
 def detail(request, tool_id):
     tool = Tool.objects.get(pk=tool_id)
     is_owner = Is_Owner( request.user.profile, tool)
+    iscoordinator = False
+    if tool.inshed():
+        shed = tool.shed
+        iscoordinator = shed.iscoordinator(request.user.profile)
     if (request.method == 'GET'):
-        return render(request, 'ToolMgmt/detail.html', {'tool': tool,'is_owner':is_owner})
+        return render(request, 'ToolMgmt/detail.html', {'tool': tool,'is_owner':is_owner,'iscoordinator':iscoordinator,})
     else:
         tool = Tool.objects.get(pk=tool_id)
         if tool.active:

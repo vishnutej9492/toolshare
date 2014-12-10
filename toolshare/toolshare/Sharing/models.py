@@ -77,6 +77,12 @@ class Shed(models.Model):
                                                "ORDER BY  Sharing_arrangement.start_date DESC", [self.id, now] )
         return list(past_tools)
 
+    def iscoordinator(self,profile):
+        if profile in self.coordinators.all():
+            return True
+        else:
+            return False
+
     def __str__(self):
         return self.name
 

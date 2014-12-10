@@ -141,11 +141,26 @@ def tooltransfer(request,tool_id):
         return HttpResponseRedirect(reverse('toolmgmt:detail',kwargs = {'tool_id':tool_id}))  
 
 @login_required(login_url='users:login')
-def returntool(request):
-    return HttpResponse("Return tool to the owner from the shed")
+def returntool(request,tool_id):
+    tool = Tool.objects.get(pk = tool_id)
+    if (tool.inshed()):
+        shed = tool.shed
+        if shed.iscoordinator(request.user.profile):
+            tool.shed = None
+            tool.save()
+            messages.add_message(request,messages.SUCCESS,"Tool returned successfully")
+            return HttpResponseRedirect(reverse('toolmgmt:tools'))  
+        else:
+            messages.add_message(request,messages.ERROR,"You are not authorised to return the tool")
+            return HttpResponseRedirect(reverse('toolmgmt:detail',kwargs = {'tool_id':tool_id}))  
 ######+++++++++++++++All things related to Shed end here+++++++++++++++#########
+#######++++++++++++++All things related to search here +++++++++++++++++########
+def searchtools(request):
+
+    return HttpResponse("searchtools")
 
 
+#########+++++++++++++All things related to search ends here ++++++++++++########
 def create_request(request, tool_id):
     context = RequestContext(request)
     tool = Tool.objects.get(id = tool_id)
