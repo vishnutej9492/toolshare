@@ -44,3 +44,12 @@ def TotalUsers(zone):
 def TotalSheds(zone):
     shed_count = Shed.objects.filter(sharezone = zone).count()
     return shed_count
+
+def get_top_borrower_rating(sharezone, top):
+    user_list = UserProfile.objects.all()
+    user_list = filter(lambda x: x.rate() != "no rated", user_list)
+    top_borrowers = sorted(user_list, key=lambda x: x.rate()[0], reverse=True)
+    if len(top_borrowers)> top:
+        return top_borrowers[:top]
+    else:
+        return top_borrowers

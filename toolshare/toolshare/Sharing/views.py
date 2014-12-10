@@ -19,7 +19,7 @@ from django import forms
 from django.db.models import Q
 import datetime
 from django.utils.timezone import utc
-from .utils import GetMostUsedTool,GetFrequentBorrower,GetFrequentLender,TotalTools,TotalUsers,TotalSheds
+from .utils import GetMostUsedTool,GetFrequentBorrower,GetFrequentLender,TotalTools,TotalUsers,TotalSheds, get_top_borrower_rating
 # Create your views here.
 ##++++++++++++++All things related to Shed here++++++++++++++++##
 @login_required(login_url='users:login')
@@ -372,10 +372,11 @@ def statistics(request):
         toolcount = TotalTools(Sharezone)
         usercount = TotalUsers(Sharezone)
         shedcount = TotalSheds(Sharezone)
+        top_borrower_rating = get_top_borrower_rating(Sharezone, 5)
         username_borrow = None
         username_lender = None
         if frequentborrower:
             username_borrow = frequentborrower.user.get_username()
         if frequentlender:
             username_lender = frequentlender.user.get_username()
-        return render(request, 'Sharing/statistics.html',{'tool':frequenttool,'borrower':username_borrow,'lender':username_lender,'totaltool':toolcount,'totaluser':usercount,'totalshed':shedcount})
+        return render(request, 'Sharing/statistics.html',{'tool':frequenttool,'borrower':username_borrow,'lender':username_lender,'totaltool':toolcount,'totaluser':usercount,'totalshed':shedcount, 'top_borrower_rating': top_borrower_rating})

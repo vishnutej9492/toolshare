@@ -20,6 +20,13 @@
         {{ borrower }}
     </td>
     </tr>
+    </tr>
+      <tr>
+          <th>Borrower top 5 rate </th>
+          {% for user in top_borrower_rating %}
+              <td>{{ user }} ({{ user.borrower_rate }} over {{user.borrowed_tools_count}})</td>
+          {% endfor %}
+    </tr>
    
     <tr>
           <th>Most Active Lender </th>
