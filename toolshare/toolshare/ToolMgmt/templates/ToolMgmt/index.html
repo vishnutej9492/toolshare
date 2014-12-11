@@ -7,6 +7,10 @@
 {% endblock %}
 {% block article_content %}
   <h1>Tool listing</h1>
+<label>Search Tool<label>
+<input type="text" />
+<a class="button" href="#">Search</a>
+<br />
   {% if all_tools|length > 0 %}
     <table>
       <thead>
@@ -16,6 +20,9 @@
           <td>Description</td>
           <td>Status</td>
           <td>Owner</td>
+          <td>In shed</td>
+          <td></td>
+          <td></td>
           <td></td>
         </tr>
       </thead>
@@ -27,7 +34,14 @@
           <td>{{ tool.description }}</td>
           <td>{{ tool.status }}</td>
           <td>{{ tool.owner }}</td>
-          <td><a href="/toolmgmt/{{tool.id}}">show</a></td>
+          {% if tool.shed %}
+            <td><a href="{% url 'sharing:sheddetail' tool.shed.id %}">{{ tool.is_in_shed }}</a></td>
+          {% else %}
+            <td>{{ tool.is_in_shed }}</td>
+          {% endif %}
+          <td>{% if tool.image %}<img src="{{ tool.image.url }}" width="100">{% else %} No image {% endif %}</td>
+          <td><a class="button" href="{% url 'toolmgmt:detail' tool.id %}">Show</a></td>
+          <td><a class="button" href="{% url 'sharing:create-request' tool.id %}">Ask</a></td>
         </tr>
       {% endfor %}
       </tbody>
@@ -36,5 +50,18 @@
     <span>No tool.</span>
   {% endif %}
 
-  <a href="/toolmgmt/register">New tool</a>
+  <div class="pagination">
+    <span class="step-links">
+        {% if all_tools.has_previous %}
+            <a class="button" href="?page={{ all_tools.previous_page_number }}">previous</a>
+        {% endif %}
+        <span class="current">
+            Page {{ all_tools.number }} of {{ all_tools.paginator.num_pages }}.
+        </span>
+        {% if all_tools.has_next %}
+            <a class="button" href="?page={{ all_tools.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+  </div>
+  <a class="button" href={% url 'toolmgmt:register' %}>New tool</a>
 {% endblock %}

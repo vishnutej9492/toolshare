@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title_html %}
+  Tool listing
+{% endblock %}
+{% block h1 %}
+  {{ bloc.super }}
+{% endblock %}
+{% block article_content %}
+  <h1>Asked requests</h1>
+  <table>
+    <thead>
+      <tr>
+        <td>Request</td>
+        <td></td>
+        <td>From</td>
+        <td>To</td>
+        <td>Accepted</td>
+        <td></td>
+        <td></td>
+      </tr>
+    </thead>
+    <tbody>
+    {% for request in waiting_requests %}
+      <tr>
+        <td>{{ request }}</td>
+        <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="100">{% else %} No image{% endif %}</td>
+        <td>{{ request.start_date }}</td>
+        <td>{{ request.end_date }}</td>
+        <td>{{ request.approved }}</td>
+        <td><a href={% url 'sharing:asked-request-detail' request.id %}>Show</a></td>
+        <td><a href={% url 'sharing:asked-request-edit' request.id %}>Edit</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <h1>Approved asked requests</h1>
+  <table>
+    <thead>
+      <tr>
+        <td>Request</td>
+        <td></td>
+        <td>From</td>
+        <td>To</td>
+        <td>Accepted</td>
+        <td></td>
+      </tr>
+    </thead>
+    <tbody>
+    {% for request in approved_requests %}
+      <tr>
+        <td>{{ request }}</td>
+        <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="100">{% else %} No image{% endif %}</td>
+        <td>{{ request.start_date }}</td>
+        <td>{{ request.end_date }}</td>
+        <td>{{ request.approved }}</td>
+        <td><a href={% url 'sharing:asked-request-detail' request.id %}>Show</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <h4>Past Asked request listing</h4>
+  <table>
+    <thead>
+      <tr>
+        <td>Request</td>
+        <td></td>
+        <td>From</td>
+        <td>To</td>
+        <td>Accepted</td>
+        <td></td>
+      </tr>
+    </thead>
+    <tbody>
+    {% for request in past_requests %}
+      <tr>
+        <td>{{ request }}</td>
+        <td>{% if request.tool.image %}<img src="{{ request.tool.image.url }}" width="50">{% else %} No image{% endif %}</td>
+        <td>{{ request.start_date }}</td>
+        <td>{{ request.end_date }}</td>
+        <td>{{ request.approved }}</td>
+        <td><a href={% url 'sharing:asked-request-detail' request.id %}>Show</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

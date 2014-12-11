@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+      {% extends "base.html" %}
 {% block title_html %}
   Tool detail
 {% endblock %}
@@ -35,9 +35,29 @@
             <td>Status:</td>
             <td>{{ tool.status }}</td>
         </tr>
+        <tr>
+            <td>Image:</td>
+            {% if tool.image %}
+                <td><img src="{{ tool.image.url }}" width="300" ></td>
+            {% else %}
+                <td> No image found</td>
+            {% endif %}
+        </tr>
         </thead>
       </table>
-    <button type="submit">Activate/Deactivate</button>
+      {% if is_owner %}
+            {% if not tool.in_shed  %}
+                <a class="button" href={% url 'sharing:tooltransfer' tool.id %}> Transfer to Shed </a>
+                <a class="button" href={% url 'toolmgmt:tool_editition' tool.id %}>Edit tool</a>
+                <button class="button" type="submit">Activate/Deactivate</button>
+            {% endif %}
+      {% endif %}
+      {% if iscoordinator %}
+        {% if tool.inshed %}
+        <a class="button" href="{%url 'sharing:returntool' tool.id%}">Return to owner</a>
+        {% endif %}    
+      {% endif %}
+
     <br>
-    <a href="/toolmgmt">Back</a> | <a href="#">Edit tool</a>
+    <a class="button" href="{% url 'toolmgmt:tools' %}">Back</a><a class="button" href={% url 'toolmgmt:tool_editition' tool.id %}>Edit tool</a>
 {% endblock %}

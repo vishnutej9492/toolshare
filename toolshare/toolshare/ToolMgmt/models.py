@@ -1,5 +1,10 @@
 from django.db import models
 from UserAuth.models import UserProfile
+from Sharing.models import ShareZone, Shed, Sharing, Request
+from django.db.models import Q
+from datetime import date, timedelta, datetime
+from django.utils.timezone import utc
+from Sharing.models import ShareZone, Shed
 
 class ToolCategory(models.Model):
     name = models.CharField(verbose_name="Name", max_length=100)
@@ -19,9 +24,35 @@ class Tool(models.Model):
     name = models.CharField(verbose_name="Name", max_length=100)
     description = models.CharField(verbose_name="Description", max_length=200)
     active = models.BooleanField(default=True)
-    category = models.ForeignKey(ToolCategory)
-    status = models.ForeignKey(ToolStatus)
-    owner = models.ForeignKey(UserProfile, null=True)
+    category = models.ForeignKey(ToolCategory, related_name='category')
+    status = models.ForeignKey(ToolStatus, related_name='status')
+    owner = models.ForeignKey(UserProfile, related_name='owner', null=True)
+    image = models.ImageField(upload_to="images/tools/", blank=True, null=True)
+    identifier = models.CharField(verbose_name="Identifier", blank=True, null=True, max_length=200)
+    shed = models.ForeignKey(Shed, related_name='tools', null = True, blank = True)
+    in_shed = models.BooleanField(default = False)
+    blackout_start_date = models.DateTimeField(null = True, blank = True)
+    blackout_end_date = models.DateTimeField(null = True, blank = True)
 
     def __str__(self):
         return self.name
+
+    def is_in_shed(self):
+        return self.shed!=None
+
+    def is_available(self, from_date, to_date):
+        result = False
+        now = datetime.datetime.utcnow().replace(tzinfo=utc)
+        tools = Request.objects.filter(Q(tool=self) & Q(approved=True) & Q(start_date__gte=now) &
+                                      ((Q(start_date__lte=from_date)&Q(end_date__gte=from_date)) |
+                                      (Q(start_date__lte=to_date)&Q(end_date__gte=to_date))))
+        return (tools.count() == 0)
+
+    def date_range(self, start, end):
+        l = []
+        for i in range((end-start).days + 1):
+            l.append( str( (start+ timedelta(days=i)).date().strftime('%Y/%m/%d') ))
+        return l
+
+    def blackout_dates(self):
+        return self.date_range(self.blackout_start_date, self.blackout_end_date)

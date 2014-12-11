@@ -16,6 +16,8 @@
           <td>Description</td>
           <td>Status</td>
           <td></td>
+          <td></td>
+          <td></td>
         </tr>
       </thead>
       <tbody>
@@ -25,7 +27,9 @@
           <td>{{ tool.name }}</td>
           <td>{{ tool.description }}</td>
           <td>{{ tool.status }}</td>
-          <td><a href="/toolmgmt/{{tool.id}}">show</a></td>
+          <td>{% if tool.image %}<img src="{{ tool.image.url }}" width="100">{% else %} No image{% endif %}</td>
+          <td><a class="button" href="{% url 'toolmgmt:detail' tool.id %}">Show</a></td>
+          <td><a class="button" href="{% url 'toolmgmt:tool_editition' tool.id %}">Edit</a></td>
         </tr>
       {% endfor %}
       </tbody>
@@ -34,5 +38,5 @@
     <span>No tool.</span>
   {% endif %}
 
-  <a href="/toolmgmt/register">New tool</a>
+  <a class="button" href="{% url 'toolmgmt:register' %}">New tool</a>
 {% endblock %}
