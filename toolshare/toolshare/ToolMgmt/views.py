@@ -57,7 +57,7 @@ def tool_edit(request, tool_id):
     context = RequestContext(request)
     tool = Tool.objects.get(id=tool_id)
     is_owner = Is_Owner(request.user.profile,tool)
-    if not tool.in_shed():
+    if not tool.is_in_shed():
         if is_owner:
             if request.POST:
                 form = ToolModelForm(request.POST, request.FILES, instance=tool)
@@ -71,6 +71,8 @@ def tool_edit(request, tool_id):
                     return render_to_response('ToolMgmt/edit.html', {'form': form, 'tool' : tool}, context)
             else:
                 form = ToolModelForm(instance=tool)
+                form.fields['blackout_start_date'].widget.attrs['id'] = 'datetimepicker'
+                form.fields['blackout_end_date'].widget.attrs['id'] = 'datetimepicker2'
                 return render_to_response('ToolMgmt/edit.html', {'form': form, 'tool' : tool}, context)
         else:
             messages.add_message(request,messages.ERROR, 'You are not authorised to edit this tool')
@@ -90,7 +92,7 @@ class ToolModelForm(forms.ModelForm):
     
     class Meta:
         model = Tool
-        fields= ('name', 'description', 'category', 'status', 'image', 'identifier', 'active')
+        fields= ('name', 'description', 'category', 'status', 'image', 'identifier', 'active', 'blackout_start_date', 'blackout_end_date')
     
 
 
@@ -99,7 +101,7 @@ def detail(request, tool_id):
     tool = Tool.objects.get(pk=tool_id)
     is_owner = Is_Owner( request.user.profile, tool)
     iscoordinator = False
-    if tool.inshed():
+    if tool.is_in_shed():
         shed = tool.shed
         iscoordinator = shed.iscoordinator(request.user.profile)
     if (request.method == 'GET'):

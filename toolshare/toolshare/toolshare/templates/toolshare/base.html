@@ -168,20 +168,22 @@
 <script src="https://rawgit.com/xdan/datetimepicker/master/jquery.js"></script>
 <script src="https://rawgit.com/xdan/datetimepicker/master/jquery.datetimepicker.js"></script>
 <script>
+
 $('#datetimepicker').datetimepicker({
 dayOfWeekStart : 1,
 lang:'en',
-disabledDates:['1986/01/08','1986/01/09','1986/01/10'],
+disabledDates: "{{ tool.blackout_dates }}",
 startDate:  '2014/12/08',
 format: 'Y-m-d H:i'
 });
 $('#datetimepicker2').datetimepicker({
 dayOfWeekStart : 1,
 lang:'en',
-disabledDates:['1986/01/08','1986/01/09','1986/01/10'],
+disabledDates: "{{ tool.blackout_dates }}",
 startDate:  '2014/12/08',
 format: 'Y-m-d H:i'
 });
+
 </script>
 </body>
 </html>

@@ -31,8 +31,8 @@ class Tool(models.Model):
     identifier = models.CharField(verbose_name="Identifier", blank=True, null=True, max_length=200)
     shed = models.ForeignKey(Shed, related_name='tools', null = True, blank = True)
     in_shed = models.BooleanField(default = False)
-    blackout_start_date = models.DateTimeField()
-    blackout_end_date = models.DateTimeField()
+    blackout_start_date = models.DateTimeField(null = True, blank = True)
+    blackout_end_date = models.DateTimeField(null = True, blank = True)
 
     def __str__(self):
         return self.name
@@ -49,12 +49,10 @@ class Tool(models.Model):
         return (tools.count() == 0)
 
     def date_range(self, start, end):
-        d1 = datetime.strptime(start, '%Y/%m/%d')
-        d2 = datetime.strptime(end, '%Y/%m/%d')
         l = []
-        for i in range((d2-d1).days + 1):
-            l.append( str( (d1+ timedelta(days=i)).date().strftime('%Y/%m/%d') ))
+        for i in range((end-start).days + 1):
+            l.append( str( (start+ timedelta(days=i)).date().strftime('%Y/%m/%d') ))
         return l
 
     def blackout_dates(self):
-        return self.date_range('2014/12/08','2014/12/19')
+        return self.date_range(self.blackout_start_date, self.blackout_end_date)
