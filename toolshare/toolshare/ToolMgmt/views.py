@@ -40,6 +40,8 @@ def register(request):
     context = RequestContext(request)
     if request.POST:
         form = ToolModelForm(request.POST, request.FILES)
+        form.fields['blackout_start_date'].widget.attrs['id'] = 'datetimepicker'
+        form.fields['blackout_end_date'].widget.attrs['id'] = 'datetimepicker2'
         if form.is_valid():
             new_tool = form.save()
             new_tool.owner = UserProfile.objects.get( user = request.user)
@@ -50,6 +52,8 @@ def register(request):
             return render_to_response('ToolMgmt/register.html', {'form': form}, context)
     else:
         form = ToolModelForm()
+        form.fields['blackout_start_date'].widget.attrs['id'] = 'datetimepicker'
+        form.fields['blackout_end_date'].widget.attrs['id'] = 'datetimepicker2'
         return render_to_response('ToolMgmt/register.html', {'form': form}, context)
 
 @login_required(login_url='users:login')
@@ -61,6 +65,8 @@ def tool_edit(request, tool_id):
         if is_owner:
             if request.POST:
                 form = ToolModelForm(request.POST, request.FILES, instance=tool)
+                form.fields['blackout_start_date'].widget.attrs['id'] = 'datetimepicker'
+                form.fields['blackout_end_date'].widget.attrs['id'] = 'datetimepicker2'
                 if form.is_valid():
                     new_tool = form.save()
                     new_tool.owner = UserProfile.objects.get( user = request.user)
